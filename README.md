@@ -25,7 +25,7 @@ Note: The changes to the reports should be pushed to the  `main` branch locally 
 
 ## Reports
 
-- [Conceptual Architecture Report](https://bittheoryproject.github.io/eecs4314-reports/a1/report.pdf)
-- [Concrete Architecture Report](https://bittheoryproject.github.io/eecs4314-reports/a2/report.pdf)
-- [Dependency Extraction Report](https://bittheoryproject.github.io/eecs4314-reports/a3/report.pdf)
-- [Architecture Enhancement Report](https://bittheoryproject.github.io/eecs4314-reports/a4/report.pdf)
+- [Conceptual Architecture Report](https://bittheoryproject.github.io/eecs4314-reports/a1/report-lualatex.pdf)
+- [Concrete Architecture Report](https://bittheoryproject.github.io/eecs4314-reports/a2/report-lualatex.pdf)
+- [Dependency Extraction Report](https://bittheoryproject.github.io/eecs4314-reports/a3/report-lualatex.pdf)
+- [Architecture Enhancement Report](https://bittheoryproject.github.io/eecs4314-reports/a4/report-lualatex.pdf)
