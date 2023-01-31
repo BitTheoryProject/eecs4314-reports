@@ -26,6 +26,7 @@ jobs:
             tutorial/report.tex
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
+          args: "--jobname=%A-lualatex"
       - name: Commit report changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
