@@ -1,0 +1,28 @@
+@startuml
+skinparam state {
+  ArrowColor #B70000
+  BorderColor #000000
+  FontName Impact
+  BackgroundColor #e1e1e1
+}
+
+[*] --> start
+start -[dashed]-> end : wait
+start: parent process
+end: parent process
+
+start --> fork : fork
+fork: child process
+
+fork --> execve : execve
+execve: child process
+
+execve --> zombie : exit
+zombie: zombie process
+
+zombie -[dashed]-> end
+
+end --> [*]
+
+
+@enduml

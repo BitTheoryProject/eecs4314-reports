@@ -1,0 +1,34 @@
+@startwbs
+<style>
+wbsDiagram {
+  arrow {
+    linecolor #B70000
+  }
+  node {
+    backgroundcolor #e1e1e1
+  }
+}
+</style>
+* process
+** process structure
+*** 🆔 PID
+*** 🆔 Parent PID
+*** signal state
+*** tracing
+*** timers
+*** process group
+**** 🆔 GID
+**** session
+*** credential
+*** VM Space
+**** region list
+*** file descripters
+**** file entries
+*** resource limits
+*** system call vectors 
+*** user structure
+**** signal actions
+**** statistics
+*** thread list
+**** [scheduling info,\nthread control block,\nthread kernel stack,\nmachine dependent thread info]
+@endwbs

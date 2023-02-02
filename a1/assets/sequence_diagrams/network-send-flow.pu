@@ -1,0 +1,108 @@
+@startuml
+skinparam {
+ArrowColor #B70000
+
+ActorBackgroundColor #F8CDCC
+ActorBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+ParticipantBackgroundColor #F8CDCC
+ParticipantBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+DatabaseBackgroundColor #F8CDCC
+DatabaseBorderColor #B70000
+
+}
+
+box "User space" #ffffff
+Actor Sender as s
+participant "Browser" as br
+
+box "Socket layer" #ffffff
+participant "Socket API" as sas
+end box
+end box
+
+box "Transport layer" #ffffff
+participant TCP
+participant UDP
+end box
+
+box "Network layer" #ffffff
+participant IP
+participant "Network Interface" as ni
+end box
+
+box "Link layer" #ffffff
+participant "Device driver" as dd
+end box
+
+
+s -> br : GET https://google.com
+activate br
+br -> sas : send(data)
+deactivate br
+
+alt HTTP, FTP, SMPT
+  sas -> TCP : sosend
+else DNS, TFTP, NFS
+  sas -> UDP : sosend
+end
+
+alt so_snd_full
+  loop until sowwakeup
+    TCP -> TCP : sbwait   
+    activate TCP
+    deactivate TCP
+  end 
+else so_snd not full
+  TCP -> TCP : (*pru_send)
+  activate TCP
+  deactivate TCP
+end
+
+alt can segment
+  TCP -> IP : tdp_output
+else cannot segment
+  TCP -> br : cannot segment
+  br -> s : error
+end
+
+UDP -> UDP : (*pru_send)
+activate UDP
+deactivate UDP
+UDP -> IP : udp_output
+activate IP
+
+IP -> ni : ip_output
+deactivate IP
+activate ni
+
+ni -> ni : (*if_output)
+deactivate ni
+
+alt ifq full
+  ni -> br : output queue full
+  br -> s : error
+else ifq not full
+  ni -> dd
+end
+
+dd -> dd : (*if_start)
+
+group Idle network scheduler
+  alt ifq_dequeue
+    loop ifq not full
+      dd -> dd : NIC DMA
+      activate dd
+      deactivate dd
+    end
+  end 
+end
+dd -> br : NIC IRQ
+@enduml
