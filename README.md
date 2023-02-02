@@ -7,6 +7,8 @@ Website can be viewed [here](https://bittheoryproject.github.io/eecs4314-project
   - `/a1/report.tex` -- report LaTeX
   - `/a1/report.pdf` -- compiled pdf
   - `/a1/assets/` -- any relevant images and other resources for this report
+- PlantUML files (`**.pu` & `**.puml`) will be built into `svgs` of the same name/directory upon merges to the `main` branch.
+  - So upon any changes to `**.pu` or `**.puml` files, make sure to run `git pull origin` once the action completes.
 
 ## Tutorial on Basics of LaTeX
 
