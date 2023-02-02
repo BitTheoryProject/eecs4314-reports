@@ -1,0 +1,174 @@
+@startuml
+title FreeBSD Full System Lifecycle for 1 User In Multi-User Mode
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+	ArrowColor #B70000
+
+	ActorBackgroundColor #F8CDCC
+	ActorBorderColor #B70000
+
+	NoteBackgroundColor #F8CDCC
+	NoteBorderColor #B70000
+
+	ParticipantBackgroundColor #F8CDCC
+	ParticipantBorderColor #B70000
+
+	NoteBackgroundColor #F8CDCC
+	NoteBorderColor #B70000
+
+	DatabaseBackgroundColor #F8CDCC
+	DatabaseBorderColor #B70000
+}
+
+== FreeBSD Startup/Initialization ==
+actor actor
+
+actor -> BIOS **: Turns system on\n& motherboard\ninitializes BIOS
+activate BIOS
+note right: BIOS starts in 16-bit real-mode
+BIOS -> BIOS: Runs POST\n(Power On Self test)\n& initializes hardware
+BIOS -> BIOS: Loads MBR (""boot0"")\nfrom disk\n(""/boot/boot0"") into\nmemory
+BIOS -> "MBR (boot0)" **: Execution passed
+deactivate BIOS
+destroy BIOS
+activate "MBR (boot0)"
+
+"MBR (boot0)" -> "MBR (boot0)": Loads First Slice of\nFreeBSD OS\n(""/boot/boot1"") from\ndisk into memory
+note right: First slice of OS contains boot1
+
+"MBR (boot0)" -> boot1 **: Execution passed
+deactivate "MBR (boot0)"
+destroy "MBR (boot0)"
+activate boot1
+boot1 -> boot1: Load ""boot2"" & ""BTX""\nfrom disk (""/boot/boot"")\ninto memory
+boot1 -> boot1: Enable access to\n>1MB of memory
+
+boot1 -> "BTX Server" **: Execution passed
+deactivate boot1
+destroy boot1
+activate "BTX Server"
+"BTX Server" -> "BTX Server": Sets up & switches to\n32-bit protected env
+
+"BTX Server" -> boot2 **: Execution passed
+deactivate "BTX Server"
+destroy "BTX Server"
+activate boot2
+boot2 -> boot2: Initializes\n""struct bootinfo""
+note right: ""bootinfo"" contains info such as\nkernel location, memory avail, etc
+boot2 -> boot2: Loads ""/boot/loader""\ninto memory\nvia ""load()""
+
+alt #F8E4E4 If user presses key within 10s
+	boot2 --> actor: Displays prompt for user to customize boot settings
+	deactivate boot2
+	actor -> boot2: Actor inputs boot settings
+	activate boot2
+end
+
+boot2 -> loader **: Execution passed
+deactivate boot2
+destroy boot2
+activate loader
+loader -> loader: Loads kernel\ninto memory
+
+loader -> kernel **: Execution passed
+deactivate loader
+destroy loader
+activate kernel
+kernel -> kernel: Various cpu-specific\ninitializations\nvia ""init386()""
+kernel -> kernel: Various system\ninitializations via\n""mi_startup()""\n(ie. ""scheduler"")
+
+kernel -> init **: Starts PID 1 (""init"")\nvia ""create_init()""
+deactivate kernel
+activate init
+note right: init and everything to its right are programs in user space.\nThese programs likely make syscalls to the kernel.\nTo avoid overcomplicating the diagram, these calls won't be shown.
+init -> rc **: Forks process
+deactivate init
+activate rc
+rc -> rc: Run-level programs are\nautomatically started\nthat are defined\nin""/etc/rc""
+rc --> init: Return exit code
+deactivate rc
+destroy rc
+activate init
+init -> init: Other initializations\n(ie. updates security\nlevel to 1 or higher, etc)
+
+== FreeBSD Is Fully Initialized -- Usage Below ==
+
+participant getty
+participant login
+participant shell
+
+init -> getty **: Forks process
+deactivate init
+activate getty
+getty -> login **: Forks process
+deactivate getty
+
+activate login
+loop #F8E4E4 until user provides valid username & pass
+	login --> actor: Requests user login
+	deactivate login
+	actor -> login: Provides username & password
+	activate login
+end
+login -> shell **: Forks a shell\nfor the user
+deactivate login
+activate shell
+shell --> actor: Return shell for the user
+deactivate shell
+
+
+loop #F8E4E4 until ""shutdown"" with root privileges
+	actor -> shell: Command entered
+	activate shell
+	shell -> shell: Process command\n(possibly making syscalls\nto kernel, forking new\nprocesses, running other\nprograms, writing output,\netc)
+	shell --> actor: Return exit code
+	deactivate shell
+end
+
+== FreeBSD Shutdown ==
+
+actor -> shell: Shuts down system (ie. ""shutdown"" or ""poweroff"")
+activate shell
+note right: Must be called with\nroot privileges\n(ie. ""sudo"" ""shutdown"")
+shell -> init: Notifies of shutdown
+deactivate shell
+
+activate init
+
+init -> rc **: Forks process
+deactivate init
+activate rc
+rc -> rc: cleanly\nterminate processes\ndefined in\n""/etc/rc.shutdown""
+rc --> init: Return exit code
+deactivate rc
+destroy rc
+activate init
+
+init -> shell: Terminates all left-over processes\n(via ""TERM"" signal)
+activate shell
+shell --> init: Returns exit code
+deactivate shell
+destroy shell
+init -> login: Terminates all left-over processes\n(via ""TERM"" signal)
+activate login
+login --> init: Returns exit code
+deactivate login
+destroy login
+
+init -> getty: Terminates all left-over processes\n(via ""TERM"" signal)
+note over init: 30 second timeout
+init -> getty: Kills all left-over processes\n(via ""KILL"" signal)
+activate getty
+getty --> init: Returns exit code
+deactivate getty
+destroy getty
+
+note left: Note that **all left-over** process will be sent\n""TERM"" and then ""KILL"" signals after a 30s timeout.\nThis example assumes that ""rc()"" didn't kill these processes.\nIt also assumes that ""TERM"" killed the ""shell"" & ""getty"" \nsuccessfully, while ""login"" required a ""KILL"" signal.
+
+init -> init: Logs shut down info
+init --> kernel: syscall to shut down system
+destroy kernel
+destroy init
+deactivate init
+@enduml
