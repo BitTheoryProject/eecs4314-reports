@@ -178,18 +178,18 @@ Data flow is how data flows among system components during processes. Control fl
 
 \section{Diagrams}
 
-\subsection{System Flow}
+\subsection{Use Case: Starting up FreeBSD, interacting with the shell, and then shutting down the system.}
 The highest level use case of FreeBSD is using a shell to interact with the system.
 Figure 1 shows how FreeBSD handles this use-case for a single user,
 from starting up the system, to shutting it down. It's important to note that
 this diagram showcases the flow in multi-user mode. If the system were in
 single-user mode, \code{init} would return a root shell instead of going through the
-\code{getty} and \code{login} process.
+\code{getty} and \code{login} process\cite{bootprocess}\cite{init}.
 
 \begin{figure}[!htb]
 	\advance\leftskip-0.5cm
 	\includesvg[inkscapelatex=false, width = 570pt]{sequence_diagrams/system-flow}
-	\caption{Sequence diagram of FreeBSD system-flow from startup to shutdown (In multi-user mode)}
+	\caption{Sequence diagram of FreeBSD system-flow from startup to shutdown (In multi-user mode) \cite{bootprocess}\cite{init}\cite{getty}\cite{login}}
 \end{figure}
 
 
@@ -212,6 +212,12 @@ single-user mode, \code{init} would return a root shell instead of going through
 \lipsum[1]
 
 \begin{thebibliography}{00}
-	\bibitem{b2} Clarke, Arthur C. 2001: A Space Odyssey. New York: Roc, 1968. 297.
+	% Note(Dante): Using MLA9 bcs I wasn't sure about the citation format %
+	% ping me if we choose to use a diff format and I'll update my citations %
+	\bibitem{bootprocess} “Chapter 14. the Freebsd Booting Process.” FreeBSD Documentation Portal,
+	https://docs.freebsd.org/en/books/handbook/boot.
+	\bibitem{init} “FreeBSD Manual Pages.” Init, https://man.freebsd.org/cgi/man.cgi?init.
+	\bibitem{getty} “FreeBSD Manual Pages.” Getty(8), https://man.freebsd.org/cgi/man.cgi?query=getty
+	\bibitem{login} “FreeBSD Manual Pages.” Login(1), https://man.freebsd.org/cgi/man.cgi?login\%281\%29.
 \end{thebibliography}
 \end{document}
