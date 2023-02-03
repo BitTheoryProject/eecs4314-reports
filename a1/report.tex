@@ -177,7 +177,21 @@ Data flow is how data flows among system components during processes. Control fl
 
 
 \section{Diagrams}
-\lipsum[1]
+
+\subsection{System Flow}
+The highest level use case of FreeBSD is using a shell to interact with the system.
+Figure 1 shows how FreeBSD handles this use-case for a single user,
+from starting up the system, to shutting it down. It's important to note that
+this diagram showcases the flow in multi-user mode. If the system were in
+single-user mode, \code{init} would return a root shell instead of going through the
+\code{getty} and \code{login} process.
+
+\begin{figure}[!htb]
+	\advance\leftskip-0.5cm
+	\includesvg[inkscapelatex=false, width = 570pt]{sequence_diagrams/system-flow}
+	\caption{Sequence diagram of FreeBSD system-flow from startup to shutdown (In multi-user mode)}
+\end{figure}
+
 
 \section{External Interfaces}
 \lipsum[1]
