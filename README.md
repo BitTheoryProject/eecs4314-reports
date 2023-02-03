@@ -13,7 +13,6 @@ Website can be viewed [here](https://bittheoryproject.github.io/eecs4314-project
 ## Tutorial on Basics of LaTeX
 
 - Go to `/tutorial/report.tex` and see the basic syntax and the corresponding `/tutorial/report.pdf`.
-- NOTE: If the report contains svg files, you'll have to compile the latex file w/ the `-shell-escape` param. (ie. `pdflatex -shell-escape ./report.tex`)
 
 ## How to Update the Reports
 

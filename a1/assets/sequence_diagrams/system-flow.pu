@@ -1,7 +1,7 @@
 @startuml
 title FreeBSD Full System Lifecycle for 1 User In Multi-User Mode
-header EECS 4314 FreeBSD Analysis - BitTheory
 
+header EECS 4314 FreeBSD Analysis - BitTheory
 skinparam {
 	ArrowColor #B70000
 
