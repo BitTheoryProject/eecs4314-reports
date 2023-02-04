@@ -1,5 +1,5 @@
 @startuml
-title FreeBSD Networking Send Request Lifecycle 
+title FreeBSD Networking Request Lifecycle 
 header EECS 4314 FreeBSD Analysis - BitTheory
 
 skinparam {
