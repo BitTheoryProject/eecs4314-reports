@@ -1,22 +1,24 @@
 @startuml
+title FreeBSD Networking Send Request Lifecycle 
+header EECS 4314 FreeBSD Analysis - BitTheory
+
 skinparam {
-ArrowColor #B70000
+	ArrowColor #B70000
 
-ActorBackgroundColor #F8CDCC
-ActorBorderColor #B70000
+	ActorBackgroundColor #F8CDCC
+	ActorBorderColor #B70000
 
-NoteBackgroundColor #F8CDCC
-NoteBorderColor #B70000
+	NoteBackgroundColor #F8CDCC
+	NoteBorderColor #B70000
 
-ParticipantBackgroundColor #F8CDCC
-ParticipantBorderColor #B70000
+	ParticipantBackgroundColor #F8CDCC
+	ParticipantBorderColor #B70000
 
-NoteBackgroundColor #F8CDCC
-NoteBorderColor #B70000
+	NoteBackgroundColor #F8CDCC
+	NoteBorderColor #B70000
 
-DatabaseBackgroundColor #F8CDCC
-DatabaseBorderColor #B70000
-
+	DatabaseBackgroundColor #F8CDCC
+	DatabaseBorderColor #B70000
 }
 
 box "User space" #ffffff
@@ -42,20 +44,21 @@ box "Link layer" #ffffff
 participant "Device driver" as dd
 end box
 
-
 s -> br : GET https://google.com
 activate br
 br -> sas : send(data)
 deactivate br
 
-alt HTTP, FTP, SMPT
+alt #F8E4E4 HTTP, FTP, SMPT
   sas -> TCP : sosend
+  activate TCP
 else DNS, TFTP, NFS
   sas -> UDP : sosend
+  activate UDP
 end
 
-alt so_snd_full
-  loop until sowwakeup
+alt #F8E4E4 so_snd_full
+  loop #F8E4E4 until sowwakeup
     TCP -> TCP : sbwait   
     activate TCP
     deactivate TCP
@@ -66,17 +69,21 @@ else so_snd not full
   deactivate TCP
 end
 
-alt can segment
-  TCP -> IP : tdp_output
+alt #F8E4E4 can segment
+  TCP -> IP **: tdp_output
 else cannot segment
-  TCP -> br : cannot segment
-  br -> s : error
+  TCP --> br : cannot segment
+  deactivate TCP
+  activate br
+  br --> s : error
+  deactivate br
 end
 
 UDP -> UDP : (*pru_send)
 activate UDP
 deactivate UDP
 UDP -> IP : udp_output
+deactivate UDP
 activate IP
 
 IP -> ni : ip_output
@@ -84,25 +91,33 @@ deactivate IP
 activate ni
 
 ni -> ni : (*if_output)
+activate ni
 deactivate ni
 
-alt ifq full
-  ni -> br : output queue full
-  br -> s : error
+alt #F8E4E4 ifq full
+  ni --> br : output queue full
+  activate br
+  br --> s : error
+  deactivate br
 else ifq not full
   ni -> dd
+  deactivate IP
+  deactivate ni
+  activate dd
 end
 
 dd -> dd : (*if_start)
+activate dd
+deactivate dd
 
 group Idle network scheduler
-  alt ifq_dequeue
-    loop ifq not full
+  alt #F8E4E4 ifq_dequeue
+    loop #F8E4E4 ifq not full
       dd -> dd : NIC DMA
       activate dd
       deactivate dd
     end
   end 
 end
-dd -> br : NIC IRQ
+dd --> br : NIC IRQ
 @enduml

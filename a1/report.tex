@@ -182,13 +182,13 @@ What is the control and data flow among parts?\par
 Data flow is how data flows among system components during processes. Control flow is the order of executions among components. The explanations below show how both flows are structured in subsystems of FreeBSD.\par
 \textbf{Initialization}: In the initialization process, Basic input/output system (BIOS) with read-only memory (ROM) will be the first program appears in the flow. Under the control of BIOS, the processer finds the address \code{0xfffffff0} which contains the how-to of POST routines for low-level initializations. Then, as the last POST routine, BIOS follows an instruction, called \code{INT 0x19}, to reach out the address \code{0x7c00} and find a boot0 program. At the point when a boot0 program executes, the control will be taken over by the FreeBSD operating system. After taking over its control, the system will jump to multiple addresses to go through other boot programs and BTX server (boot1, BTX server, and boot2), and eventually reach a loader, which boots the system’s kernel.\par
 \textbf{Inter-Process Communication}: The major component for IPC in FreeBSD is a descriptor file, called BSD sockets. For example, to obtain an object on a web page, the system recognizes the object, which is encoded as a file, and utilizes a HTTP protocol to obtain more information on the object. These processes can be completed in the system’s kernel. Then, BSD sockets take care of the process of utilizing Transmission Control Protocol (TCP) and Internet Protocol (IP) to obtain the object from a server.\par
-\textbf{File System}: For the processes of communicating with devices, Zettabyte file system (ZFS) takes a significant role in the system. ZFS is a system that handles general file system jobs as well as the volume management jobs, and it is under the control of the operating system. By combining multiple devices into a pool, it generates a large file system. Based on this file system, data can be exchanged between a hardware device and programs. For programs to obtain data, stored in a device, an ISA driver controls the communication between them, and it copies the necessary data from the device memory into the main memory. Moreover, if data needs to be stored in a device, the driver takes the data address and sends it to the device. Then, the hardware’s Direct Memory Access (DMA) mechanism allows the device to access the data.\par 
+\textbf{File System}: For the processes of communicating with devices, Zettabyte file system (ZFS) takes a significant role in the system. ZFS is a system that handles general file system jobs as well as the volume management jobs, and it is under the control of the operating system. By combining multiple devices into a pool, it generates a large file system. Based on this file system, data can be exchanged between a hardware device and programs. For programs to obtain data, stored in a device, an ISA driver controls the communication between them, and it copies the necessary data from the device memory into the main memory. Moreover, if data needs to be stored in a device, the driver takes the data address and sends it to the device. Then, the hardware’s Direct Memory Access (DMA) mechanism allows the device to access the data.\par
 \textbf{Memory Manager}: We can find a lot of components that the system’s memory manager handles. One of the responsibilities is kernel memory allocation, which the system utilizes virtual memory (VM) to handle page tables with addresses. For instance, system calls such as \code{brk} can be made by library functions (e.g., \code{malloc}) to control the allocation volume of a process, and the system’s kernel in the OS reach out to the main memory if necessary. The whole process here can be completed by the kernel in the system.\par
 
 
-\section{Diagrams}
+\section{Use cases}
 
-\subsection{Use Case: Starting up FreeBSD, interacting with the shell, and then shutting down the system.}
+\subsection{Shell}
 The highest level use case of FreeBSD is using a shell to interact with the system.
 Figure 1 shows how FreeBSD handles this use-case for a single user,
 from starting up the system, to shutting it down. It's important to note that
@@ -201,12 +201,22 @@ single-user mode, \code{init} would return a root shell instead of going through
 	\includegraphics[width = 570pt]{assets/sequence_diagrams/system-flow.pdf}
 	\caption{Sequence diagram of FreeBSD system-flow from startup to shutdown (In multi-user mode) \cite{bootprocess}\cite{init}\cite{getty}\cite{login}}
 \end{figure}
+\clearpage
 
+\subsection{Networking}
+One of the most important use cases of FreeBSD is the ability to network with other servers and systems. Because FreeBSD is
+widely used as a server, as result it must have robust networking capabilities over several protocols such as \code{HTTP}, \code{FTP}, \code{NFS} and many more.
+Figure 2 shows how FreeBSD handles a network request using the \code{HTTP} protocol using a browser. Please note that the default FreeBSD system
+doesn't come with applications such as browsers or networking tools such as \code{curl} and they must be installed after initialization.
+
+\begin{figure}[!htb]
+	\advance\leftskip-0.5cm
+	\includegraphics[width = 570pt]{assets/sequence_diagrams/network-send-flow.pdf}
+	\caption{Sequence diagram of FreeBSD network-flow when a user makes an \code{HTTP} request}
+\end{figure}
+\clearpage
 
 \section{External Interfaces}
-\lipsum[1]
-
-\section{Use Cases}
 \lipsum[1]
 
 \section{Data Dictionary}
