@@ -1,33 +1,30 @@
 @startuml
-title FreeBSD Networking Request Lifecycle 
+title FreeBSD HTTP Request Lifecycle 
 header EECS 4314 FreeBSD Analysis - BitTheory
 
 skinparam {
-	ArrowColor #B70000
+  ArrowColor #B70000
 
-	ActorBackgroundColor #F8CDCC
-	ActorBorderColor #B70000
+  ActorBackgroundColor #F8CDCC
+  ActorBorderColor #B70000
 
-	NoteBackgroundColor #F8CDCC
-	NoteBorderColor #B70000
+  NoteBackgroundColor #F8CDCC
+  NoteBorderColor #B70000
 
-	ParticipantBackgroundColor #F8CDCC
-	ParticipantBorderColor #B70000
+  ParticipantBackgroundColor #F8CDCC
+  ParticipantBorderColor #B70000
+  
+  NoteBackgroundColor #F8CDCC
+  NoteBorderColor #B70000
 
-	NoteBackgroundColor #F8CDCC
-	NoteBorderColor #B70000
-
-	DatabaseBackgroundColor #F8CDCC
-	DatabaseBorderColor #B70000
+  DatabaseBackgroundColor #F8CDCC
+  DatabaseBorderColor #B70000
 }
 
 box "User space" #ffffff
-Actor Sender as s
-participant "Browser" as br
-
-box "Socket layer" #ffffff
-participant "Socket API" as sas
-end box
+  Actor Sender as s
+  participant "Browser" as br
+  participant "Socket API" as sa
 end box
 
 box "Transport layer" #ffffff
@@ -46,78 +43,74 @@ end box
 
 s -> br : GET https://google.com
 activate br
-br -> sas : send(data)
+br -> sa : socket()
+sa --> br : new socket
+br -> sa : connect()
+br -> sa : send(data)
 deactivate br
 
-alt #F8E4E4 HTTP, FTP, SMPT
-  sas -> TCP : sosend
+alt #F8E4E4 HTTP, FTP, SMPT, NFS
+  sa -> TCP : sosend()
   activate TCP
-else DNS, TFTP, NFS
-  sas -> UDP : sosend
+else DNS, TFTP
+  sa -> UDP : sosend()
   activate UDP
 end
 
 alt #F8E4E4 so_snd_full
-  loop #F8E4E4 until sowwakeup
-    TCP -> TCP : sbwait   
+  loop #F8E4E4 until so_snd not full 
+    TCP -> TCP : sbwait()
     activate TCP
     deactivate TCP
   end 
 else so_snd not full
-  TCP -> TCP : (*pru_send)
+  TCP -> TCP : sowwakeup()
+  activate TCP
+  deactivate TCP
+  TCP -> TCP : pru_send()
   activate TCP
   deactivate TCP
 end
 
-alt #F8E4E4 can segment
-  TCP -> IP **: tdp_output
-else cannot segment
-  TCP --> br : cannot segment
-  deactivate TCP
-  activate br
-  br --> s : error
-  deactivate br
-end
-
-UDP -> UDP : (*pru_send)
+TCP -> IP : tcp_output()
+deactivate TCP
+UDP -> UDP : pru_send()
 activate UDP
 deactivate UDP
-UDP -> IP : udp_output
+UDP -> IP : udp_output()
 deactivate UDP
+
 activate IP
+IP -> IP : insert IP options
+IP -> IP : fill in header fields
+IP -> IP : determine the route (i.e outgoing interface)
+IP -> IP : if multicast addres, get outgoing interface and hop count
+IP -> IP : if brodcast address, check if brodcast is allowed
+IP -> IP : IPSec (i.e any encryption or security)
+IP -> IP : check filtering rules
+alt packet is smaller than maxpacket size
+  IP -> IP : calculate checksum and continue
+else packet is larger than maxpacket size
+  IP -> IP : fragment to smaller chunks and send each
+end
 
-IP -> ni : ip_output
+IP -> ni : ip_output()
+note right : Once the packet is confirmed to go to\nthe correct destination, it is passed along \nto the NIC to be transmitted.\n
 deactivate IP
-activate ni
-
-ni -> ni : (*if_output)
-activate ni
+ni -> dd : if_output()
 deactivate ni
-
-alt #F8E4E4 ifq full
-  ni --> br : output queue full
-  activate br
-  br --> s : error
-  deactivate br
-else ifq not full
-  ni -> dd
-  deactivate IP
-  deactivate ni
-  activate dd
-end
-
-dd -> dd : (*if_start)
 activate dd
-deactivate dd
+dd -> dd : if_start()
+activate dd
 
-group Idle network scheduler
-  alt #F8E4E4 ifq_dequeue
-    loop #F8E4E4 ifq not full
-      dd -> dd : NIC DMA
-      activate dd
-      deactivate dd
-    end
-  end 
+loop #F8E4E4 ifq not full
+  dd -> dd : ifq_dequeue
+  activate dd
+  deactivate dd
+  dd -> dd : NIC DMA
+  activate dd
+  deactivate dd
+  deactivate dd
 end
-dd --> br : NIC IRQ
+dd --> br : NIC IRQ. After the request has been transmitted, the NIC sends an interrupt request
 @enduml
