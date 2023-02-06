@@ -1,4 +1,6 @@
 @startuml
+header EECS 4314 FreeBSD Analysis - BitTheory
+
 skinparam state {
   ArrowColor #B70000
   BorderColor #000000

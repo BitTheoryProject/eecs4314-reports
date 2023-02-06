@@ -1,4 +1,6 @@
 @startuml
+header EECS 4314 FreeBSD Analysis - BitTheory
+
 skinparam {
   arrowcolor #B70000
   linetype ortho

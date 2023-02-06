@@ -1,4 +1,6 @@
 @startwbs
+header EECS 4314 FreeBSD Analysis - BitTheory\n\n
+
 <style>
 wbsDiagram {
   arrow {
