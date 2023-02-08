@@ -210,17 +210,10 @@ We can find a lot of components that the system’s memory manager handles. One 
 
 \section{Concurrency}
 Concurrency and parallelism in FreeBSD are primarily driven by the SMPng Architecture. The SMPng Architecture shares a lot of the same primitives as other architectures, such as mutexes, shared/exclusive locks, semaphores, and condition variables. The SMPng design was introduced in FreeBSD Version 5, to better accommodate multiprocessing systems and improve scalability.
-
-
 Figure A: SMP Architecture: Quad-Processor Intel Xeon
-
 The SMPng Architecture supports both read locks and write locks. Multiple threads can safely read a portion of data at the same time without it becoming corrupted. However, once write operations are introduced, locks are required to protect data. One method used to circumvent this issue is by simply using an exclusive lock for writes and a shared lock for reads. Another method is less commonly used. It involves having multiple locks for a portion of data, with a read lock for only one of the locks and a write lock for all of them.
-
 Older versions of the FreeBSD system would use one Giant lock for all of the kernel, but in later versions the Giant lock was removed for various parts of the system such as the device drivers, UFS file system, and network stack. Overtime, the Giant lock has been replaced with smaller, fine-grained locks which improves parallel performance and scalability with multi-processor systems. Another reason the Giant lock was overhauled was because of Giant lock contention. This occurs most frequently during kernel-heavy workloads, such as networking or storage, resulting in more delays as the CPU waits for the lock to be unlocked.
-
-
 The SMPng Architecture also supports atomic operations, i.e. a set of instructions that are protected together by a lock, without releasing the lock in between the execution of operations by a CPU. Atomic operations guarantee that after execution, all changes to the data made by a CPU are made visible at the same time to other CPUs. Atomic operations only allow one item to be read or written at a time.
-
 FreeBSD provides interrupt handlers with interrupt thread context, allowing them to block processes during execution, even with locks. The interrupt threads are often called heavyweight interrupt threads, because switching to them requires a full context switch. In order to mitigate latency, the kernel was made preemptive. Interrupt threads run at real-time kernel priority (ie the highest priority) and therefore, they should not run very long to avoid starvation. There are some interrupt handlers that don’t execute in a thread context, instead opting for primary interrupt context, but these handlers are only used in clock interrupts and serial I/O interrupts. In general, the CPU should be doing the highest priority work whenever possible.
 
 \clearpage
@@ -269,15 +262,14 @@ doesn't come with applications such as browsers or networking tools such as \cod
 \lipsum[1]
 
 \begin{thebibliography}{00}
-	% Note(Dante): Using MLA9 bcs I wasn't sure about the citation format %
-	% ping me if we choose to use a diff format and I'll update my citations %
-	\bibitem{smpng} “Chapter 8. SMPNG Design Document.” FreeBSD Documentation Portal, https://docs.freebsd.org/en/books/arch-handbook/smp/.
-	\bibitem{bootprocess} “Chapter 14. the Freebsd Booting Process.” FreeBSD Documentation Portal,
-	https://docs.freebsd.org/en/books/handbook/boot.
-	\bibitem{init} “FreeBSD Manual Pages.” Init, https://man.freebsd.org/cgi/man.cgi?init.
-	\bibitem{getty} “FreeBSD Manual Pages.” Getty(8), https://man.freebsd.org/cgi/man.cgi?query=getty
-	\bibitem{login} “FreeBSD Manual Pages.” Login(1), https://man.freebsd.org/cgi/man.cgi?login\%281\%29.
+	\bibitem{brooks} Brooks, Frederick P. The Mythical Man-Month: Essays on Software Engineering. Anniversary Edition (2nd ed.). Addison-Wesley Pub Co, 1995.
+	\bibitem{smpng} "Chapter 8. SMPNG Design Document." FreeBSD Documentation Portal, https://docs.freebsd.org/en/books/arch-handbook/smp/.
+	\bibitem{bootprocess} "Chapter 14. the Freebsd Booting Process." FreeBSD Documentation Portal, https://docs.freebsd.org/en/books/handbook/boot.
+	\bibitem{dev-model} "FreeBSD Books." dev-model, https://docs.freebsd.org/en/books/dev-model/
+	\bibitem{init} "FreeBSD Manual Pages." Init, https://man.freebsd.org/cgi/man.cgi?init.
+	\bibitem{getty} "FreeBSD Manual Pages." Getty(8), https://man.freebsd.org/cgi/man.cgi?query=getty
+	\bibitem{login} "FreeBSD Manual Pages." Login(1), https://man.freebsd.org/cgi/man.cgi?login\%281\%29.
 	\bibitem{design} McKusick, Marshall Kirk, et al. The Design and Implementation of the Freebsd Operating System, 2nd Edition = FreeBSD Cao Zuo Xi Tong She Ji Yu Shi Xian, Di 2 Ban. Ren Min You Dian Chu Ban She, 2016.
-	\bibitem{watson} Watson, R. “[PDF] Introduction to Multithreading and Multiprocessing in the Freebsd SMPNG Network Stack: Semantic Scholar.” [PDF]  Introduction to Multithreading and Multiprocessing in the FreeBSD SMPng Network Stack | Semantic Scholar, 1 Jan. 1970, https://www.semanticscholar.org/paper/Introduction-to-Multithreading-and-Multiprocessing-Watson/088630aae6b4622e4175f58045cde69159d9eff5.
+	\bibitem{watson} Watson, R. "[PDF] Introduction to Multithreading and Multiprocessing in the Freebsd SMPNG Network Stack: Semantic Scholar." [PDF]  Introduction to Multithreading and Multiprocessing in the FreeBSD SMPng Network Stack | Semantic Scholar, 1 Jan. 1970, https://www.semanticscholar.org/paper/Introduction-to-Multithreading-and-Multiprocessing-Watson/088630aae6b4622e4175f58045cde69159d9eff5.
 \end{thebibliography}
 \end{document}
