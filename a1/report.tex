@@ -146,23 +146,21 @@
 \hspace{0pt}
 \vfill
 \begin{abstract}
-Software architecture refers to the high-level view of a software system, including all software components, their respective relationships (connectors), and the principles and guidelines of their structural and behavioural design. It provides a broad and abstract view of the architectural design, and encompasses the key concepts and structures of the system. Each of these elements, or abstractions, collaborate and interact with each other and give rise to a collaborative environment that makes a system more than a simple conglomeration of individual parts. The arrangement of these architectural elements and their interactions are critical to the overall success of the system.
+	Software architecture refers to the high-level view of a software system, including all software components, their respective relationships (connectors), and the principles and guidelines of their structural and behavioural design. It provides a broad and abstract view of the architectural design, and encompasses the key concepts and structures of the system. Each of these elements, or abstractions, collaborate and interact with each other and give rise to a collaborative environment that makes a system more than a simple conglomeration of individual parts. The arrangement of these architectural elements and their interactions are critical to the overall success of the system.
 
-In the context of FreeBSD, a Unix-based operating system, its conceptual architecture defines the fundamental design principles, architectural styles, components and connectors that make up such a powerful computing environment. Some of its components are the kernel, the system libraries and user applications.
-	
-FreeBSD is based on the BSD model, which started its development in 1993 with one single goal in mind: to provide software that can be used for any purpose. A series of evolutionary upgrades have been made by the thousands of contributors, committers and core members of the project.
-	
-The structure of the operating system is composed of 8 main interacting components, which are: the Kernel Facilities, the Security Features, Memory Management, Generic System Interfaces, File System, Terminal-handling, Inter-process communication, and Network communication.
-	
-The data and control flows in the subsystems of FreeBSD are as follows: (1) initialization starts with the BIOS and is taken over by the operating system through various boot programs, eventually leading to the user process; (2) inter-process communication is managed by BSD sockets; and (3) file system management is handled by the Zettabyte File System, which is under the control of the operating system and communicates with devices through ISA drivers. Memory management is handled by the system's memory manager, which uses virtual memory and handles kernel memory allocation through various system calls. 
-	
-In FreeBSD, concurrency relates to SMPng Architecture, which includes mutexes, shared/exclusive locks, semaphores, and condition variables such as those found in many other systems. 
-	
-The two main use cases of FreeBSD are the Shell, which allows for system interaction, and the Networking environment, which has robust capabilities over several protocols, such as HTTP and FTP.
-	
-The modular, efficient and highly configurable software architecture of FreeBSD makes it such a popular choice for various systems, servers, embedded environments and desktop applications.
+	In the context of FreeBSD, a Unix-based operating system, its conceptual architecture defines the fundamental design principles, architectural styles, components and connectors that make up such a powerful computing environment. Some of its components are the kernel, the system libraries and user applications.
 
-	\lipsum[1]
+	FreeBSD is based on the BSD model, which started its development in 1993 with one single goal in mind: to provide software that can be used for any purpose. A series of evolutionary upgrades have been made by the thousands of contributors, committers and core members of the project.
+
+	The structure of the operating system is composed of 8 main interacting components, which are: the Kernel Facilities, the Security Features, Memory Management, Generic System Interfaces, File System, Terminal-handling, Inter-process communication, and Network communication.
+
+	The data and control flows in the subsystems of FreeBSD are as follows: (1) initialization starts with the BIOS and is taken over by the operating system through various boot programs, eventually leading to the user process; (2) inter-process communication is managed by BSD sockets; and (3) file system management is handled by the Zettabyte File System, which is under the control of the operating system and communicates with devices through ISA drivers. Memory management is handled by the system's memory manager, which uses virtual memory and handles kernel memory allocation through various system calls.
+
+	In FreeBSD, concurrency relates to SMPng Architecture, which includes mutexes, shared/exclusive locks, semaphores, and condition variables such as those found in many other systems.
+
+	The two main use cases of FreeBSD are the Shell, which allows for system interaction, and the Networking environment, which has robust capabilities over several protocols, such as HTTP and FTP.
+
+	The modular, efficient and highly configurable software architecture of FreeBSD makes it such a popular choice for various systems, servers, embedded environments and desktop applications.
 	\\\\
 	\keywords{keyword1, keyword2, keyword3}
 \end{abstract}
