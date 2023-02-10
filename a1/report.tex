@@ -232,7 +232,7 @@ Terminal handling is another essential part of the operating system. Shells are 
 Inter-process communication allows different processes to communicate and interact. As mentioned, it gets a command from the terminal handling part and helps kernel facilities, memory management, and the filesystem. At the same time, network communication is also a process, so it needs to interact with inter-process communication. As a result some processes need to be able to keep track of the state of other processes. FreeBSD's process management system uses the observer pattern to manage notify other process of a processes state.
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width = 46pt]{assets/state_diagrams/process-state.pdf}
+	\includegraphics[width = 300pt]{assets/state_diagrams/process-state.pdf}
 	\caption{FreeBSD process creation state}
 \end{figure}
 
