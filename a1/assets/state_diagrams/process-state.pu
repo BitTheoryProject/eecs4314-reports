@@ -8,23 +8,17 @@ skinparam state {
   BackgroundColor #e1e1e1
 }
 
-[*] --> start
-start -[dashed]-> end : wait
+[*] -r-> start
 start: parent process
 end: parent process
-
-start --> fork : fork
+start -r-> fork : fork
 fork: child process
-
-fork --> execve : execve
+fork -r-> execve : execve
 execve: child process
-
-execve --> zombie : exit
+execve -r-> zombie : exit
 zombie: zombie process
-
-zombie -[dashed]-> end
-
-end --> [*]
-
+zombie -r[dashed]-> end
+end -r-> [*]
+start -[dashed]-> end : wait
 
 @enduml
