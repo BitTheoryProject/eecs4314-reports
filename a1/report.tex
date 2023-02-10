@@ -223,10 +223,35 @@ We can find a lot of components that the system’s memory manager handles. One 
 
 \section{Concurrency}
 Concurrency and parallelism in FreeBSD are primarily driven by the SMPng Architecture. The SMPng Architecture shares a lot of the same primitives as other architectures, such as mutexes, shared/exclusive locks, semaphores, and condition variables. The SMPng design was introduced in FreeBSD Version 5, to better accommodate multiprocessing systems and improve scalability.
-Figure A: SMP Architecture: Quad-Processor Intel Xeon
+
+\subsubsection{Read and Write Locks}
+
 The SMPng Architecture supports both read locks and write locks. Multiple threads can safely read a portion of data at the same time without it becoming corrupted. However, once write operations are introduced, locks are required to protect data. One method used to circumvent this issue is by simply using an exclusive lock for writes and a shared lock for reads. Another method is less commonly used. It involves having multiple locks for a portion of data, with a read lock for only one of the locks and a write lock for all of them.
+
+\subsubsection{Giant Lock vs Fine-Grained Locking}
+
 Older versions of the FreeBSD system would use one Giant lock for all of the kernel, but in later versions the Giant lock was removed for various parts of the system such as the device drivers, UFS file system, and network stack. Overtime, the Giant lock has been replaced with smaller, fine-grained locks which improves parallel performance and scalability with multi-processor systems. Another reason the Giant lock was overhauled was because of Giant lock contention. This occurs most frequently during kernel-heavy workloads, such as networking or storage, resulting in more delays as the CPU waits for the lock to be unlocked.
+
+\begin{figure}[!h]
+	\begin{minipage}[c]{0.4\linewidth}
+		\centering
+		\includegraphics[width = 250pt]{assets/concurrency_diagrams/figureA.png}
+		\caption{Giant Locking}
+	\end{minipage}\hfill
+	\begin{minipage}[c]{0.5\linewidth}
+		\centering
+		\includegraphics[width = 250pt]{assets/concurrency_diagrams/figureB.png}
+		\caption{Fine-Grained Locking}
+	\end{minipage}
+	\caption{Comparison of different kinds of contention between Giant Lock and Fine-Grained Lock (Source: Watson) \cite{watson}}
+\end{figure}
+
+\subsubsection{Atomic operations}
+
 The SMPng Architecture also supports atomic operations, i.e. a set of instructions that are protected together by a lock, without releasing the lock in between the execution of operations by a CPU. Atomic operations guarantee that after execution, all changes to the data made by a CPU are made visible at the same time to other CPUs. Atomic operations only allow one item to be read or written at a time.
+
+\subsubsection{Interrupt Handling}
+
 FreeBSD provides interrupt handlers with interrupt thread context, allowing them to block processes during execution, even with locks. The interrupt threads are often called heavyweight interrupt threads, because switching to them requires a full context switch. In order to mitigate latency, the kernel was made preemptive. Interrupt threads run at real-time kernel priority (ie the highest priority) and therefore, they should not run very long to avoid starvation. There are some interrupt handlers that don’t execute in a thread context, instead opting for primary interrupt context, but these handlers are only used in clock interrupts and serial I/O interrupts. In general, the CPU should be doing the highest priority work whenever possible.
 
 \clearpage
