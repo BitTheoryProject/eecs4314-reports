@@ -185,19 +185,30 @@ Overall, the conceptual software architecture of FreeBSD is designed to be modul
 \section{Architecture}
 \subsection{Evolution}
 \subsubsection{Origins}
-As you may or may not know, BSD stands for Berkeley Software Distribution. “The University of California at Berkeley obtained a copy of Unix from Bell Labs in 1974. Over the following four years, Bell Labs and Berkeley enjoyed a strong collaborative relationship which helped UNIX to flourish”(1). This collaboration branched out into different systems, the one of interest here being BSD. This system was shared around the world while also carrying the requirement of paying AT\&T for a license first. Due to the commercialization of Unix researchers at Bell Laboratories were no longer able to foster community research. Although community research still continued, just through a different avenue; the Berkeley Computer Research Group, which could further coordinate and produce Unix releases1).
+As you may or may not know, BSD stands for Berkeley Software Distribution. “The University of California at Berkeley obtained a copy of Unix from Bell Labs in 1974. Over the following four years, Bell Labs and Berkeley enjoyed a strong collaborative relationship which helped UNIX to flourish”\cite{david}. This collaboration branched out into different systems built on the Unix Architecture, the one of interest here being BSD. 
+\begin{figure}[h]
+	\center
+	\includegraphics[width=250pt]{assets/Unix_Architecture.jpg}
+	\caption{UNIX Layered Architecture Style}
+\end{figure}
+This system was shared around the world while also carrying the requirement of paying AT\&T for a license first. Due to the commercialization of Unix researchers at Bell Laboratories were no longer able to foster community research. Although community research still continued, just through a different avenue; the Berkeley Computer Research Group, which could further coordinate and produce Unix releases1\cite{david}.
 CSRG was able to make big contributions to UNIX, the major one being implementation of ARPANet protocols (TCP/IP). This implementation has been used long after as the basis for TCP/IP implementation which shows its significance.
 Although this was under the licensing fee of AT\&T (\$50000), this caused many to request for the networking code and utilities to be provided under free licensing terms. Which led to the Networking Release 1. Keith Bostic brought up the idea of another release with even more BSD code, which would take a huge workload to rewrite many lines of code. This pushed him to make a very innovative move which set the standard for open source software, he enrolled developers across the world to contribute to this release, and in return they would be commended with name for their work on the project. This work resulted in Networking Release 2.
-After this release different groups of development split into different branches all prioritizing different things. One group “initially focused continued development exclusively on the Intel x86 platform” (1) as well as inexpensive CD-ROM distribution and ease of installation became the most widely used BSD, this is FreeBSD.
+After this release different groups of development split into different branches all prioritizing different things. One group “initially focused continued development exclusively on the Intel x86 platform” \cite{david} as well as inexpensive CD-ROM distribution and ease of installation became the most widely used BSD, this is FreeBSD.
 
 \subsubsection{Releases}
 Being an open-source platform, FreeBSD develops as a result of contributions from both its users and its developers. Collaboration is critical to its evolution, which focuses on creating new features, optimizing performance, and introducing additional layers of protection. Developers and users must first identify new system requirements and develop solutions for them in order to start the evolution process. The best suggestions are then chosen for execution after being discussed and assessed by the community.
 
-Significant releases over the years have advanced the development of the FreeBSD system. Some of the most significant releases that demonstrate the system's evolution through time are the topic of this study.
-The release of FreeBSD 4.0 was a pivotal moment in the system's development. A new package management system was added to the FreeBSD operating system with this version, greatly simplifying the process for users to install and manage packages. Additionally, FreeBSD 4.0 provided significant performance improvements and improved support for modern hardware, making it a more efficient and dependable platform for both residential and commercial use.
-FreeBSD 5.0, published in 2004, was the first stable release that represented the system's growth. With the introduction of this release, the system started adding support for advanced multiprocessors, thread support, and the sparc64 and ia64 platforms. The most important new features were support for hardware virtualization, a new security architecture, and support for more sophisticated file systems like ZFS. These features were among the numerous new features that were added. Additionally, by streamlining the network stack and enhancing the operating system's virtual memory capabilities, this new version enhanced operating system performance.
-Another key release in the development of the system was FreeBSD 7.0. This update improved the system by enhancing data protection features. This edition also saw the introduction of the ZFS file system, which helped users manage and safeguard their data. It is now much simpler for users to run many virtual machines on a single host thanks to better support for multi-core CPUs and hardware virtualization.
+Significant releases over the years have advanced the development of the FreeBSD system. Some of the most significant releases that demonstrate the system's evolution through time are the topic of this study.\\\\
+The release of FreeBSD 4.0 was a pivotal moment in the system's development. A new package management system was added to the FreeBSD operating system with this version, greatly simplifying the process for users to install and manage packages. Additionally, FreeBSD 4.0 provided significant performance improvements and improved support for modern hardware, making it a more efficient and dependable platform for both residential and commercial use.\\
 
+FreeBSD 5.0, published in 2004, was the first stable release that represented the system's growth. With the introduction of this release, the system started adding support for advanced multiprocessors, thread support, and the sparc64 and ia64 platforms. The most important new features were support for hardware virtualization, a new security architecture, and support for more sophisticated file systems like ZFS. These features were among the numerous new features that were added. Additionally, by streamlining the network stack and enhancing the operating system's virtual memory capabilities, this new version enhanced operating system performance.\\\\
+Another key release in the development of the system was FreeBSD 7.0. This update improved the system by enhancing data protection features. This edition also saw the introduction of the ZFS file system, which helped users manage and safeguard their data. It is now much simpler for users to run many virtual machines on a single host thanks to better support for multi-core CPUs and hardware virtualization.\\
+\begin{figure}[h]
+	\center
+	\includegraphics[width=350pt]{assets/release_graph.png}
+	\caption{FreeBSD stable release growth \cite{Bieman}}
+\end{figure}
 
 FreeBSD 11.0 brought changes to the systems networked capabilities an further evolved the system into one that could cater to most of its users needs. This release brought major updates to the system network stack. This greatly increased the performance and scalability of the system. In addition VIMAGE virtual networking system was introduced and more improvements were made to ZFS support bringing further security enhancements to its users for data protection.
 To summarize, the evolution of FreeBSD over the years has been shaped by a series of key releases that have brought new features, improved performance, and increased dependability to the operating system. With the help of these updates, FreeBSD has evolved from a simple Unix-like operating system into a strong platform that can accommodate a variety of uses and applications.
@@ -272,8 +283,8 @@ Beneath the Core Team, we have the Project Leads. These are individuals who are 
 At the bottom of the hierarchy, we have the Contributors. These are individuals who have contributed to the project, such as submitting a bug report, writing documentation, or writing code. They play an important role in the development of the operating system, but they don't have the same level of decision-making authority as the other members of the hierarchy.
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width = 250pt]{assets/Project_Hierarchy/Project-Structure.png}
-	\caption{Project Hierarchy of FreeBSD \cite{dev-model}}
+	\includegraphics[width = 350pt]{assets/Project_Hierarchy/Project-Structure.png}
+	\caption{Project Hierarchy of FreeBSD\cite{dev-model}}
 \end{figure}
 
 
@@ -312,13 +323,33 @@ doesn't come with applications such as browsers or networking tools such as \cod
 \lipsum[1]
 
 \section{Data Dictionary}
-\lipsum[1]
+\begin{itemize}
+	\item{brk: FreeBSD program for handling the volume of memory allocation}
+	\item{malloc: A function for allocating uninitialized memory in the kernel space}
+           \item{init: FreeBSD program for handling system (de)initialization}
+           \item{rc: FreeBSD program for (de)initializing programs on startup and shutdown}
+           \item{getty: FreeBSD program to set terminal modeiafjoijfdio}
+\end{itemize}
 
 \section{Naming Conventions}
-\lipsum[1]
+\begin{itemize}
+	\item{BIOS: Basic input/output system }
+	\item{ROM: Read-only memory)}
+           \item{IPC: Inter-process communication}
+           \item{TCP: Transmission control protocol}
+           \item{IP: Internet protocol}
+	\item{ZFS: Zettabyte file system}
+	\item{DMA: Direct Memory Access}
+           \item{VM: Virtual Memory}
+           \item{POST: Power on Self Test}
+           \item{MBR: Master Boot Record}
+   	 \item{BTX: Boot Extender}
+	\item{PID: Process ID )}
+	\item{CSRG: Berkeley Computer Research Group)}
+\end{itemize}
 
 \section{Conclusion}
-\lipsum[1]
+In conclusion, FreeBSD is an Open Source Operating System that can be used effectively in many diverse situations without any licensing fees and liberal copyright terms, which is what it was intended to do when it was first created. This community build distribution shows the strength of open source development because of its features, performance, and wide use in the industry. Commonly used for networking because of its reliability leading to less time fixing problems and rebooting servers (widely used for TCP/IP stack). Its wide hardware support also helps to make FreeBSD usable in more situations. We have completed our investigation into the conceptual architectural architecture of FreeBSD and found how the components interact with and depend on each other. What we have found has shown us why this distribution is actually used widely in the industry even though it is an open source operating system. We first looked at the top -down structure and functionality of the entire operating system, showing the main dependencies of the components of the system. Then found some notable advantages in the architecture compared to other operating systems in the Control and Concurrency such as the Zettabyte File System and the SMPng Architecture. 
 
 \section{Lessons Learned}
 \lipsum[1]
@@ -333,5 +364,7 @@ doesn't come with applications such as browsers or networking tools such as \cod
 	\bibitem{login} "FreeBSD Manual Pages." Login(1), https://man.freebsd.org/cgi/man.cgi?login\%281\%29.
 	\bibitem{design} McKusick, Marshall Kirk, et al. The Design and Implementation of the Freebsd Operating System, 2nd Edition = FreeBSD Cao Zuo Xi Tong She Ji Yu Shi Xian, Di 2 Ban. Ren Min You Dian Chu Ban She, 2016.
 	\bibitem{watson} Watson, R. "[PDF] Introduction to Multithreading and Multiprocessing in the Freebsd SMPNG Network Stack: Semantic Scholar." [PDF]  Introduction to Multithreading and Multiprocessing in the FreeBSD SMPng Network Stack | Semantic Scholar, 1 Jan. 1970, https://www.semanticscholar.org/paper/Introduction-to-Multithreading-and-Multiprocessing-Watson/088630aae6b4622e4175f58045cde69159d9eff5.
+	\bibitem{Bieman}Izurieta, Clemente, and James Bieman. “The Evolution of Freebsd and Linux: Proceedings of the 2006 ACM/IEEE International Symposium on Empirical Software Engineering.” ACM Conferences, Association for Computing Machinery, 21 Sept. 2006, https://dl.acm.org/doi/10.1145/1159733.1159765. 
+	\bibitem{david}Bretthauer, David. “Open Source Software: A History.” OpenCommons@UConn, Published Works, 2001, https://opencommons.uconn.edu/librpubs/7/. 
 \end{thebibliography}
 \end{document}
