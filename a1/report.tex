@@ -229,11 +229,11 @@ As we all know, the filesystem is an integral part of all kinds of operating sys
 Terminal handling is another essential part of the operating system. Shells are a common way to interface with the underlying operating system through an external interface given input from the user. As a result, it needs to interact with all other parts controlled directly by users, including the generic system interface, basic system facilities and inter-process communication.
 
 
-Inter-process communication allows different processes to communicate and interact. As mentioned, it gets a command from the terminal handling part and helps kernel facilities, memory management, and the filesystem. At the same time, network communication is also a process, so it needs to interact with inter-process communication. As a result some processes need to be able to keep track of the state of other processes. FreeBSD's process management system uses the observer pattern to manage notify other process of a processes state.
+Inter-process communication allows different processes to communicate and interact. As mentioned, it gets a command from the terminal handling part and helps kernel facilities, memory management, and the filesystem. At the same time, network communication is also a process, so it needs to interact with inter-process communication. As a result some processes need to be able to keep track of the state of other processes. FreeBSD's process management system uses the observer pattern to notify other processes of a processes state.
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width = 300pt]{assets/state_diagrams/process-state.pdf}
-	\caption{FreeBSD process creation state}
+	\caption{FreeBSD process creation state \cite{design}}
 \end{figure}
 
 Network communication is part of FreeBSD, which is responsible for the internet, which is why we can communicate with each other through the internet. This part gets input from inter-process communication, basic system facilities and the filesystem. After that, it posts output to the security part first to ensure the data received are harmless.
@@ -242,7 +242,7 @@ FreeBSD offers advanced networking, performance, security and compatibility feat
 (focusing on access control), memory-management support, generic system interfaces (I/O, control and multiplexing operations), file systems, terminal handling, inter-process communication facilities and network communication.
 
 The first is the kernel facilities which include timer and system-clock handling, descriptor management, and process management. Since process management is essential for most kernel layer activities, it will interact with many other parts. The first part it will interact with
-is security which is also the access control component. Access control is the process where the user's identity is authenticated. The kernel is a crucial component and as a result, FreeBSD is designed to make architecture of this component simpler. FreeBSD uses \code{Kobj} (Kernel Objects) to provide and Object Oriented Programming (OOP) support with the C language for the kernel.
+is security which is also the access control component. Access control is the process where the user's identity is authenticated. The kernel is a crucial component and as a result, FreeBSD is designed to make architecture of this component simpler. FreeBSD uses \code{Kobj} (Kernel Objects) to provide and Object Oriented Programming (OOP) support with the C language for the kernel \cite{kobj}.
 
 The second part is memory management. The process will be saved in the memory, but the memory is also the process of controlling a
 computer's main memory. The third and fourth parts are inter-process communication and file systems. Both parts will depend on the process management to start and end their
@@ -256,7 +256,7 @@ Memory management is the main component that stores the process, user identifica
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width = 390pt]{assets/other_diagrams/dependency-structure.png}
-	\caption{FreeBSD dependency diagram}
+	\caption{FreeBSD dependency diagram \cite{design}}
 \end{figure}
 
 \subsection{Control \& Data Flow}
@@ -273,7 +273,7 @@ We can find a lot of components that the system's memory manager handles. One of
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width = 550pt]{assets/system_diagrams/kernel-organization.pdf}
-	\caption{FreeBSD control \& data flow between major layers}
+	\caption{FreeBSD control \& data flow between major layers \cite{design}}
 \end{figure}
 \clearpage
 
@@ -403,6 +403,7 @@ The architecture of FreeBSD, a Unix-based operating system, is a prime example o
 \begin{thebibliography}{00}
 	\bibitem{david}Bretthauer, David. "Open Source Software: A History." OpenCommons@UConn, Published Works, 2001, https://opencommons.uconn.edu/librpubs/7/.
 	\bibitem{brooks} Brooks, Frederick P. The Mythical Man-Month: Essays on Software Engineering. Anniversary Edition (2nd ed.). Addison-Wesley Pub Co, 1995.
+	\bibitem{kobj} "Chapter 3. Kernel Objects." FreeBSD Documentation Portal, https://docs.freebsd.org/en/books/arch-handbook/smp/.
 	\bibitem{smpng} "Chapter 8. SMPNG Design Document." FreeBSD Documentation Portal, https://docs.freebsd.org/en/books/arch-handbook/smp/.
 	\bibitem{bootprocess} "Chapter 14. the Freebsd Booting Process." FreeBSD Documentation Portal, https://docs.freebsd.org/en/books/handbook/boot.
 	\bibitem{dev-model} "FreeBSD Books." dev-model, https://docs.freebsd.org/en/books/dev-model/

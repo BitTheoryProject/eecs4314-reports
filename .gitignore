@@ -23,7 +23,7 @@
 *.mtc1
 *.out
 *.toc
-*/report.syntex
+*report.syntex
 a1/report.pdf
 a2/report.pdf
 a3/report.pdf
