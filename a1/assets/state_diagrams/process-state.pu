@@ -20,5 +20,4 @@ zombie: zombie process
 zombie -r[dashed]-> end
 end -r-> [*]
 start -[dashed]-> end : wait
-
 @enduml

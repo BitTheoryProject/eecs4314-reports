@@ -24,7 +24,7 @@ wbsDiagram {
 *** credential
 *** VM Space
 **** region list
-*** file descripters
+*** file descriptors
 **** file entries
 *** resource limits
 *** system call vectors 

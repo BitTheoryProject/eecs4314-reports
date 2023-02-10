@@ -4,7 +4,6 @@ header EECS 4314 FreeBSD Analysis - BitTheory
 
 skinparam {
   ArrowColor #B70000
-
   ActorBackgroundColor #F8CDCC
   ActorBorderColor #B70000
 

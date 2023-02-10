@@ -14,7 +14,6 @@ rectangle {
 }
 </style>
 
-
 component "kernel space" as ks #e1e1e1 {
   folder "system calls" as sc #ffffff {
     [headers] #F8CDCC
