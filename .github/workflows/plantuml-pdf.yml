@@ -1,0 +1,34 @@
+name: generate plantuml
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "**.pu"
+      - "**.puml"
+jobs:
+  generate_plantuml:
+    runs-on: ubuntu-latest
+    name: plantuml
+    steps:
+    - uses: actions/checkout@v2
+    - name: convert plantuml to svg
+      id: plantuml
+      uses: grassedge/generate-plantuml-action@v1.5
+      with:
+        path: .
+        message: "PlantUML to SVG conversion"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v2
+    - name: convert svg to pdf
+      run: |
+        git pull
+        sudo add-apt-repository universe
+        sudo add-apt-repository ppa:inkscape.dev/stable
+        sudo apt-get update
+        sudo apt install inkscape
+        find . -name '*.svg' -exec inkscape --export-type=pdf {} +
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: PlantUML to PDF conversion

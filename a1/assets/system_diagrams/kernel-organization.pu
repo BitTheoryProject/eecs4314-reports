@@ -1,0 +1,84 @@
+@startuml
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+  arrowcolor #B70000
+  linetype ortho
+}
+
+<style>
+rectangle {
+    backgroundcolor white
+    shadowing 0
+    linecolor transparent
+}
+</style>
+
+
+component "kernel space" as ks #e1e1e1 {
+  folder "system calls" as sc #ffffff {
+    [headers] #F8CDCC
+    [initialization] #F8CDCC
+    [kernel facilities] #F8CDCC
+    [generic interfaces] #F8CDCC
+    [interprocess communication] #F8CDCC
+    [terminal handling] #F8CDCC
+    [virtual memory] #F8CDCC
+    [vnode management] #F8CDCC
+    [fast filesystem] #F8CDCC
+    [misc filesystem] #F8CDCC
+    [network filesystem] #F8CDCC
+    [netgraph] #F8CDCC
+    [ipv4] #F8CDCC
+    [ipv6] #F8CDCC
+    [wireless] #F8CDCC
+    [packet filter] #F8CDCC
+    [IPsec] #F8CDCC
+    [cryptography] #F8CDCC
+    [security] #F8CDCC
+    [geometry layer] #F8CDCC
+    [common access method layer] #F8CDCC
+    [peripheral component interconnect] #F8CDCC
+  }
+}
+
+component "user space" as us #e1e1e1 {
+  frame "session" as ps #ffffff {
+  frame "process group" as pf { 
+  circle "parent" as p1 #F8CDCC
+  circle "child1" as p2 #F8CDCC
+  circle "child2" as p3 #F8CDCC
+  circle "child3" as p4 #F8CDCC
+  circle "child4" as p5 #F8CDCC
+  circle "child5" as p6 #F8CDCC
+
+  p1 -d-> p2
+  p1 -d-> p3
+  p1 -d-> p4
+  p1 -d-> p5
+  p1 -d-> p6
+  }
+  rectangle "..." as pr
+
+  pr -u[hidden]-> pf
+  }
+}
+
+component "hardware" as hw {
+  [cpu] #F8CDCC
+  [moniter] #F8CDCC
+  [mouse] #F8CDCC
+  [disks] #F8CDCC
+  [keyboard] #F8CDCC
+  [network links] #F8CDCC
+  rectangle "..." as hr
+  [mouse] -u[hidden]-> hr
+}
+
+
+
+ks -l-> us
+ks <-r- us
+ks <-l- hw
+ks -r-> hw
+@enduml

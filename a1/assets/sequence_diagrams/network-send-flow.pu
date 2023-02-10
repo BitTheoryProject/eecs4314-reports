@@ -1,0 +1,116 @@
+@startuml
+title FreeBSD HTTP Request Lifecycle 
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+  ArrowColor #B70000
+
+  ActorBackgroundColor #F8CDCC
+  ActorBorderColor #B70000
+
+  NoteBackgroundColor #F8CDCC
+  NoteBorderColor #B70000
+
+  ParticipantBackgroundColor #F8CDCC
+  ParticipantBorderColor #B70000
+  
+  NoteBackgroundColor #F8CDCC
+  NoteBorderColor #B70000
+
+  DatabaseBackgroundColor #F8CDCC
+  DatabaseBorderColor #B70000
+}
+
+box "User space" #ffffff
+  Actor Sender as s
+  participant "Browser" as br
+  participant "Socket API" as sa
+end box
+
+box "Transport layer" #ffffff
+participant TCP
+participant UDP
+end box
+
+box "Network layer" #ffffff
+participant IP
+participant "Network Interface" as ni
+end box
+
+box "Link layer" #ffffff
+participant "Device driver" as dd
+end box
+
+s -> br : GET https://google.com
+activate br
+br -> sa : socket()
+sa --> br : new socket
+br -> sa : connect()
+br -> sa : send(data)
+deactivate br
+
+alt #F8E4E4 HTTP, FTP, SMPT, NFS
+  sa -> TCP : sosend()
+  activate TCP
+else DNS, TFTP
+  sa -> UDP : sosend()
+  activate UDP
+end
+
+alt #F8E4E4 so_snd_full
+  loop #F8E4E4 until so_snd not full 
+    TCP -> TCP : sbwait()
+    activate TCP
+    deactivate TCP
+  end 
+else so_snd not full
+  TCP -> TCP : sowwakeup()
+  activate TCP
+  deactivate TCP
+  TCP -> TCP : pru_send()
+  activate TCP
+  deactivate TCP
+end
+
+TCP -> IP : tcp_output()
+deactivate TCP
+UDP -> UDP : pru_send()
+activate UDP
+deactivate UDP
+UDP -> IP : udp_output()
+deactivate UDP
+
+activate IP
+IP -> IP : insert IP options
+IP -> IP : fill in header fields
+IP -> IP : determine the route (i.e outgoing interface)
+IP -> IP : if multicast addres, get outgoing interface and hop count
+IP -> IP : if brodcast address, check if brodcast is allowed
+IP -> IP : IPSec (i.e any encryption or security)
+IP -> IP : check filtering rules
+alt packet is smaller than maxpacket size
+  IP -> IP : calculate checksum and continue
+else packet is larger than maxpacket size
+  IP -> IP : fragment to smaller chunks and send each
+end
+
+IP -> ni : ip_output()
+note right : Once the packet is confirmed to go to\nthe correct destination, it is passed along \nto the NIC to be transmitted.\n
+deactivate IP
+ni -> dd : if_output()
+deactivate ni
+activate dd
+dd -> dd : if_start()
+activate dd
+
+loop #F8E4E4 ifq not full
+  dd -> dd : ifq_dequeue
+  activate dd
+  deactivate dd
+  dd -> dd : NIC DMA
+  activate dd
+  deactivate dd
+  deactivate dd
+end
+dd --> br : NIC IRQ. After the request has been transmitted, the NIC sends an interrupt request
+@enduml

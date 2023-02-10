@@ -1,0 +1,24 @@
+@startuml
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam state {
+  ArrowColor #B70000
+  BorderColor #000000
+  FontName Impact
+  BackgroundColor #e1e1e1
+}
+
+[*] -r-> start
+start: parent process
+end: parent process
+start -r-> fork : fork
+fork: child process
+fork -r-> execve : execve
+execve: child process
+execve -r-> zombie : exit
+zombie: zombie process
+zombie -r[dashed]-> end
+end -r-> [*]
+start -[dashed]-> end : wait
+
+@enduml
