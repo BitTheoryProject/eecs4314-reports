@@ -11,6 +11,6 @@
 # Instructions to Visualize dependency
 
 1. run `perl script/csv-to-ta.pl ./freebsd_FileDependencies.csv` (convert csv to raw.ta)
-2. run `perl script/gen-containment.pl ./freebsd_FileDependencies.raw.ta ./freebsd_IPC.contain ./freebsd/` with options (create contain file)
+2. run `perl script/gen-containment.pl ./freebsd_FileDependencies.raw.ta ./freebsd_IPC.contain ./freebsd/` (create contain file)
 3. run `script/final-containment.sh -c freebsd_IPC.contain -t freebsd_FileDependencies.raw.ta -n freebsd_IPC -j lib/ql.jar` (create final ls.ta file)
 4. run `script/ls-edit.sh -f ./freebsd_IPC.con.ta -j lib/lseditor-7.3.13.jar` (visualize file dependency with containment structure)
