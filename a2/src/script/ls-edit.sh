@@ -89,4 +89,4 @@ if [[ -z "$jar" ]]; then
     errorMessage "Missing option 'jar'" 2 1
 fi
 
-java -Xms5g -Xmx20g -jar $jar -v -d $file
+java -Xms1g -Xmx3g -jar $jar -v -d $file
