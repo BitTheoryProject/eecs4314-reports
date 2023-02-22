@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 use Data::Dumper;
+use List::Util qw(first);
+
 
 # todo: build out subsystems more accuratly, FreeBSD is structured with standard naming 
 # practices so it's possible to build the subsystems from the existing modules.
@@ -34,9 +36,53 @@ my $s = "/";
 # ${s}sys${s}kern${s}sys* -> match system kernel files
 # ${s}sys${s}kern${s}uipc* -> match kernel ipc files
 my $subsystems = {
-    "SYS.ss" => [
-        ["glob", "sys${s}**${s}*"],
-    ],
+    "IPC.ss" => {
+            "SYSTEMV.ss" => [
+                ["exact", "sys${s}kern${s}sysv_msg.c"],
+                ["exact", "sys${s}kern${s}sysv_sem.c"],
+                ["exact", "sys${s}kern${s}sysv_shm.c"],
+                ["exact", "sys${s}kern${s}sysv_ipc.c"],
+            ],
+            "POSIX.ss" => [
+                ["exact", "sys${s}kern${s}posix4_mib.c"],
+            ],
+            "MQUEUE.ss" => [
+                ["exact", "sys${s}kern${s}uipc_mqueue.c"],
+            ],
+            "KQUEUE.ss" => [
+                ["exact", "sys${s}kern${s}kern_event.c"],
+                ["exact", "sys${s}kern${s}kern_kqueue.c"],
+            ],
+            "PTY.ss" => [
+                ["exact", "sys${s}kern${s}tty_pty.c"],
+                ["exact", "sys${s}kern${s}tty_tty.c"],
+            ],
+            "SIGNAL.ss" => [
+                ["exact", "sys${s}kern${s}kern_sig.c"],
+                ["exact", "sys${s}kern${s}kern_sigqueue.c"],
+            ],
+            "SOCKET.ss" => [
+                ["exact", "sys${s}kern${s}uipc_domain.c"],
+                ["exact", "sys${s}kern${s}uipc_mbuf.c"],
+                ["exact", "sys${s}kern${s}uipc_socket.c"],
+                ["exact", "sys${s}kern${s}uipc_socket2.c"],
+            ],
+            "PROCESS_MANAGEMENT.ss" => [
+                ["exact", "sys${s}kern${s}kern_exit.c"],
+                ["exact", "sys${s}kern${s}kern_fork.c"],
+                ["exact", "sys${s}kern${s}kern_kthread.c"],
+                ["exact", "sys${s}kern${s}kern_resource.c"],
+                ["exact", "sys${s}kern${s}kern_sched.c"],
+                ["exact", "sys${s}kern${s}kern_synch.c"],
+            ],
+        },
+        "KERNEL.ss" => [
+            ["exact", "sys${s}kern${s}sys_pipe.c"],
+            ["exact", "sys${s}kern${s}sys_procdesc.c"],
+            ["exact", "sys${s}kern${s}sys_process.c"],
+            ["exact", "sys${s}kern${s}sys_socket.c"],
+            ["exact", "sys${s}kern${s}syscalls.c"],
+        ],
 };
 
 # Parse args
@@ -95,21 +141,19 @@ sub print_subsystem {
                     }
                 } elsif ($type eq "regex") {
                     # match pattern using regex
-                    if ($file =~ /$pattern/) {
-                        $fn->($subsystem, "$file");
-                    } 
-                    else {
+                    my $match = first { $_ =~ $pattern } @dependencies;
+
+                    if ($match) {
+                        $fn->($subsystem, "$match");
+                    } else {
                         # push @rootlevel, "contain $root $file";  
                     }
                 } elsif ($type eq "exact") {
                     # match pattern exactly
-                    for my $file (@dependencies) {
-                        if ($file eq $pattern) {
-                            $fn->($subsystem, "$root${s}$file");
-                        } 
-                        else {
-                            # push @rootlevel, "contain $root $file";  
-                        }
+                    if (grep { $_ eq "$root${s}$pattern" } @dependencies) {
+                        $fn->($subsystem, "$root${s}$pattern");
+                    } else {
+                        # push @rootlevel, "contain $root $file";  
                     }
                 } else {
                     die("Invalid pattern type: $type");

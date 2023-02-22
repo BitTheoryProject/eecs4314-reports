@@ -10,9 +10,9 @@ with open('./freebsd_IPC.ls.ta') as file, open('./res.txt', 'w') as newFile:
     for line in file:
         # get file path from line
         shouldAdd = True
-        res = re.search(r" (.*/[^/]*) (.*/[^/]*)", line)
+        res = re.search(r"^(cLinks|\$INSTANCE)\s+(.*) (.*)\r?\n?$", line)
         if res:
-            p1, p2 = res.groups()
+            type, p1, p2 = res.groups()
             if p1 in toRemove or p2 in toRemove:
                 shouldAdd = False
         if shouldAdd:
