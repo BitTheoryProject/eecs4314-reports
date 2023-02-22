@@ -109,5 +109,4 @@ if [[ -z "$jar" ]]; then
     errorMessage "Missing option 'jar'" 2 1
 fi
 
-java -Xms256M -Xmx1024M -classpath $jar ca.uwaterloo.cs.ql.Main addcontain.ql $contain $ta $name.con.ta
-cat schema.asv.ta $name.con.ta > $name.ls.ta
+java -Xms1g -Xmx3g -classpath $jar ca.uwaterloo.cs.ql.Main addcontain.ql $contain $ta $name.con.ta && cat schema.asv.ta $name.con.ta > $name.ls.ta
