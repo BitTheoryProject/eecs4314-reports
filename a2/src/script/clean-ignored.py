@@ -31,7 +31,8 @@ with open(ta_file) as file, open(res_file, 'w') as res:
         if append:
             res.write(line)
 
-with open(res_file) as res, open(ta_file, 'w') as file:
-    for line in res:
-        file.write(line)   
-    os.remove(res_file)
+if overwrite:
+    with open(res_file) as res, open(ta_file, 'w') as file:
+        for line in res:
+            file.write(line)   
+        os.remove(res_file)
