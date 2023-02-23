@@ -1,0 +1,45 @@
+{
+  "IPC.ss": {
+    "KQUEUE.ss": [
+      ["exact", "sys/kern/kern_event.c"],
+      ["exact", "sys/kern/kern_kqueue.c"]
+    ],
+    "PTY.ss": [
+      ["exact", "sys/kern/tty_pty.c"],
+      ["exact", "sys/kern/tty_tty.c"]
+    ],
+    "SIGNAL.ss": [
+      ["exact", "sys/kern/kern_sig.c"],
+      ["exact", "sys/kern/kern_sigqueue.c"]
+    ],
+    "SOCKET.ss": [
+      ["exact", "sys/kern/uipc_domain.c"],
+      ["exact", "sys/kern/uipc_mbuf.c"],
+      ["exact", "sys/kern/uipc_socket.c"],
+      ["exact", "sys/kern/uipc_socket2.c"]
+    ],
+    "SYSTEMV.ss": [
+      ["exact", "sys/kern/sysv_msg.c"],
+      ["exact", "sys/kern/sysv_sem.c"],
+      ["exact", "sys/kern/sysv_shm.c"],
+      ["exact", "sys/kern/sysv_ipc.c"]
+    ],
+    "POSIX.ss": [["exact", "sys/kern/posix4_mib.c"]],
+    "MQUEUE.ss": [["exact", "sys/kern/uipc_mqueue.c"]],
+    "PROCESS_MANAGEMENT.ss": [
+      ["exact", "sys/kern/kern_exit.c"],
+      ["exact", "sys/kern/kern_fork.c"],
+      ["exact", "sys/kern/kern_kthread.c"],
+      ["exact", "sys/kern/kern_resource.c"],
+      ["exact", "sys/kern/kern_sched.c"],
+      ["exact", "sys/kern/kern_synch.c"]
+    ]
+  },
+  "KERNEL.ss": [
+    ["exact", "sys/kern/sys_pipe.c"],
+    ["exact", "sys/kern/sys_procdesc.c"],
+    ["exact", "sys/kern/sys_process.c"],
+    ["exact", "sys/kern/sys_socket.c"],
+    ["exact", "sys/kern/syscalls.c"]
+  ]
+}

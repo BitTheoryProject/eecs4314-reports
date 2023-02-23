@@ -1,5 +1,4 @@
-ignored.txt
-res.txt
 freebsd_FileDependencies.csv
 freebsd_FileDependencies.raw.ta
-freebsd_*.con.ta
+*.con.ta
+*.txt
