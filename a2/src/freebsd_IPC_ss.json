@@ -1,45 +1,23 @@
 {
-  "IPC.ss": {
-    "KQUEUE.ss": [
-      ["exact", "sys/kern/kern_event.c"],
-      ["exact", "sys/kern/kern_kqueue.c"]
+  "KERNEL.ss": {
+    "InterProcessCommunication.ss": [
+      ["glob", "sys/kern/uipc*"],
+      ["glob", "sys/kern/sysv*"]
     ],
-    "PTY.ss": [
-      ["exact", "sys/kern/tty_pty.c"],
-      ["exact", "sys/kern/tty_tty.c"]
-    ],
-    "SIGNAL.ss": [
-      ["exact", "sys/kern/kern_sig.c"],
-      ["exact", "sys/kern/kern_sigqueue.c"]
-    ],
-    "SOCKET.ss": [
-      ["exact", "sys/kern/uipc_domain.c"],
-      ["exact", "sys/kern/uipc_mbuf.c"],
-      ["exact", "sys/kern/uipc_socket.c"],
-      ["exact", "sys/kern/uipc_socket2.c"]
-    ],
-    "SYSTEMV.ss": [
-      ["exact", "sys/kern/sysv_msg.c"],
-      ["exact", "sys/kern/sysv_sem.c"],
-      ["exact", "sys/kern/sysv_shm.c"],
-      ["exact", "sys/kern/sysv_ipc.c"]
-    ],
-    "POSIX.ss": [["exact", "sys/kern/posix4_mib.c"]],
-    "MQUEUE.ss": [["exact", "sys/kern/uipc_mqueue.c"]],
-    "PROCESS_MANAGEMENT.ss": [
-      ["exact", "sys/kern/kern_exit.c"],
-      ["exact", "sys/kern/kern_fork.c"],
-      ["exact", "sys/kern/kern_kthread.c"],
-      ["exact", "sys/kern/kern_resource.c"],
-      ["exact", "sys/kern/kern_sched.c"],
-      ["exact", "sys/kern/kern_synch.c"]
-    ]
-  },
-  "KERNEL.ss": [
-    ["exact", "sys/kern/sys_pipe.c"],
-    ["exact", "sys/kern/sys_procdesc.c"],
-    ["exact", "sys/kern/sys_process.c"],
-    ["exact", "sys/kern/sys_socket.c"],
-    ["exact", "sys/kern/syscalls.c"]
-  ]
+    "KernelFacilities.ss": [["glob", "sys/kern/kern*"]],
+    "NetworkCommunication.ss": [["glob", "sys/net*/**/*"]],
+    "TerminalHandling": [["glob", "sys/kern/tty*"]],
+    "FileSystem.ss": {
+      "FS.ss": [["glob", "sys/fs/**/*"]],
+      "UFS.ss": [["glob", "sys/ufs/**/*"]],
+      "NFS.ss": [["glob", "sys/nfs/**/*"]],
+      "NFSCLIENT.ss": [["glob", "sys/nfsclient/**/*"]],
+      "NFSSERVIER.ss": [["glob", "sys/nfsserver/**/*"]]
+    },
+    "MemoryManagement.ss": [["glob", "sys/vm/**/*"]],
+    "GenericSystemInterface.ss": [["glob", "sys/sys/**/*"]],
+    "Security.ss": [["glob", "sys/security/**/*"]],
+    "Subroutines.ss": [["glob", "sys/kern/subr*"]],
+    "Crypto.ss": [["glob", "sys/*crypto*/**/*"]]
+  }
 }
