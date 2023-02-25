@@ -5,7 +5,7 @@ import json
 import argparse
 
 # Parse args
-parser = argparse.ArgumentParser(description='Remove the paths in ignore file from the generated <containment-file-name>.contain file')
+parser = argparse.ArgumentParser(description='Generate the <containment-file-name>.contain file')
 parser.add_argument('-t', '--ta-raw', type=str, required=True, help='The raw.ta file')
 parser.add_argument('-ss', '--subsystems', type=str, required=True, help='The raw.ta file')
 parser.add_argument('-c', '--contain', type=str, required=True, help='The containment file name')
