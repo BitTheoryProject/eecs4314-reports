@@ -1,0 +1,111 @@
+@startuml
+title FreeBSD IPC Using a Pipe
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+    ArrowColor #B70000
+
+    ActorBackgroundColor #F8CDCC
+    ActorBorderColor #B70000
+
+    NoteBackgroundColor #F8CDCC
+    NoteBorderColor #B70000
+
+    ParticipantBackgroundColor #F8CDCC
+    ParticipantBorderColor #B70000
+
+    NoteBackgroundColor #F8CDCC
+    NoteBorderColor #B70000
+
+    DatabaseBackgroundColor #F8CDCC
+    DatabaseBorderColor #B70000
+}
+
+note over shell, kernel: Note that there are many ways the shell could implement pipes, and it's implementation may vary between shells.\nThe goal of this diagram is to show how pipes work in FreeBSD, using the shell as an example parent process.
+
+actor actor
+participant "shell"
+participant "process 1"
+participant "process 2"
+participant "kernel"
+
+actor -> shell: ""app_1 | app_2""
+
+shell++
+
+shell -> shell: Finds executable for ""app_1"" & ""app_2"" (ie. in ""PATH"")
+shell -> kernel: ""pipe([fd0, fd1])"" to initialize pipe & file descriptors (fd)
+
+kernel ++
+kernel -> kernel: Sets ""fd[0]"" & ""fd[1]""
+kernel --> shell: Returns 1 to indiciate success
+kernel --
+shell -> kernel: ""fork()"" to create duplicate process
+kernel ++
+
+kernel -> "process 1" **: Create forked process (dupe of ""shell"")
+activate "process 1"
+kernel --> shell: PID of process 1
+kernel --
+shell -> kernel: ""wait()"" to wait for process 1 to exit
+shell --
+
+"process 1" -> kernel: ""close(1)"" to close stdout fd
+kernel ++
+kernel --> "process 1": Returns 1 to indicate success
+kernel --
+"process 1" -> kernel: ""dupe(fd1)"" to direct process 1 output to write side of pipe
+kernel ++
+
+note right: This is how process 1 writes\ndata to process 2
+
+kernel --> "process 1": Returns duplicate of ""fd1""
+kernel --
+"process 1" -> kernel: ""execve(app_1_path, args, env)""
+kernel ++
+kernel -> "process 1": Transforms process 1 from ""shell"" fork to ""app_1""
+kernel --
+"process 1" -> "process 1": Executes ""app_1"", passing output to ""fd1""
+"process 1" -> kernel --: ""exit()""
+kernel ++
+destroy "process 1"
+
+kernel -> shell: ""signal(SIGCHLD)"" to alert of process exiting
+kernel --
+shell ++
+
+
+shell -> kernel: ""fork()"" to create duplicate process
+
+kernel -> "process 2" **: Create forked process (dupe of ""shell"")
+activate "process 2"
+kernel --> shell: PID of process 2
+shell -> kernel: ""wait()"" to wait for process 2 to exit
+shell --
+
+
+"process 2" -> kernel: ""close(0)"" to close stdin fd
+kernel ++
+kernel --> "process 2": Returns 1 to indicate success
+kernel --
+"process 2" -> kernel: ""dupe(fd0)"" to use read side of pipe as process 2 input
+kernel ++
+note right: This is how process 2 reads\ndata from process 1
+kernel --> "process 2": Returns duplicate of ""fd0""
+kernel --
+"process 2" -> kernel: ""execve(app_2_path, args, env)""
+kernel ++
+kernel -> "process 2": Transforms process 2 from ""shell"" fork to ""app_2""
+kernel --
+"process 2" -> "process 2": Executes ""app_2"", reading input from ""fd0"",\nand outputting to stdout (default output fd)
+"process 2" -> kernel: ""exit()""
+destroy "process 2"
+kernel ++
+
+kernel -> shell: ""signal(SIGCHLD)"" to alert of process exiting
+kernel --
+shell ++
+
+shell -> actor: Prompt for next command
+shell --
+@enduml
