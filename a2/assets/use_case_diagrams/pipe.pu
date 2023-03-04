@@ -54,7 +54,7 @@ shell --
 kernel ++
 kernel --> "process 1": Returns 1 to indicate success
 kernel --
-"process 1" -> kernel: ""dupe(fd1)"" to direct process 1 output to write side of pipe
+"process 1" -> kernel: ""dup(fd1)"" to direct process 1 output to write side of pipe
 kernel ++
 
 note right: This is how process 1 writes\ndata to process 2
@@ -88,7 +88,7 @@ shell --
 kernel ++
 kernel --> "process 2": Returns 1 to indicate success
 kernel --
-"process 2" -> kernel: ""dupe(fd0)"" to use read side of pipe as process 2 input
+"process 2" -> kernel: ""dup(fd0)"" to use read side of pipe as process 2 input
 kernel ++
 note right: This is how process 2 reads\ndata from process 1
 kernel --> "process 2": Returns duplicate of ""fd0""

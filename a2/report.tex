@@ -173,7 +173,16 @@
 \lipsum[1]
 
 \section{Use Cases}
-\lipsum[1]
+\subsection{Piping In Shell}
+The following sequence diagram shows how system calls can be used to pipe the
+output of 1 application to the input of another in FreeBSD, using a shell
+as an example program.
+\begin{figure}[!htb]
+	\advance\leftskip-0.5cm
+	\includegraphics[width = 570pt]{assets/use_case_diagrams/pipe.pdf}
+	\caption{Sequence diagram showing pipes being used in the shell for IPC. \cite{pipe}\cite{fork}\cite{wait}\cite{close}\cite{dup}\cite{execve}\cite{signal}\cite{pipe-explained}}
+\end{figure}
+\clearpage
 
 \section{Data Dictionary}
 \lipsum[1]
@@ -188,6 +197,13 @@
 \lipsum[1]
 
 \begin{thebibliography}{00}
-	\bibitem{b2} Clarke, Arthur C. 2001: A Space Odyssey. New York: Roc, 1968. 297.
+	\bibitem{pipe} “FreeBSD Manual Pages.” Pipe(2), \href{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}.
+	\bibitem{fork} “FreeBSD Manual Pages.” Fork(2), \href{https://man.freebsd.org/cgi/man.cgi?fork(2)}{https://man.freebsd.org/cgi/man.cgi?fork(2)}.
+	\bibitem{wait} “FreeBSD Manual Pages.” Wait(2), \href{https://man.freebsd.org/cgi/man.cgi?wait(2)}{https://man.freebsd.org/cgi/man.cgi?wait(2)}.
+	\bibitem{close} “FreeBSD Manual Pages.” Close(2), \href{https://man.freebsd.org/cgi/man.cgi?query=close\&sektion=2}{https://man.freebsd.org/cgi/man.cgi?query=close\&sektion=2}.
+	\bibitem{dup} “FreeBSD Manual Pages.” Dup(2), \href{https://man.freebsd.org/cgi/man.cgi?query=dup\&sektion=2\&n=1}{https://man.freebsd.org/cgi/man.cgi?query=dup\&sektion=2\&n=1}.
+	\bibitem{execve} “FreeBSD Manual Pages.” Execve(2), \href{https://man.freebsd.org/cgi/man.cgi?query=execve\&sektion=2\&n=1}{https://man.freebsd.org/cgi/man.cgi?query=execve\&sektion=2\&n=1}.
+	\bibitem{signal} “FreeBSD Manual Pages.” Signal(3), \href{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}.
+	\bibitem{pipe-explained} Menon-Sen, Abhijit. “How Are Unix Pipes Implemented?” Toroid.org, 27 Mar. 2020, \href{https://toroid.org/unix-pipe-implementation}{https://toroid.org/unix-pipe-implementation}.
 \end{thebibliography}
 \end{document}
