@@ -160,17 +160,15 @@
 \section{Introduction}
 \lipsum[1]
 
-\subsection{Overview}
-\lipsum[1]
-
-\section{Architecture}
-\lipsum[1]
-
 \section{Diagrams}
 \lipsum[1]
 
-\section{External Interfaces}
-\lipsum[1]
+\section{Architecture}
+\subsection{Networking Inter-Process Communction}
+The network IPC facilities are layed on top of the networking facilities, and this heavy coupling is shown in the conceptual architecture and confirmed in the concrete architecture we derived. Data from the application is sent through the socket layer to the networking layer, and data coming in flows from the networking layer through the socket, and then into the receiving application.  State required by the socket layer is fully encapsulated within it, whereas any protocol-related state is maintained in data structures that are specific to the supporting protocols. The system-call interface routines manage the actions related to a system call, collecting parameters, and converting user data into the format expected by the socket layer routine. Socket layer routines directly manipulate socket data structures and manage the synchronization between asynchronous activities.
+
+\section{Reflextion Analysis}
+
 
 \section{Use Cases}
 \subsection{Piping In Shell}
