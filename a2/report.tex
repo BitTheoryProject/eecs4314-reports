@@ -189,10 +189,29 @@ as an example program.
 \lipsum[1]
 
 \section{Conclusion}
-\lipsum[1]
+In conclusion, the FreeBSD operating system has a powerful and flexible inter-process communication system which allows processes to communicate with each other, both through networks (Networking / Socket IPC) and within local computing environments (Single system / Local IPC). 
+
+On one hand, the Socket or networking IPC is a mechanism for communication between processes running on the same system or on different systems connected over a network. In this sense, data from the applications flows through a socket and through a networking layer. The received data, which also comes from the networking layer through the socket, then goes into the application. With sockets, not only do processes not have to run on the same machine in order to communicate between them, they do not even have to run under the same operating system.
+
+Three main types of sockets are supported by the FreeBSD operating system: (1) stream sockets, which provide a connection-oriented, sequential, reliable and bi-directional communication channel; (2) datagram sockets, which provide a message-oriented communication channel in a connectionless manner; and (3) raw sockets, which allow direct access to the low level protocols of the network layer and facilitate sending/receiving network packets.
+
+On the other hand, the single system or local IPC includes an integrated environment of semaphores, message queues, pipes and shared memory regions. Semaphores serve as a synchronisation mechanism to allow different processes to access shared memory. Message queues, however, facilitate sending and receiving messages locally in a structured way. Along with pipes, they serve as a buffer that stores messages in a First-In-First-Out (FIFO) manner. These various mechanisms provide low-level access to regions of shared memory and sending/receiving messages between multiple processes. 
+
+Overall, FreeBSD provides a variety of IPC mechanisms that allow processes to communicate and coordinate with each other efficiently, whether on the same system or across a network.
 
 \section{Lessons Learned}
-\lipsum[1]
+After studying the concrete architecture of the IPC (Inter-Process Communication) system of FreeBSD, some of the lessons learned include:
+
+- \textbf{Lesson 1:} The interprocess communication system of FreeBSD is designed to be modular, flexible and scalable, which means that different communication mechanisms between processes can be implemented. This provides a powerful IPC system  for both local and networking environments.
+
+- \textbf{Lesson 2:} As it includes mechanisms such as message queues or stream sockets, the FreeBSD’s IPC system is designed to be reliable and to ensure structured bi-directional communication amongst various local or remote processes.
+
+- \textbf{Lesson 3:} Sockets allow processes to communicate through a network, even within computers with different operating systems. They provide the means for application data to flow through the networking layer, be received by a different process on a different machine, and flow into the application of the new receiving environment. 
+
+- \textbf{Lesson 4:} Pipes are used in the shell for interprocess communication in a First-In-First-Out manner. It is a mechanism that allows process communication by sharing an unidirectional stream of data. 
+
+- \textbf{Lesson 5:} Overall, the power of the FreeBSD IPC subsystem provides structured, secure and reliable mechanisms for interprocess communication, making it a popular option being widely used in the industry.
+
 
 \begin{thebibliography}{00}
 	% Using MLA9. If there are too many references, feel free to drop my manpage references %
