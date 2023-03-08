@@ -161,6 +161,11 @@
 \lipsum[1]
 
 \section{Derivation Process}
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 390pt]{assets/derivation_diagram.png}
+	\caption{Derivation process in a diagram}
+\end{figure}
 Unlike the process of understanding conceptual architecture, which requires mainly documentation reviews, understanding concrete architecture can be more challenging and complicated as it requires source code observations. To have better understanding of FreeBSD’s concrete architecture, we followed extraction steps, and they are shown as a derivation process in a figure above.
 After downloading FreeBSD source code, we use a source code extractor (efx), Understand, which retrieves relations from the source code (e.g., control and data flow dependencies, relations among function calls). Here, we obtain a file, freebsd\_FileDependencies.csv which has been produced by Understand. By running a Perl command to convert the csv file into a raw.ta file using csv-to-ta.pl, software, called jGrok, figures out their subsystem relations. After filtering dependencies by running clean\_ignored.py, a graphical landscape editor, LSEdit, takes a role of visualizations for the extracted relations. Our task here is to manually observe those visualized diagrams in ls-edit.sh, and decompose subsystems hierarchically and pass the decomposed architectural structure to jGrok. We repeat these processes until we reach the point where the subsystem structure is understood in clear and detailed manners.
 
