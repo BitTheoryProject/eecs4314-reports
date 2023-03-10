@@ -1,0 +1,19 @@
+{
+  "BIN.ss": [["glob", "bin/**/*"]],
+  "CDDL.ss": [["glob", "cddl/**/*"]],
+  "CONTRIB.ss": [["glob", "contrib/**/*"]],
+  "CRYPTO.ss": [["glob", "crypto/**/*"]],
+  "GNU.ss": [["glob", "gnu/**/*"]],
+  "INCLUDE.ss": [["glob", "include/**/*"]],
+  "KERBEROS5.ss": [["glob", "kerberos5/**/*"]],
+  "LIB.ss": [["glob", "lib/**/*"]],
+  "LIBEXEC.ss": [["glob", "libexec/**/*"]],
+  "SBIN.ss": [["glob", "sbin/**/*"]],
+  "SECURE.ss": [["glob", "secure/**/*"]],
+  "STAND.ss": [["glob", "stand/**/*"]],
+  "SYS.ss": [["glob", "sys/**/*"]],
+  "TESTS.ss": [["glob", "tests/**/*"]],
+  "TOOLS.ss": [["glob", "tools/**/*"]],
+  "USR.BIN.ss": [["glob", "usr.bin/**/*"]],
+  "USR.SBIN.ss": [["glob", "usr.sbin/**/*"]]
+}
