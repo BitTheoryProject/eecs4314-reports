@@ -261,7 +261,37 @@ Pipes come from the \code{POSIX} standard, and are a common way to set up an int
 
 In \code{POSIX}, \code{pipe()} takes an array of two integers. \code{fildes[1]} is used for writing, and \code{fildes[0]} is used for reading. In the above diagram, process B is forked from process A, and the written data from process A is fed through the pipe into process B. If it returns successfully, it writes file descriptors on each end of the pipeline. Otherwise, it returns \code{-1}.
 
+\clearpage
 \section{Reflextion Analysis}
+
+\subsection{IPC dependence on the Security Subsystem}
+Another dependency that we discovered in the process of extracting the concrete architecture is that IPC depended on the \bold{Security Subsystem}. The security subsystem in FreeBSD is responsible for enforcing security policies and mechanisism at various level of the system, including network security, user authentication, access control, and system integreity. 
+
+The IPC subsystem depends on the Security subsystem in two main ways:
+
+\subsubsection{Access Control}
+The IPC subsystem relies on the Security subsystem to enforce access control policies for IPC resources such as message queses, shared memory segments, and semaphores. The security subsystem provides mechanism such as file permessions and \bold{mandatory access control (MAC)} frameworks to restrict access to IPC resources based on user identities, level of previliege the user has and security policies. We did a study of the source code FreeBSD and found the file level dependency that explains this relation of two subsystem:
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=290pt]{assets/4Ws_2.png}
+	\caption{Source Code Sticky Note showning the dependency of IPC to Security} 
+\end{figure}
+
+Here we see that a file named uipc_socket.c depends on a header file mac_framework.h, that is part of the security subsystem. uipc_socket.c contains implementation of socket related functions. This file is responsible for creating, managing, and interacting with sockets for network communication. the reason foor the dependency to mac_framework.h is that it provides a mechanism for implementing and enforcing \bold{mando
+access control} policies. Therefore, the inclusion of mac_framework.h is essential for ensuring the security of network communcation in FreeBSD.
+
+\subsubsection{System integrity}
+It is also essential that the integrity of IPC resources are maintained and that there is no unauthorized modification or tampering. The security subsystem provides mechanisism such for logging and monitoring system activity for this purpose. The ausiting subsystem can track various types of system events, including process creation, IPC activity, and file access. We went ahead a tried to find this dependency in the source code and came across the following relation:
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=290pt]{assets/4W's_1.png}
+	\caption{Source Code Sticky Note showning the dependency of IPC to Security} 
+\end{figure}
+
+The audit.h header file provides interface for the system's auditing subsystem, which is responsible for logging and monitoring system activity for security and complaince purposes. A file names \bold{uipc_syscalls.c} that is part of IPC subsystem depends on \bold{audit.h} because it contains an important macro called \bold{AUDIT_ARG_SOCKET()}. This macro is used to capture the domain, type, and protocol arguments of \bold{socket
+()} and \bold{socketpair()} system calls. These arguments are important pieces of information for auditing network activity, as they indicate the type of socket that is being created. This way the OS gains the ability to log socket-related events to system audit trials. This allows the system administrator to monitor network activity and detect and suspicious behavior.
 
 \clearpage
 \section{Use Cases}
