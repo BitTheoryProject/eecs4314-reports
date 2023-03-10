@@ -178,6 +178,7 @@ Unlike the process of understanding conceptual architecture, which requires main
 After downloading FreeBSD source code, we use a source code extractor (\code{cfx}), Understand, which retrieves relations from the source code (e.g., control and data flow dependencies, relations among function calls). Here, we obtain a file, \code{freebsd\_FileDependencies.csv} which has been produced by Understand. By running a Perl command to convert the csv file into a \code{raw.ta} file using \code{csv-to-ta.pl}, software, called \code{jGrok}, figures out their subsystem relations. After filtering dependencies by running \code{clean-ignored}.py, a graphical landscape editor, \code{LSEdit}, takes a role of visualizations for the extracted relations. Our task here is to manually observe those visualized diagrams using \code{ls-edit.sh}, and decompose subsystems hierarchically and pass the decomposed architectural structure to \code{jGrok}. We repeat these processes until we reach the point where the subsystem structure is understood in clear and detailed manners.
 \clearpage
 \section{Results}
+\subsection{Conceptual Architecture}
 Figure 2 below is the conceptual architecture derived in assignment 1. We won't go into much detail but we will have it as reference as we analyze the concrete architecture in comparison.
 
 \begin{figure}[!htb]
@@ -185,6 +186,7 @@ Figure 2 below is the conceptual architecture derived in assignment 1. We won't 
 	\includegraphics[width = 390pt]{assets/conceptual-architecture.png}
 	\caption{Conceptual architecture of FreeBSD subsystems}
 \end{figure}
+\subsection{Concrete Architecture}
 
 The final iteration of our derivation process resulted in a concrete dependency diagram of the FreeBSD subsystems in Figure 3. Notably, we discovered several new dependencies represented by bashed red lines and unexpected bidirectional dependencies, depicted by hollow arrows. We also discovered a few removed dependencies, represented by crossed arrows. Furthermore, we identified two new subsystems, Crypto and Subroutines. To our surprise, majority of our existing dependencies in our conceptual diagram in Figure 2 stayed consistent, besides the various new divergences. Later in the report, we will analyze a few of these divergences in the IPC subsystem.
 
@@ -194,6 +196,7 @@ The final iteration of our derivation process resulted in a concrete dependency 
 	\caption{Concrete architecture of FreeBSD subsystems}
 \end{figure}
 \clearpage
+\subsection{Concrete Inter-Process Communication Architecture}
 
 The derivation process of the IPC subsystem in FreeBSD revealed a few new dependencies and subsystems. We will review some of the subsystems that IPC depends on and their functionality. The Security subsystem supports IPC, performing security audits on IPC mechanisms to ensure the system is traceable and secure \cite{audit}. The Generic System Interfaces subsystem provides the necessary data structures for implementing IPC. For example, IPC uses the message queue data structure defined in \code{sys/msg.h} and the shared memory data structure \code{sys/shm.h} to represent data for various implementations logically. The new Subroutines subsystem offers support functions for complex tasks. For instance, IPC uses system calls indirectly using \code{subr\_syscall.c} when interacting with the kernel. Additionally, IPC depends on Crypto, which indirectly utilizes its cryptography functions to provide secure communication by encrypting and decrypting messages between processes. Understanding these dependencies provides valuable insights into the workings of the complex monolithic architecture of the FreeBSD kernel.
 
@@ -202,6 +205,7 @@ The derivation process of the IPC subsystem in FreeBSD revealed a few new depend
 	\includegraphics[width = 390pt]{assets/ipc-concrete-architecture.png}
 	\caption{Concrete architecture of FreeBSD IPC subsystem}
 \end{figure}
+\subsection{Top Level Kernel Dependencies}
 
 We created a custom script, \code{count-links.py} as a part of our derivation process to see how the FreeBSD kernel depended on the top level modules. We found that the kernel depended on the top level modules \code{lib}, \code{stand}, and \code{contrib} very strongly. All these dependencies had 1k to 6K+ use cases in the kernel. The kernel depended on the \code{stand} module, where the boot loader sources reside, the most with over 10k links.
 \begin{figure}[!htb]
