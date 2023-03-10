@@ -204,7 +204,7 @@ Figure 2 below is the conceptual architecture derived in assignment 1. We won't 
 \end{figure}
 \subsection{Concrete Architecture}
 
-The final iteration of our derivation process resulted in a concrete dependency diagram of the FreeBSD subsystems in Figure 3. Notably, we discovered several new dependencies represented by bashed red lines and unexpected bidirectional dependencies, depicted by hollow arrows. We also discovered a few removed dependencies, represented by crossed arrows. Furthermore, we identified two new subsystems, Crypto and Subroutines. To our surprise, majority of our existing dependencies in our conceptual diagram in Figure 2 stayed consistent, besides the various new divergences. Later in the report, we will analyze a few of these divergences in the IPC subsystem.
+The final iteration of our derivation process resulted in a concrete dependency diagram of the FreeBSD subsystems in Figure 3. Notably, we discovered several new dependencies represented by dashed red lines and unexpected bidirectional dependencies, depicted by hollow arrows. We also discovered a few removed dependencies, represented by crossed arrows. Furthermore, we identified two new subsystems, Crypto and Subroutines. To our surprise, majority of our existing dependencies in our conceptual diagram in Figure 2 stayed consistent, besides the various new divergences. Later in the report, we will analyze a few of these divergences in the IPC subsystem.
 
 \begin{figure}[!htb]
 	\center
@@ -252,7 +252,7 @@ Previously, UNIX used the filesystem namespace to allow processes to rendezvous 
 \begin{figure}[hbt!]
 	\centering
 	\includegraphics[width=290pt]{assets/localipc1.png}
-	\caption{Comparison of APIs between System V and POSIX} \cite{mckusick}
+	\caption{Comparison of APIs between \code{System V} and \code{POSIX}} \cite{mckusick}
 \end{figure}
 
 Pipes come from the \code{POSIX} standard, and are a common way to set up an interprocess communication channel for one process to send data to another in a byte-stream. Pipes are unidirectional, meaning they can only send data from one process to another and not in reverse. Contrast this with sockets (also in the \code{POSIX} standard), where data flow is bidirectional. A group of processes, aka a job, are connected by the shell via pipes. The output of the first process is fed into the second process, then the output of the second process is fed into the third, and so on. This is often referred to as a pipeline, and is reminiscent of the pipe and filter architecture style.
@@ -266,20 +266,20 @@ Pipes come from the \code{POSIX} standard, and are a common way to set up an int
 In \code{POSIX}, \code{pipe()} takes an array of two integers. \code{fildes[1]} is used for writing, and \code{fildes[0]} is used for reading. In the above diagram, process B is forked from process A, and the written data from process A is fed through the pipe into process B. If it returns successfully, it writes file descriptors on each end of the pipeline. Otherwise, it returns \code{-1}.
 
 \section{Reflextion Analysis}
-Now to start our reflection analysis of the introduced divergences from the conceptual architecture  we will look at the dependencies from Inter-Process Communication to General System Interfaces. The General System Interfaces subsystem has a large amount of facilities and data structures used by IPC so we will only go over a couple. First, we will look at the dependency between uipc\_socket.c and jail.h. The uipc\_socket.c file implements a very large amount of socket facilities and is an extremely large file with many dependencies. The jail.h file implements the jail and prison data structures. This dependency was introduced because previously, interaction with IPv6 was not well-defined, and might be inappropriate for some environments. So what the author, rwatson, did to solve this was modify jail to limit creation of sockets to: UNIX domain sockets, TCP/IP (v4) sockets, and routing sockets. At the time of this change, this functionality was enabled by default, and toggleable using a variable in jail.h. 
+Now to start our reflection analysis of the introduced divergences from the conceptual architecture  we will look at the dependencies from Inter-Process Communication to General System Interfaces. The General System Interfaces subsystem has a large amount of facilities and data structures used by IPC so we will only go over a couple. First, we will look at the dependency between \code{uipc\_socket.c} and \code{jail.h}. The \code{uipc\_socket.c} file implements a very large amount of socket facilities and is an extremely large file with many dependencies. The \code{jail.h} file implements the jail and prison data structures. This dependency was introduced because previously, interaction with IPv6 was not well-defined, and might be inappropriate for some environments. So what the author, rwatson, did to solve this was modify jail to limit creation of sockets to: UNIX domain sockets, TCP/IP (v4) sockets, and routing sockets. At the time of this change, this functionality was enabled by default, and toggleable using a variable in \code{jail.h}.
 \clearpage
 \begin{figure}
 	\centering
 	\includegraphics[width=290pt]{assets/IPC_Jail.png}
-	\caption{InterProcessCommunication \-\> GerneralSystemInterfaces jail.h Reflection Analysis} 
+	\caption{InterProcessCommunication \-\> GerneralSystemInterfaces \code{jail.h} Reflection Analysis}
 \end{figure}
 
-This next dependency is between uipc\_socket.c and sx.h; which implements the lock data structure / facilities. To give some context, the sx in sx.h stands for shared/exclusive and shared/exclusive locks are used to protect data that are read more often than they are written. The key difference between shared/exclusive locks and regular read-write locks is that they do not implement priority propagation like mutexes and reader/writer locks to prevent priority inversions. This change was also done by rwatson and was well documented. This change was an optimization which resulted in: Marginally better performance, Better handling of contention during simultaneous socket I/O across multiple threads, and A cleaner separation between the different layers of locking in socket buffers.
+This next dependency is between \code{uipc\_socket.c} and \code{sx.h}; which implements the lock data structure / facilities. To give some context, the sx in \code{sx.h} stands for shared/exclusive and shared/exclusive locks are used to protect data that are read more often than they are written. The key difference between shared/exclusive locks and regular read-write locks is that they do not implement priority propagation like mutexes and reader/writer locks to prevent priority inversions. This change was also done by rwatson and was well documented. This change was an optimization which resulted in: Marginally better performance, Better handling of contention during simultaneous socket I/O across multiple threads, and A cleaner separation between the different layers of locking in socket buffers.
 
 \begin{figure}[hbt!]
 	\centering
 	\includegraphics[width=290pt]{assets/IPC_Sx.png}
-	\caption{InterProcessCommunication \-\> GerneralSystemInterfaces sx.h Reflection Analysis}\cite{sx}
+	\caption{InterProcessCommunication \-\> GerneralSystemInterfaces \code{sx.h} Reflection Analysis}\cite{sx}
 \end{figure}
 
 \clearpage
@@ -332,7 +332,8 @@ After studying the concrete architecture of the IPC (Inter-Process Communication
 	      \item{LSEdit: The Landscape Editor}
 	\item {CFX: Source Code Extractor}
 	\item {FIFO: First in First Out}
-	\item{SX:Shared / Exclusive}
+	      \item{SX: Shared/Exclusive}
+	      \item{I/O: Input/Output}
 \end{itemize}
 
 \begin{thebibliography}{00}
@@ -346,10 +347,10 @@ After studying the concrete architecture of the IPC (Inter-Process Communication
 	\bibitem{fork} “FreeBSD Manual Pages.” Fork(2), \href{https://man.freebsd.org/cgi/man.cgi?fork(2)}{https://man.freebsd.org/cgi/man.cgi?fork(2)}.
 	\bibitem{pipe} “FreeBSD Manual Pages.” Pipe(2), \href{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}.
 	\bibitem{signal} “FreeBSD Manual Pages.” Signal(3), \href{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}.
+	\bibitem{sx} “FreeBSD Manual Pages.” SX(9), \href{https://man.freebsd.org/cgi/man.cgi?sx(9)}{https://man.freebsd.org/cgi/man.cgi?sx(9)}.
 	\bibitem{wait} “FreeBSD Manual Pages.” Wait(2), \href{https://man.freebsd.org/cgi/man.cgi?wait(2)}{https://man.freebsd.org/cgi/man.cgi?wait(2)}.
 	\bibitem{mckusick} McKusick, Marshall Kirk. Design and Implementation of the Freebsd Operating System. 2nd ed., Addison-Wesley Professional, 2015.
 	\bibitem{pipe-explained} Menon-Sen, Abhijit. “How Are Unix Pipes Implemented?” Toroid.org, 27 Mar. 2020, \href{https://toroid.org/unix-pipe-implementation}{https://toroid.org/unix-pipe-implementation}.
 	\bibitem{rytarowski}Rytarowski, Kamil. “Mastering Unix Pipes, Part 1.” Moritz Systems, 26 Nov. 2020, \href{https://www.moritz.systems/blog/mastering-unix-pipes-part-1/}{https://www.moritz.systems/blog/mastering-unix-pipes-part-1/}.
-	\bibitem{sx} “FreeBSD Manual Pages.” SX(9), \href{https://man.freebsd.org/cgi/man.cgi?sx(9)}{https://man.freebsd.org/cgi/man.cgi?sx(9)}.
 \end{thebibliography}
 \end{document}
