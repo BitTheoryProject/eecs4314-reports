@@ -160,18 +160,46 @@
 \section{Introduction}
 \lipsum[1]
 
+\subsection{Overview}
+\lipsum[1]
+\clearpage
+
 \section{Derivation Process}
 \begin{figure}[!htb]
 	\center
-	\includegraphics[width = 390pt]{assets/derivation_diagram.png}
-	\caption{Derivation process in a diagram}
+	\includegraphics[width = 290pt]{assets/derivation_diagram.png}
+	\caption{Concrete architecture derivation process \cite{derivation}}
 \end{figure}
 Unlike the process of understanding conceptual architecture, which requires mainly documentation reviews, understanding concrete architecture can be more challenging and complicated as it requires source code observations. To have better understanding of FreeBSD’s concrete architecture, we followed extraction steps, and they are shown as a derivation process in a figure above.
-After downloading FreeBSD source code, we use a source code extractor (efx), Understand, which retrieves relations from the source code (e.g., control and data flow dependencies, relations among function calls). Here, we obtain a file, freebsd\_FileDependencies.csv which has been produced by Understand. By running a Perl command to convert the csv file into a raw.ta file using csv-to-ta.pl, software, called jGrok, figures out their subsystem relations. After filtering dependencies by running clean\_ignored.py, a graphical landscape editor, LSEdit, takes a role of visualizations for the extracted relations. Our task here is to manually observe those visualized diagrams in ls-edit.sh, and decompose subsystems hierarchically and pass the decomposed architectural structure to jGrok. We repeat these processes until we reach the point where the subsystem structure is understood in clear and detailed manners.
-
-\section{Diagrams}
+After downloading FreeBSD source code, we use a source code extractor (\code{cfx}), Understand, which retrieves relations from the source code (e.g., control and data flow dependencies, relations among function calls). Here, we obtain a file, \code{freebsd\_FileDependencies.csv} which has been produced by Understand. By running a Perl command to convert the csv file into a \code{raw.ta} file using \code{csv-to-ta.pl}, software, called \code{jGrok}, figures out their subsystem relations. After filtering dependencies by running \code{clean-ignored}.py, a graphical landscape editor, \code{LSEdit}, takes a role of visualizations for the extracted relations. Our task here is to manually observe those visualized diagrams using \code{ls-edit.sh}, and decompose subsystems hierarchically and pass the decomposed architectural structure to \code{jGrok}. We repeat these processes until we reach the point where the subsystem structure is understood in clear and detailed manners.
+\clearpage
+\section{Results}
 \lipsum[1]
 
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 390pt]{assets/conceptual-architecture.png}
+	\caption{Conceptual architecture of FreeBSD subsystems}
+\end{figure}
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 390pt]{assets/concrete-architecture.png}
+	\caption{Concrete architecture of FreeBSD subsystems}
+\end{figure}
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 390pt]{assets/ipc-concrete-architecture.png}
+	\caption{Concrete architecture of FreeBSD IPC subsystem}
+\end{figure}
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 390pt]{assets/kernel-dependencies.png}
+	\caption{Kernel dependencies on top level modules in FreeBSD}
+\end{figure}
+\clearpage
 \section{Architecture}
 \subsection{Networking Inter-Process Communction}
 The network IPC facilities are layed on top of the networking facilities, and this heavy coupling is shown in the conceptual architecture and confirmed in the concrete architecture we derived. Data from the application is sent through the socket layer to the networking layer, and data coming in flows from the networking layer through the socket, and then into the receiving application.  State required by the socket layer is fully encapsulated within it, whereas any protocol-related state is maintained in data structures that are specific to the supporting protocols. The system-call interface routines manage the actions related to a system call, collecting parameters, and converting user data into the format expected by the socket layer routine. Socket layer routines directly manipulate socket data structures and manage the synchronization between asynchronous activities.
@@ -183,17 +211,17 @@ Previously, UNIX used the filesystem namespace to allow processes to rendezvous 
 
 \newpage
 \begin{figure}[hbt!]
-  \centering
-  \includegraphics[width=570pt]{assets/localipc1.png}
-  \caption{Comparison of APIs between System V and POSIX} \cite{mckusick}
+	\centering
+	\includegraphics[width=570pt]{assets/localipc1.png}
+	\caption{Comparison of APIs between System V and POSIX} \cite{mckusick}
 \end{figure}
 
 Pipes come from the POSIX standard, and are a common way to set up an interprocess communication channel for one process to send data to another in a byte-stream. Pipes are unidirectional, meaning they can only send data from one process to another and not in reverse. Contrast this with sockets (also in the POSIX standard), where data flow is bidirectional. A group of processes, aka a job, are connected by the shell via pipes. The output of the first process is fed into the second process, then the output of the second process is fed into the third, and so on. This is often referred to as a pipeline, and is reminiscent of the pipe and filter architecture style.
 
 \begin{figure}[hbt!]
-  \centering
-  \includegraphics[width=570pt]{assets/localipc2.png}
-  \caption{A diagram of the pipeline architecture in POSIX} \cite{rytarowski}
+	\centering
+	\includegraphics[width=570pt]{assets/localipc2.png}
+	\caption{A diagram of the pipeline architecture in POSIX} \cite{rytarowski}
 \end{figure}
 
 In POSIX, pipe() takes an array of two integers. fildes[1] is used for writing, and fildes[0] is used for reading. In the above diagram, process B is forked from process A, and the written data from process A is fed through the pipe into process B. If it returns successfully, it writes file descriptors on each end of the pipeline. Otherwise, it returns -1.
@@ -212,6 +240,32 @@ as an example program.
 	\caption{Sequence diagram showing pipes being used in the shell for IPC. \cite{pipe}\cite{fork}\cite{wait}\cite{close}\cite{dup}\cite{execve}\cite{signal}\cite{pipe-explained}}
 \end{figure}
 
+\clearpage
+\section{Conclusion}
+In conclusion, the FreeBSD operating system has a powerful and flexible inter-process communication system which allows processes to communicate with each other, both through networks (Networking / Socket IPC) and within local computing environments (Single system / Local IPC).
+
+On one hand, the Socket or networking IPC is a mechanism for communication between processes running on the same system or on different systems connected over a network. In this sense, data from the applications flows through a socket and through a networking layer. The received data, which also comes from the networking layer through the socket, then goes into the application. With sockets, not only do processes not have to run on the same machine in order to communicate between them, they do not even have to run under the same operating system.
+
+Three main types of sockets are supported by the FreeBSD operating system: (1) stream sockets, which provide a connection-oriented, sequential, reliable and bi-directional communication channel; (2) datagram sockets, which provide a message-oriented communication channel in a connectionless manner; and (3) raw sockets, which allow direct access to the low level protocols of the network layer and facilitate sending/receiving network packets.
+
+On the other hand, the single system or local IPC includes an integrated environment of semaphores, message queues, pipes and shared memory regions. Semaphores serve as a synchronisation mechanism to allow different processes to access shared memory. Message queues, however, facilitate sending and receiving messages locally in a structured way. Along with pipes, they serve as a buffer that stores messages in a First-In-First-Out (FIFO) manner. These various mechanisms provide low-level access to regions of shared memory and sending/receiving messages between multiple processes.
+
+Overall, FreeBSD provides a variety of IPC mechanisms that allow processes to communicate and coordinate with each other efficiently, whether on the same system or across a network.
+
+\section{Lessons Learned}
+After studying the concrete architecture of the IPC (Inter-Process Communication) system of FreeBSD, some of the lessons learned include:
+
+- \textbf{Lesson 1:} The interprocess communication system of FreeBSD is designed to be modular, flexible and scalable, which means that different communication mechanisms between processes can be implemented. This provides a powerful IPC system  for both local and networking environments.
+
+- \textbf{Lesson 2:} As it includes mechanisms such as message queues or stream sockets, the FreeBSD’s IPC system is designed to be reliable and to ensure structured bi-directional communication amongst various local or remote processes.
+
+- \textbf{Lesson 3:} Sockets allow processes to communicate through a network, even within computers with different operating systems. They provide the means for application data to flow through the networking layer, be received by a different process on a different machine, and flow into the application of the new receiving environment.
+
+- \textbf{Lesson 4:} Pipes are used in the shell for interprocess communication in a First-In-First-Out manner. It is a mechanism that allows process communication by sharing an unidirectional stream of data.
+
+- \textbf{Lesson 5:} Overall, the power of the FreeBSD IPC subsystem provides structured, secure and reliable mechanisms for interprocess communication, making it a popular option being widely used in the industry.
+\clearpage
+
 \section{Data Dictionary}
 \begin{itemize}
 	\item{Understand: A source code extractor, used for extracting function relations}
@@ -224,38 +278,14 @@ as an example program.
 	\item {CFX: Source Code Extractor}
 \end{itemize}
 
-\section{Conclusion}
-In conclusion, the FreeBSD operating system has a powerful and flexible inter-process communication system which allows processes to communicate with each other, both through networks (Networking / Socket IPC) and within local computing environments (Single system / Local IPC). 
-
-On one hand, the Socket or networking IPC is a mechanism for communication between processes running on the same system or on different systems connected over a network. In this sense, data from the applications flows through a socket and through a networking layer. The received data, which also comes from the networking layer through the socket, then goes into the application. With sockets, not only do processes not have to run on the same machine in order to communicate between them, they do not even have to run under the same operating system.
-
-Three main types of sockets are supported by the FreeBSD operating system: (1) stream sockets, which provide a connection-oriented, sequential, reliable and bi-directional communication channel; (2) datagram sockets, which provide a message-oriented communication channel in a connectionless manner; and (3) raw sockets, which allow direct access to the low level protocols of the network layer and facilitate sending/receiving network packets.
-
-On the other hand, the single system or local IPC includes an integrated environment of semaphores, message queues, pipes and shared memory regions. Semaphores serve as a synchronisation mechanism to allow different processes to access shared memory. Message queues, however, facilitate sending and receiving messages locally in a structured way. Along with pipes, they serve as a buffer that stores messages in a First-In-First-Out (FIFO) manner. These various mechanisms provide low-level access to regions of shared memory and sending/receiving messages between multiple processes. 
-
-Overall, FreeBSD provides a variety of IPC mechanisms that allow processes to communicate and coordinate with each other efficiently, whether on the same system or across a network.
-
-\section{Lessons Learned}
-After studying the concrete architecture of the IPC (Inter-Process Communication) system of FreeBSD, some of the lessons learned include:
-
-- \textbf{Lesson 1:} The interprocess communication system of FreeBSD is designed to be modular, flexible and scalable, which means that different communication mechanisms between processes can be implemented. This provides a powerful IPC system  for both local and networking environments.
-
-- \textbf{Lesson 2:} As it includes mechanisms such as message queues or stream sockets, the FreeBSD’s IPC system is designed to be reliable and to ensure structured bi-directional communication amongst various local or remote processes.
-
-- \textbf{Lesson 3:} Sockets allow processes to communicate through a network, even within computers with different operating systems. They provide the means for application data to flow through the networking layer, be received by a different process on a different machine, and flow into the application of the new receiving environment. 
-
-- \textbf{Lesson 4:} Pipes are used in the shell for interprocess communication in a First-In-First-Out manner. It is a mechanism that allows process communication by sharing an unidirectional stream of data. 
-
-- \textbf{Lesson 5:} Overall, the power of the FreeBSD IPC subsystem provides structured, secure and reliable mechanisms for interprocess communication, making it a popular option being widely used in the industry.
-
-
 \begin{thebibliography}{00}
 	% Using MLA9. If there are too many references, feel free to drop my manpage references %
 	\bibitem{bell} Bell-Thomas, A. H. “Interprocess Communication in Freebsd 11: Performance Analysis.” DeepAI, University of Cambridge, 5 Aug. 2020, https://deepai.org/publication/interprocess-communication-in-freebsd-11-performance-analysis.
+	\bibitem{derivation} “BitTheory source code.” README.md, \href{https://github.com/BitTheoryProject/eecs4314-reports/tree/main/a2/src}{https://github.com/BitTheoryProject/eecs4314-reports/tree/main/a2/src}.
 	\bibitem{close} “FreeBSD Manual Pages.” Close(2), \href{https://man.freebsd.org/cgi/man.cgi?query=close\&sektion=2}{https://man.freebsd.org/cgi/man.cgi?query=close\&sektion=2}.
 	\bibitem{dup} “FreeBSD Manual Pages.” Dup(2), \href{https://man.freebsd.org/cgi/man.cgi?query=dup\&sektion=2\&n=1}{https://man.freebsd.org/cgi/man.cgi?query=dup\&sektion=2\&n=1}.
 	\bibitem{execve} “FreeBSD Manual Pages.” Execve(2), \href{https://man.freebsd.org/cgi/man.cgi?query=execve\&sektion=2\&n=1}{https://man.freebsd.org/cgi/man.cgi?query=execve\&sektion=2\&n=1}.
-	\bibitem{fork} “FreeBSD Manual Pages.” Fork(2), \href{https://man.freebsd.org/cgi/man.cgi?fork(2)}{https://man.freebsd.org/cgi/man.cgi?fork(2)}.	
+	\bibitem{fork} “FreeBSD Manual Pages.” Fork(2), \href{https://man.freebsd.org/cgi/man.cgi?fork(2)}{https://man.freebsd.org/cgi/man.cgi?fork(2)}.
 	\bibitem{pipe} “FreeBSD Manual Pages.” Pipe(2), \href{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}.
 	\bibitem{signal} “FreeBSD Manual Pages.” Signal(3), \href{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}.
 	\bibitem{wait} “FreeBSD Manual Pages.” Wait(2), \href{https://man.freebsd.org/cgi/man.cgi?wait(2)}{https://man.freebsd.org/cgi/man.cgi?wait(2)}.
