@@ -201,30 +201,30 @@ After downloading FreeBSD source code, we use a source code extractor (\code{cfx
 \end{figure}
 \clearpage
 \section{Architecture}
-\subsection{Networking Inter-Process Communction}
+\subsection{Networking Inter-Process Communication}
 The network IPC facilities are layed on top of the networking facilities, and this heavy coupling is shown in the conceptual architecture and confirmed in the concrete architecture we derived. Data from the application is sent through the socket layer to the networking layer, and data coming in flows from the networking layer through the socket, and then into the receiving application.  State required by the socket layer is fully encapsulated within it, whereas any protocol-related state is maintained in data structures that are specific to the supporting protocols. The system-call interface routines manage the actions related to a system call, collecting parameters, and converting user data into the format expected by the socket layer routine. Socket layer routines directly manipulate socket data structures and manage the synchronization between asynchronous activities.
 
-\subsection{Local Inter-Process Communction}
-As well as network sockets, local interprocess communication is provided inside the kernel, in the form of semaphores, shared memory, and message queues. Initially, these mechanisms were provided by System V, and they are often referred to as System V semaphores, mutexes, and shared memory. There are some applications that use the System V implementation, such as PostgreSQL or X11. Later, POSIX was added to the kernel, and improves upon System V by introducing file descriptors. POSIX’s implementations of semaphores and shared-memory objects have replaced System V’s implementations in many applications. For example, Capsicum uses its own version of the POSIX shared-memory interface which links a file descriptor with an anonymous vm\_object and allows multiple processes to share this object through the file descriptor.
+\subsection{Local Inter-Process Communication}
+As well as network sockets, local interprocess communication is provided inside the kernel, in the form of semaphores, shared memory, and message queues. Initially, these mechanisms were provided by \code{System V}, and they are often referred to as \code{System V} semaphores, mutexes, and shared memory. There are some applications that use the \code{System V} implementation, such as \code{PostgreSQL} or \code{X11}. Later, \code{POSIX} was added to the kernel, and improves upon System V by introducing file descriptors. \code{POSIX}’s implementations of semaphores and shared-memory objects have replaced \code{System V}’s implementations in many applications. For example, Capsicum uses its own version of the \code{POSIX} shared-memory interface which links a file descriptor with an anonymous \code{vm\_object} and allows multiple processes to share this object through the file descriptor.
 
-Previously, UNIX used the filesystem namespace to allow processes to rendezvous with each other and share their resources. But FreeBSD used the System V IPC, which introduced a new key-based namespace. Using ftok(), it would generate a key for a process based on its pathname. Multiple processes with the same pathname would get the same key. Using that key, a process would then create or get a specific object using the get call, using the IPC\_CREAT flag to specify whether the object is being created or retrieved. The table below shows the POSIX and System V APIs for how they handle IPC objects.
+Previously, UNIX used the filesystem namespace to allow processes to rendezvous with each other and share their resources. But FreeBSD used the \code{System V} IPC, which introduced a new key-based namespace. Using \code{ftok()}, it would generate a key for a process based on its pathname. Multiple processes with the same pathname would get the same key. Using that key, a process would then create or get a specific object using the get call, using the \code{IPC\_CREAT} flag to specify whether the object is being created or retrieved. The table below shows the \code{POSIX} and \code{System V} APIs for how they handle IPC objects.
 
 \newpage
 \begin{figure}[hbt!]
 	\centering
-	\includegraphics[width=570pt]{assets/localipc1.png}
+	\includegraphics[width=290pt]{assets/localipc1.png}
 	\caption{Comparison of APIs between System V and POSIX} \cite{mckusick}
 \end{figure}
 
-Pipes come from the POSIX standard, and are a common way to set up an interprocess communication channel for one process to send data to another in a byte-stream. Pipes are unidirectional, meaning they can only send data from one process to another and not in reverse. Contrast this with sockets (also in the POSIX standard), where data flow is bidirectional. A group of processes, aka a job, are connected by the shell via pipes. The output of the first process is fed into the second process, then the output of the second process is fed into the third, and so on. This is often referred to as a pipeline, and is reminiscent of the pipe and filter architecture style.
+Pipes come from the \code{POSIX} standard, and are a common way to set up an interprocess communication channel for one process to send data to another in a byte-stream. Pipes are unidirectional, meaning they can only send data from one process to another and not in reverse. Contrast this with sockets (also in the \code{POSIX} standard), where data flow is bidirectional. A group of processes, aka a job, are connected by the shell via pipes. The output of the first process is fed into the second process, then the output of the second process is fed into the third, and so on. This is often referred to as a pipeline, and is reminiscent of the pipe and filter architecture style.
 
 \begin{figure}[hbt!]
 	\centering
-	\includegraphics[width=570pt]{assets/localipc2.png}
-	\caption{A diagram of the pipeline architecture in POSIX} \cite{rytarowski}
+	\includegraphics[width=290pt]{assets/localipc2.png}
+	\caption{A diagram of the pipeline architecture in \code{POSIX}} \cite{rytarowski}
 \end{figure}
 
-In POSIX, pipe() takes an array of two integers. fildes[1] is used for writing, and fildes[0] is used for reading. In the above diagram, process B is forked from process A, and the written data from process A is fed through the pipe into process B. If it returns successfully, it writes file descriptors on each end of the pipeline. Otherwise, it returns -1.
+In \code{POSIX}, \code{pipe()} takes an array of two integers. \code{fildes[1]} is used for writing, and \code{fildes[0]} is used for reading. In the above diagram, process B is forked from process A, and the written data from process A is fed through the pipe into process B. If it returns successfully, it writes file descriptors on each end of the pipeline. Otherwise, it returns \code{-1}.
 
 \section{Reflextion Analysis}
 
@@ -232,7 +232,7 @@ In POSIX, pipe() takes an array of two integers. fildes[1] is used for writing, 
 \section{Use Cases}
 \subsection{Piping In Shell}
 The following sequence diagram shows how system calls can be used to pipe the
-output of 1 application to the input of another in FreeBSD, using a shell
+output of one application to the input of another in FreeBSD, using a shell
 as an example program.
 \begin{figure}[!htb]
 	\advance\leftskip-0.5cm
@@ -248,7 +248,7 @@ On one hand, the Socket or networking IPC is a mechanism for communication betwe
 
 Three main types of sockets are supported by the FreeBSD operating system: (1) stream sockets, which provide a connection-oriented, sequential, reliable and bi-directional communication channel; (2) datagram sockets, which provide a message-oriented communication channel in a connectionless manner; and (3) raw sockets, which allow direct access to the low level protocols of the network layer and facilitate sending/receiving network packets.
 
-On the other hand, the single system or local IPC includes an integrated environment of semaphores, message queues, pipes and shared memory regions. Semaphores serve as a synchronisation mechanism to allow different processes to access shared memory. Message queues, however, facilitate sending and receiving messages locally in a structured way. Along with pipes, they serve as a buffer that stores messages in a First-In-First-Out (FIFO) manner. These various mechanisms provide low-level access to regions of shared memory and sending/receiving messages between multiple processes.
+On the other hand, the single system or local IPC includes an integrated environment of semaphores, message queues, pipes and shared memory regions. Semaphores serve as a synchronization mechanism to allow different processes to access shared memory. Message queues, however, facilitate sending and receiving messages locally in a structured way. Along with pipes, they serve as a buffer that stores messages in a First-In-First-Out (FIFO) manner. These various mechanisms provide low-level access to regions of shared memory and sending/receiving messages between multiple processes.
 
 Overall, FreeBSD provides a variety of IPC mechanisms that allow processes to communicate and coordinate with each other efficiently, whether on the same system or across a network.
 
