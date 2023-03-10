@@ -1,0 +1,524 @@
+[33mcommit 23d59a411f037ae52ff9f9d73f87266b755f2549[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Mar 10 05:00:40 2023 +0000
+
+    A2 report: abstract,intro,overview
+
+[33mcommit 32aabf70969e854e75be1ba334e71b36a102d667[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Mar 10 03:28:18 2023 +0000
+
+    A2 report: update results structure
+
+[33mcommit 48230db5bd25dbbde917425fe4430caf63c15dfb[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Mar 10 03:17:21 2023 +0000
+
+    A2 report: more formatting, results explinations, references
+
+[33mcommit 079535a39612e125b05ab02d439f3d09aa46e052[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Mar 10 02:02:11 2023 +0000
+
+    A2 report: more formatting, typo fixes
+
+[33mcommit 855dace070b96065d246fbea791206d8caf4a5ce[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Mar 10 01:44:06 2023 +0000
+
+    A2 report: add derivation diagrams, formatting
+
+[33mcommit 5e3727906306586bbc2599bdf02e2876cb55da96[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Mar 10 01:33:33 2023 +0000
+
+    Add A2 concrete diagram results
+
+[33mcommit aa903c675f1e78582edfc8259323823de088c9dc[m
+Author: Arian-VM <arian68@hotmail.ca>
+Date:   Thu Mar 9 20:22:46 2023 -0500
+
+    Added Local IPC section, fixed references
+
+[33mcommit 1825a0e19c51277c74927a3dfaeaa2be9dfc8412[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Wed Mar 8 15:10:42 2023 -0500
+
+    Added some items for naming conventions and data dictionary
+
+[33mcommit 841135073e73901e7feb44c2b56627b06a8c9086[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Wed Mar 8 14:50:22 2023 -0500
+
+    Added a derivation process diagram
+
+[33mcommit e08841d8b57dab0b04e4801616cd9cf568788bf5[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Wed Mar 8 00:22:51 2023 -0500
+
+    Added a derivation process section
+
+[33mcommit 636229a85c89580c8c897115b78ed62d8ec4741b[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Tue Mar 7 22:13:47 2023 -0500
+
+    formatting fix for use-cases
+
+[33mcommit 5121f6ed83332e792f280610f8b59dea8a3d2e91[m
+Author: dnsantosuosso <dnsantosuosso@gmail.com>
+Date:   Mon Mar 6 13:01:15 2023 -0500
+
+    Added conclusion and lessons learned
+
+[33mcommit e551423e1b135affeefc9cdceb229cefb986aa92[m
+Author: isaiahL88 <isaiah.ib@outlook.com>
+Date:   Sun Mar 5 23:22:00 2023 -0500
+
+    Changes sub sections, and added Networking IPC part
+
+[33mcommit 6735a83d40786920446db1201fa2035992b86931[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Fri Mar 3 19:05:19 2023 -0500
+
+    comment added
+
+[33mcommit c6153d6eb61947e7a8a0931cb69feadab18d2834[m
+Author: DanteLaviolette <DanteLaviolette@users.noreply.github.com>
+Date:   Sat Mar 4 00:05:06 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit 07eaa75379c13a66e9d47c0e418176cae4a0d9f8[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Sat Mar 4 00:04:28 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit ee936da1a9e18b9aa3a36b14fe3af7f0ffc378cf[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Fri Mar 3 19:04:11 2023 -0500
+
+    pipe use case
+
+[33mcommit 62de69ea9a88982c7ec760384d7f26b1df543354[m
+Author: DanteLaviolette <DanteLaviolette@users.noreply.github.com>
+Date:   Sun Feb 26 23:14:26 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit 6a9aed291f12b63424890ca511fee85d3cc93d38[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Sun Feb 26 23:13:50 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit 19b0b94207430d148fe3253abc93a0272aa15f7b[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Sun Feb 26 17:59:14 2023 -0500
+
+    Pipe use case implemented
+
+[33mcommit cc766b96aa7432a8749becc31138fc6fd1d8e195[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Sat Feb 25 21:45:27 2023 +0000
+
+    Added count-links.py helper
+
+[33mcommit aae53acf69e84f1f8d1cca426aa69139510e4b9d[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 24 21:13:17 2023 +0000
+
+    Convert gen-containment to py, update IPC_ss and freebsd_ss
+
+[33mcommit 959e67a06fc083d681f152f362a60a50032f7752[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 24 02:56:13 2023 +0000
+
+    Added freebsd_ss.json subsystems
+
+[33mcommit 2f01ac52a4e55049bc44291f76416eb65e5296e1[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Thu Feb 23 01:21:36 2023 -0500
+
+    Update clean-ignored.py
+
+[33mcommit b626c03ad682b83778691c122093c27a45fd8dfe[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Thu Feb 23 06:13:15 2023 +0000
+
+    Added support for json subsystems format in gen-containment.pl
+
+[33mcommit 529f24258076ae70be85759e41dd3dca7c0724cd[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Wed Feb 22 05:48:43 2023 +0000
+
+    Fix clean-ignored.py and gen-containment.pl, added IPC subsystems
+
+[33mcommit 5e2f93c8c829d3ba5fa58a8d0a872da7e5adfcaa[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Tue Feb 21 22:53:31 2023 -0500
+
+    Update README.md
+
+[33mcommit 7aea31f43a90ff5945d663ede50c6c7d055bceb8[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Wed Feb 22 03:50:54 2023 +0000
+
+    Update gen-containent.pl algorithm, add clean-ignored.py, add a2/src .gitignore
+
+[33mcommit cb332f44eab7be177540bc14a22c787ac919299f[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Tue Feb 21 22:28:27 2023 -0500
+
+    Delete freebsd_IPC.con.ta
+
+[33mcommit 367d12ee76c7c844edcdaafd1d8f8eec33f8a9f0[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Tue Feb 21 22:28:19 2023 -0500
+
+    Delete freebsd_FileDependencies.raw.ta
+
+[33mcommit c1427868451a1ffb1109d743f43f14fc142d4e95[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Tue Feb 21 22:28:05 2023 -0500
+
+    Delete freebsd_FileDependencies.csv
+
+[33mcommit dcc7b7ed51c53d5597766c214b9d7550dc5d7d83[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Sun Feb 19 05:19:55 2023 +0000
+
+    Update ls-edit.sh to use ls.ta file
+
+[33mcommit d04b8276b787419c8cb693692aa7688328ceefaa[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Sun Feb 19 05:18:57 2023 +0000
+
+    Increase A2 ls-edit.sh memory
+
+[33mcommit bd03d07f4cef9bdf75bd2d52ffb04ad5389e8a0e[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Sat Feb 18 18:45:40 2023 -0500
+
+    Update README.md
+
+[33mcommit 4a1b53452301c22a0b06c78752552bb0d8eebe11[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Sat Feb 18 17:43:54 2023 -0500
+
+    Update README.md
+
+[33mcommit 978bb4ff913f26b6d1104c5432799df0d94d12fc[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Sat Feb 18 22:37:50 2023 +0000
+
+    Added A2 dependency extraction scripts
+
+[33mcommit aead9254fb723789d3952f9e1155a33fab689f73[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Fri Feb 10 16:03:44 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit a08509b5e500f056a4762e19db3756fa683e3121[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Fri Feb 10 16:02:47 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit ded79f07dfbd2cbc731fc4ac46c29e22e85e56d3[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 10 16:02:22 2023 +0000
+
+    Added more references
+
+[33mcommit 25b30797cbd13a14df97ee60195878b8d9dd86a0[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 10 15:57:25 2023 +0000
+
+    Fixed merge conflict, added missing references
+
+[33mcommit 8e0030aadc6190bd201eff119bff0b7e2d6ffeb1[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Fri Feb 10 14:15:38 2023 +0000
+
+    Updated reports
+
+[33mcommit 314168c9e104d0dbe01edb68dc583a09acbdfeff[m
+Merge: 8e112aa 84e73bd
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Fri Feb 10 09:13:24 2023 -0500
+
+    Merge pull request #7 from BitTheoryProject/main
+    
+    A1 report
+
+[33mcommit 84e73bd37e875497db979c253f54e45abfb0aa83[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 10 14:04:19 2023 +0000
+
+    Changed A1 process sate diagram size
+
+[33mcommit a9ba8b6d98b70666a93d720fec84ae377bfb9d3f[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Fri Feb 10 14:01:15 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit eb746fc0b9d260542e27aa0552e4b4bb4f43f17c[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Fri Feb 10 14:00:26 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit 54b1afa352a3215344483430cf8d7d63aac668e6[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 10 13:59:09 2023 +0000
+
+    Added edits, content, formatting, and lessons learned
+
+[33mcommit a15824a8354bec4b1377be9e4c894afe521b2e77[m
+Author: isaiahL88 <isaiah.ib@outlook.com>
+Date:   Fri Feb 10 03:12:10 2023 -0500
+
+    Added refferences, pictures to evolutions section, conclution section, data dictionary, naming conventions
+
+[33mcommit 35b657902604cbb6e33f7c30f3c9b8ec7d46ca74[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 10 07:04:00 2023 +0000
+
+    Updated A1 project hierarchy figure
+
+[33mcommit b3a85f6195484901613f9c8b15c13ec472073ef0[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 10 07:01:21 2023 +0000
+
+    Removed A1 project hierarchy svg
+
+[33mcommit 79982144d5a1e11cf9bab59a3a1b8e18bfec256b[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Fri Feb 10 07:00:24 2023 +0000
+
+    Updated A1 project hierarchy to png
+
+[33mcommit 9caa1b98c61f6d2b239dffb94278efe9deda588e[m
+Author: furquanh <64953180+furquanh@users.noreply.github.com>
+Date:   Fri Feb 10 01:39:54 2023 -0500
+
+    updated width for my Q5 figure
+
+[33mcommit 5b11bfad983ad2fe52980cdcfa49c087610e2bd2[m
+Author: furquanh <64953180+furquanh@users.noreply.github.com>
+Date:   Fri Feb 10 01:32:47 2023 -0500
+
+    Add png incase problem with svg.
+
+[33mcommit c94146022edfe60b714dfcbc50a679b16a01e02b[m
+Author: furquanh <furquanh@my.yorku.ca>
+Date:   Fri Feb 10 01:19:37 2023 -0500
+
+    Added the Q5 content
+
+[33mcommit 9f582cfbb41a02fdd64eda56d36ec11ce3767067[m
+Author: Arian-VM <arian68@hotmail.ca>
+Date:   Thu Feb 9 19:55:19 2023 -0500
+
+    Formatted the Concurrency section, added some diagrams
+
+[33mcommit addbc4e1ad9c4d608b892473c9263e35e87f4f57[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Thu Feb 9 03:17:17 2023 +0000
+
+    Updated A1 abstract
+
+[33mcommit 7b8e97f555b5ad0e25fc9c683bb32bb1d96496f6[m
+Author: dnsantosuosso <dnsantosuosso@gmail.com>
+Date:   Wed Feb 8 18:50:59 2023 -0500
+
+    Added abstract
+
+[33mcommit 51e5833af789dd39a54e5eb7855721f2698bbace[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Wed Feb 8 02:28:34 2023 +0000
+
+    Added more references to A1 report
+
+[33mcommit 40af9d569621d2f2be4767268e31f57488fd3543[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Tue Feb 7 21:16:22 2023 -0500
+
+    Update report.tex
+
+[33mcommit 638b231fc8f98f5fbf88a7c64b30ec5506a26855[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Mon Feb 6 19:55:28 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit cebb454177ad828fbc03dad84228fb0f619af25e[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Mon Feb 6 19:54:09 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit 97ec7576332457887b226e7f146c37a383cffb76[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Mon Feb 6 19:53:47 2023 +0000
+
+    Added copyright to diagrams for A1
+
+[33mcommit 36f1cbd919f099386a470034007ce662adf60299[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Mon Feb 6 19:50:20 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit 5b820800cad53ea5751cd503d01fbe595fd297ba[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Mon Feb 6 19:49:37 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit 6057e33f5af3282fa3d03b48f358c319a3ddd25a[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Mon Feb 6 19:49:04 2023 +0000
+
+    Updated network send flow diagram for A1
+
+[33mcommit d055855d4c4b22cd2e02c41df134617e529ad7d5[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Mon Feb 6 19:36:07 2023 +0000
+
+    Update A1 report
+
+[33mcommit 4360938ecbf75267e55dab9d2b46ba6306efac10[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Mon Feb 6 19:34:50 2023 +0000
+
+    Added evolution, functionality and formatted A1 report
+
+[33mcommit d49acd9e73da5f1c50bdf0c30ff005a4b895f200[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Mon Feb 6 06:35:13 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit db855b23b3efc1fa52697743f880547165dfdfa6[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Fri Feb 3 22:52:37 2023 -0500
+
+    Added more texts to Q3 part
+
+[33mcommit 558fd9213493c190f1590a5ccbbed0e3f2dfd52d[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Sat Feb 4 03:08:07 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit 05c04ed4691ea7cba7f9e4c330513391a833cd1f[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Sat Feb 4 03:07:25 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit 3be5e17192b084972393fffef9e6921e525e432a[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Sat Feb 4 02:21:58 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit 19ee66d1c58563717158c6f477bd82e7601dfe7b[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Sat Feb 4 02:21:15 2023 +0000
+
+    PlantUML to SVG conversion
+
+[33mcommit 69bc2e45c34f5ad415a6a9cf816f1636cd031d1f[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Sat Feb 4 02:20:50 2023 +0000
+
+    Update network flow diagram title
+
+[33mcommit 0f40c637fddec1c8de3234d5b829c5b75f7ad2ce[m
+Author: Amir <60088310+a-mohamad@users.noreply.github.com>
+Date:   Fri Feb 3 21:19:10 2023 -0500
+
+    Fix plantuml svg generation
+
+[33mcommit 39bd6b886646f98f0d3487cebaef438f7b391f23[m
+Author: a-mohamad <a-mohamad@users.noreply.github.com>
+Date:   Sat Feb 4 02:02:04 2023 +0000
+
+    PlantUML to PDF conversion
+
+[33mcommit b9f9bf57105fcf67f290a64ce531bfb5366ec8f8[m
+Author: Amir Mohamad <amohamad@my.yorku.ca>
+Date:   Sat Feb 4 02:00:46 2023 +0000
+
+    Added network flow diagram and explination
+
+[33mcommit 0d2f7c461643fe5ce13b75f117d769baf29eefe2[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Fri Feb 3 16:39:24 2023 -0500
+
+    PlantUML to PDF
+
+[33mcommit 06857cfc63a57655a0bde9c550b324d4dd24ef6e[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Fri Feb 3 16:17:48 2023 -0500
+
+    Citations for part of q6 & modified 3.1 title
+
+[33mcommit b247b1b8416d56ae5aed9240f70bda9d4dba018a[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Fri Feb 3 15:00:07 2023 -0500
+
+    Added system flow diagram
+
+[33mcommit 22b5138005972af422d2d667a030da5b40443987[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Fri Feb 3 14:43:49 2023 -0500
+
+    Added explanation of compiling w/ SVGs
+
+[33mcommit ef0506d89632edd19f76bbe2891f10d94e30e02b[m
+Author: DanteLaviolette <dante.laviolette@gmail.com>
+Date:   Fri Feb 3 14:41:08 2023 -0500
+
+    Setup SVG rendering
+
+[33mcommit 717584425bb9ff678d6b2e918a3ec490697d81d2[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Fri Feb 3 01:01:49 2023 -0500
+
+    Made subsystems bold and some components in coding format
+
+[33mcommit b9eff0efb2b2a675526ed977e3296500a1027fb9[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Fri Feb 3 00:20:37 2023 -0500
+
+    Added syntex to .gitignore
+
+[33mcommit a4c2ba2da84ac41483a1c472447cdaa3ffca968f[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Thu Feb 2 23:44:31 2023 -0500
+
+    Modification
+
+[33mcommit ce223b7d164f33591b35fa5b88ffcf2c1151f850[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Thu Feb 2 23:14:34 2023 -0500
+
+    Modification from the previous change
+
+[33mcommit b5d50c7ece64cdc491eaa268c17cb3938326d311[m
+Author: misato100 <misato1@my.yorku.ca>
+Date:   Thu Feb 2 22:59:51 2023 -0500
+
+    Added Question 3 to a1 architecture section
+
+[33mcommit b2e0c7fae9fd26e64994e1ffbe4e63c8f5671a55[m
+Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+Date:   Thu Feb 2 22:55:11 2023 +0000
+
+    Render PlantUML files
