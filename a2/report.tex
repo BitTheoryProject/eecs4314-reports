@@ -267,6 +267,7 @@ In \code{POSIX}, \code{pipe()} takes an array of two integers. \code{fildes[1]} 
 
 \clearpage
 \section{Reflextion Analysis}
+\subsection{IPC dependence on the General System Interfaces}
 Now to start our reflection analysis of the introduced divergences from the conceptual architecture  we will look at the dependencies from Inter-Process Communication to General System Interfaces. The General System Interfaces subsystem has a large amount of facilities and data structures used by IPC so we will only go over a couple. First, we will look at the dependency between \code{uipc\_socket.c} and \code{jail.h}. The \code{uipc\_socket.c} file implements a very large amount of socket facilities and is an extremely large file with many dependencies. The \code{jail.h} file implements the jail and prison data structures. This dependency was introduced because previously, interaction with IPv6 was not well-defined, and might be inappropriate for some environments. So what the author, rwatson, did to solve this was modify jail to limit creation of sockets to: UNIX domain sockets, TCP/IP (v4) sockets, and routing sockets. At the time of this change, this functionality was enabled by default, and toggleable using a variable in \code{jail.h}.
 \begin{figure}[!htb]
 	\centering
