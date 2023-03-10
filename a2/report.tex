@@ -150,10 +150,17 @@
 \hspace{0pt}
 \vfill
 \begin{abstract}
-	\lipsum[1]
-	\lipsum[1]
+	Concrete Architecture identifies the relationships between the subsystem and components inside the project. It includes what the system does, how it will implement the functionality, identification of significant components and connectors and realization of architecture mechanisms. The concrete architecture will investigate the responsibilities, component interaction, control and data flow. Interprocess communication is the methodology that allows the processes to communicate with each other and synchronize their actions. This communication between the processes can also be called a method of cooperation between processes. There are several advantages of using IPC. First, it is convenient because it allows a single user to work on many tasks simultaneously. IPC can divide the extensive system’s functions into small processes or threads. These small processes can also speed up the processes of each execution and simultaneously execute the other processes. These processes will share the data they are using concurrently, reducing the time for processes to reload the data into the memory. In FreeBSD, the IPC model will provide access to communication networks such as the Internet. For 4.2BSD, the interprocess-communication facilities were intended to provide a sufficiently general interface to allow network-based applications to be constructed independently of the underlying communication facilities. To allow multiprocess programs, FreeBSD uses UNIX pipe. These pipes force systems to be designed with a contorted structure. The pipe contains four properties to interact with the data being used in the system. The four properties are:
+	\begin{itemize}
+		\item In-order delivery of data.
+		\item Unduplicated delivery of data.
+		\item Unduplicated delivery of data.
+		\item Reliable delivery of data and connection-oriented communication.
+	\end{itemize}
+
+	In FreeBSD, the system must support communication networks that use different sets of protocols, naming conventions, hardware, and so on. In this case, the IPC contains the communication domain. A communication domain embodies the standard semantics of communication and naming, allowing the system to connect to different networks with different standards. To communicate across networks, FreeBSD uses sockets. Compared to the pipe method, sockets have not only the properties pipes have, but they also have properties such as preserving message boundaries and supporting out-of-band messages.
 	\\\\
-	\keywords{keyword1, keyword2, keyword3}
+	\keywords{concrete architecture, conceptual architecture, IPC, FreeBSD, pipes, sockets}
 \end{abstract}
 \vfill
 \hspace{0pt}
@@ -162,10 +169,19 @@
 \clearpage
 
 \section{Introduction}
-\lipsum[1]
+As we have discussed, the operating system is one of the essential parts of all kinds of computers, and it is responsible for managing the whole computer system. Due to this complex mission, the operating system needs the support of several subsystems to help it finish the job perfectly. One of those main subsystems is the interprocess communication system, also known as IPC, which is the target we will discuss.
+Interprocess communication can be defined as the mechanism that the operating systems provide to manage the data shared between processes in the operating system.
+The principle of interprocess communication is pretty simple.
+While the processes or applications are trying to transfer data, the process that requests the data will be considered a client, and the process that sends the data will be the server.
+Most of the applications can be both client and server.
+There are three goals for the interprocess-communication model. The first was providing access to communication networks such as the Internet.
+The second goal was to allow multiprocess programs, such as distributed databases, to be implemented.
+The third goal is to provide new communication facilities for constructing local-area network services, such as file servers. These facilities are designed to support: Transparency which ensures that the communication between processes can be on different machines, Efficiency, which provides the applicability of any IPC facility and Compatibility ensures the existing naïve processes should be usable in a distributed environment without change.
 
 \subsection{Overview}
-\lipsum[1]
+The report will analyze the concrete architecture of the FreeBSD operating system's interprocess communication(IPC) system.  We will deeply explore the derivation process and learn about the architecture of IPC.
+After that, the report will analyze the reflection and use case to help understand IPC from another point of view.
+Finally, there will be a conclusion summarizing the limitations we met in the exploration and the lesson we have learnt from this process.
 \clearpage
 
 \section{Derivation Process}
