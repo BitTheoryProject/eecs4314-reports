@@ -239,7 +239,7 @@ We created a custom script, \code{count-links.py} as a part of our derivation pr
 \end{figure}
 \subsection{Networking Inter-Process Communication}
 The network IPC facilities are layed on top of the networking facilities, and this heavy coupling is shown in the conceptual architecture and confirmed in the concrete architecture we derived. Data from the application is sent through the socket layer to the networking layer, and data coming in flows from the networking layer through the socket, and then into the receiving application.  State required by the socket layer is fully encapsulated within it, whereas any protocol-related state is maintained in data structures that are specific to the supporting protocols. The system-call interface routines manage the actions related to a system call, collecting parameters, and converting user data into the format expected by the socket layer routine. Socket layer routines directly manipulate socket data structures and manage the synchronization between asynchronous activities.
-\begin{figure}[hbt!]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=500pt]{assets/IPC_Net_ARCH.png}
 	\caption{Networking IPC Layered Architecture}\cite{mckusick}
@@ -249,7 +249,7 @@ As well as network sockets, local interprocess communication is provided inside 
 
 Previously, UNIX used the filesystem namespace to allow processes to rendezvous with each other and share their resources. But FreeBSD used the \code{System V} IPC, which introduced a new key-based namespace. Using \code{ftok()}, it would generate a key for a process based on its pathname. Multiple processes with the same pathname would get the same key. Using that key, a process would then create or get a specific object using the get call, using the \code{IPC\_CREAT} flag to specify whether the object is being created or retrieved. The table below shows the \code{POSIX} and \code{System V} APIs for how they handle IPC objects.
 
-\begin{figure}[hbt!]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=290pt]{assets/localipc1.png}
 	\caption{Comparison of APIs between \code{System V} and \code{POSIX}} \cite{mckusick}
@@ -257,7 +257,7 @@ Previously, UNIX used the filesystem namespace to allow processes to rendezvous 
 
 Pipes come from the \code{POSIX} standard, and are a common way to set up an interprocess communication channel for one process to send data to another in a byte-stream. Pipes are unidirectional, meaning they can only send data from one process to another and not in reverse. Contrast this with sockets (also in the \code{POSIX} standard), where data flow is bidirectional. A group of processes, aka a job, are connected by the shell via pipes. The output of the first process is fed into the second process, then the output of the second process is fed into the third, and so on. This is often referred to as a pipeline, and is reminiscent of the pipe and filter architecture style.
 
-\begin{figure}[hbt!]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=290pt]{assets/localipc2.png}
 	\caption{A diagram of the pipeline architecture in \code{POSIX}} \cite{rytarowski}
@@ -268,51 +268,48 @@ In \code{POSIX}, \code{pipe()} takes an array of two integers. \code{fildes[1]} 
 \clearpage
 \section{Reflextion Analysis}
 Now to start our reflection analysis of the introduced divergences from the conceptual architecture  we will look at the dependencies from Inter-Process Communication to General System Interfaces. The General System Interfaces subsystem has a large amount of facilities and data structures used by IPC so we will only go over a couple. First, we will look at the dependency between \code{uipc\_socket.c} and \code{jail.h}. The \code{uipc\_socket.c} file implements a very large amount of socket facilities and is an extremely large file with many dependencies. The \code{jail.h} file implements the jail and prison data structures. This dependency was introduced because previously, interaction with IPv6 was not well-defined, and might be inappropriate for some environments. So what the author, rwatson, did to solve this was modify jail to limit creation of sockets to: UNIX domain sockets, TCP/IP (v4) sockets, and routing sockets. At the time of this change, this functionality was enabled by default, and toggleable using a variable in \code{jail.h}.
-\clearpage
-\begin{figure}
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=290pt]{assets/IPC_Jail.png}
-	\caption{InterProcessCommunication \-\> GerneralSystemInterfaces \code{jail.h} Reflection Analysis}
+	\caption{InterProcessCommunication $\longrightarrow$ GeneralSystemInterfaces \code{jail.h} Reflection Analysis}
 \end{figure}
 
 This next dependency is between \code{uipc\_socket.c} and \code{sx.h}; which implements the lock data structure / facilities. To give some context, the sx in \code{sx.h} stands for shared/exclusive and shared/exclusive locks are used to protect data that are read more often than they are written. The key difference between shared/exclusive locks and regular read-write locks is that they do not implement priority propagation like mutexes and reader/writer locks to prevent priority inversions. This change was also done by rwatson and was well documented. This change was an optimization which resulted in: Marginally better performance, Better handling of contention during simultaneous socket I/O across multiple threads, and A cleaner separation between the different layers of locking in socket buffers.
 
-\begin{figure}[hbt!]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=290pt]{assets/IPC_Sx.png}
-	\caption{InterProcessCommunication \-\> GerneralSystemInterfaces \code{sx.h} Reflection Analysis}\cite{sx}
+	\caption{InterProcessCommunication $\longrightarrow$ GeneralSystemInterfaces \code{sx.h} Reflection Analysis}\cite{sx}
 \end{figure}
 
 \subsection{IPC dependence on the Security Subsystem}
-Another dependency that we discovered in the process of extracting the concrete architecture is that IPC depended on the \bold{Security Subsystem}. The security subsystem in FreeBSD is responsible for enforcing security policies and mechanisism at various level of the system, including network security, user authentication, access control, and system integreity. 
+Another dependency that we discovered in the process of extracting the concrete architecture is that IPC depended on the Security subsystem. The Security subsystem in FreeBSD is responsible for enforcing security policies and mechanisms at various level of the system, including network security, user authentication, access control, and system integrity.
 
 The IPC subsystem depends on the Security subsystem in two main ways:
 
 \subsubsection{Access Control}
-The IPC subsystem relies on the Security subsystem to enforce access control policies for IPC resources such as message queses, shared memory segments, and semaphores. The security subsystem provides mechanism such as file permessions and \bold{mandatory access control (MAC)} frameworks to restrict access to IPC resources based on user identities, level of previliege the user has and security policies. We did a study of the source code FreeBSD and found the file level dependency that explains this relation of two subsystem:
+The IPC subsystem relies on the Security subsystem to enforce access control policies for IPC resources such as message queues, shared memory segments, and semaphores. The security subsystem provides mechanism such as file permissions and mandatory access control (MAC) frameworks to restrict access to IPC resources based on user identities, level of privilege the user has and security policies. We did a study of the source code FreeBSD and found the file level dependency that explains this relation of two subsystem:
 
-\begin{figure}[hbt!]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=290pt]{assets/4Ws_2.png}
-	\caption{Source Code Sticky Note showning the dependency of IPC to Security} 
+	\caption{InterProcessCommunication $\longrightarrow$ Security \code{mac\_framework.h} Reflection Analysis}
 \end{figure}
 
-Here we see that a file named uipc_socket.c depends on a header file mac_framework.h, that is part of the security subsystem. uipc_socket.c contains implementation of socket related functions. This file is responsible for creating, managing, and interacting with sockets for network communication. the reason foor the dependency to mac_framework.h is that it provides a mechanism for implementing and enforcing \bold{mando
-access control} policies. Therefore, the inclusion of mac_framework.h is essential for ensuring the security of network communcation in FreeBSD.
+Here we see that a file named \code{uipc\_socket.c} depends on a header file \code{mac\_framework.h}, that is part of the security subsystem. \code{uipc\_socket.c} contains implementation of socket related functions. This file is responsible for creating, managing, and interacting with sockets for network communication. the reason for the dependency to \code{mac\_framework.h} is that it provides a mechanism for implementing and enforcing mandatory access control policies. Therefore, the inclusion of \code{mac\_framework.h} is essential for ensuring the security of network communication in FreeBSD.
 
-\subsubsection{System integrity}
-It is also essential that the integrity of IPC resources are maintained and that there is no unauthorized modification or tampering. The security subsystem provides mechanisism such for logging and monitoring system activity for this purpose. The ausiting subsystem can track various types of system events, including process creation, IPC activity, and file access. We went ahead a tried to find this dependency in the source code and came across the following relation:
+\subsubsection{System Integrity}
+It is also essential that the integrity of IPC resources are maintained and that there is no unauthorized modification or tampering. The security subsystem provides mechanisms such for logging and monitoring system activity for this purpose. The auditing subsystem can track various types of system events, including process creation, IPC activity, and file access. We went ahead a tried to find this dependency in the source code and came across the following relation:
 
-\begin{figure}[hbt!]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=290pt]{assets/4W's_1.png}
-	\caption{Source Code Sticky Note showning the dependency of IPC to Security} 
+	\caption{InterProcessCommunication $\longrightarrow$ Security \code{audit.h} Reflection Analysis}
 \end{figure}
 
-The audit.h header file provides interface for the system's auditing subsystem, which is responsible for logging and monitoring system activity for security and complaince purposes. A file names \bold{uipc_syscalls.c} that is part of IPC subsystem depends on \bold{audit.h} because it contains an important macro called \bold{AUDIT_ARG_SOCKET()}. This macro is used to capture the domain, type, and protocol arguments of \bold{socket
-()} and \bold{socketpair()} system calls. These arguments are important pieces of information for auditing network activity, as they indicate the type of socket that is being created. This way the OS gains the ability to log socket-related events to system audit trials. This allows the system administrator to monitor network activity and detect and suspicious behavior.
-
+The \code{audit.h} header file provides interface for the system's auditing subsystem, which is responsible for logging and monitoring system activity for security and compliance purposes. A file named \code{uipc\_syscalls.c} that is part of the IPC subsystem depends on \code{audit.h} because it contains an important macro called \code{AUDIT\_ARG\_SOCKET()} \cite{audit}. This macro is used to capture the domain, type, and protocol arguments of \code{socket()} and \code{socketpair()} system calls. These arguments are important pieces of information for auditing network activity, as they indicate the type of socket that is being created. This way the OS gains the ability to log socket-related events to system audit trail \cite{audit}. This allows the system administrator to monitor network activity and detect and suspicious behavior \cite{audit}.
 \clearpage
+
 \section{Use Cases}
 \subsection{Piping In Shell}
 The following sequence diagram shows how system calls can be used to pipe the
