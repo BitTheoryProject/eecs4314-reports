@@ -176,6 +176,28 @@ After downloading FreeBSD source code, we use a source code extractor (efx), Und
 \subsection{Networking Inter-Process Communction}
 The network IPC facilities are layed on top of the networking facilities, and this heavy coupling is shown in the conceptual architecture and confirmed in the concrete architecture we derived. Data from the application is sent through the socket layer to the networking layer, and data coming in flows from the networking layer through the socket, and then into the receiving application.  State required by the socket layer is fully encapsulated within it, whereas any protocol-related state is maintained in data structures that are specific to the supporting protocols. The system-call interface routines manage the actions related to a system call, collecting parameters, and converting user data into the format expected by the socket layer routine. Socket layer routines directly manipulate socket data structures and manage the synchronization between asynchronous activities.
 
+\subsection{Local Inter-Process Communction}
+As well as network sockets, local interprocess communication is provided inside the kernel, in the form of semaphores, shared memory, and message queues. Initially, these mechanisms were provided by System V, and they are often referred to as System V semaphores, mutexes, and shared memory. There are some applications that use the System V implementation, such as PostgreSQL or X11. Later, POSIX was added to the kernel, and improves upon System V by introducing file descriptors. POSIX’s implementations of semaphores and shared-memory objects have replaced System V’s implementations in many applications. For example, Capsicum uses its own version of the POSIX shared-memory interface which links a file descriptor with an anonymous vm\_object and allows multiple processes to share this object through the file descriptor.
+
+Previously, UNIX used the filesystem namespace to allow processes to rendezvous with each other and share their resources. But FreeBSD used the System V IPC, which introduced a new key-based namespace. Using ftok(), it would generate a key for a process based on its pathname. Multiple processes with the same pathname would get the same key. Using that key, a process would then create or get a specific object using the get call, using the IPC\_CREAT flag to specify whether the object is being created or retrieved. The table below shows the POSIX and System V APIs for how they handle IPC objects.
+
+\newpage
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=570pt]{assets/localipc1.png}
+  \caption{Comparison of APIs between System V and POSIX} \cite{mckusick}
+\end{figure}
+
+Pipes come from the POSIX standard, and are a common way to set up an interprocess communication channel for one process to send data to another in a byte-stream. Pipes are unidirectional, meaning they can only send data from one process to another and not in reverse. Contrast this with sockets (also in the POSIX standard), where data flow is bidirectional. A group of processes, aka a job, are connected by the shell via pipes. The output of the first process is fed into the second process, then the output of the second process is fed into the third, and so on. This is often referred to as a pipeline, and is reminiscent of the pipe and filter architecture style.
+
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=570pt]{assets/localipc2.png}
+  \caption{A diagram of the pipeline architecture in POSIX} \cite{rytarowski}
+\end{figure}
+
+In POSIX, pipe() takes an array of two integers. fildes[1] is used for writing, and fildes[0] is used for reading. In the above diagram, process B is forked from process A, and the written data from process A is fed through the pipe into process B. If it returns successfully, it writes file descriptors on each end of the pipeline. Otherwise, it returns -1.
+
 \section{Reflextion Analysis}
 
 \clearpage
@@ -229,13 +251,16 @@ After studying the concrete architecture of the IPC (Inter-Process Communication
 
 \begin{thebibliography}{00}
 	% Using MLA9. If there are too many references, feel free to drop my manpage references %
-	\bibitem{pipe} “FreeBSD Manual Pages.” Pipe(2), \href{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}.
-	\bibitem{fork} “FreeBSD Manual Pages.” Fork(2), \href{https://man.freebsd.org/cgi/man.cgi?fork(2)}{https://man.freebsd.org/cgi/man.cgi?fork(2)}.
-	\bibitem{wait} “FreeBSD Manual Pages.” Wait(2), \href{https://man.freebsd.org/cgi/man.cgi?wait(2)}{https://man.freebsd.org/cgi/man.cgi?wait(2)}.
+	\bibitem{bell} Bell-Thomas, A. H. “Interprocess Communication in Freebsd 11: Performance Analysis.” DeepAI, University of Cambridge, 5 Aug. 2020, https://deepai.org/publication/interprocess-communication-in-freebsd-11-performance-analysis.
 	\bibitem{close} “FreeBSD Manual Pages.” Close(2), \href{https://man.freebsd.org/cgi/man.cgi?query=close\&sektion=2}{https://man.freebsd.org/cgi/man.cgi?query=close\&sektion=2}.
 	\bibitem{dup} “FreeBSD Manual Pages.” Dup(2), \href{https://man.freebsd.org/cgi/man.cgi?query=dup\&sektion=2\&n=1}{https://man.freebsd.org/cgi/man.cgi?query=dup\&sektion=2\&n=1}.
 	\bibitem{execve} “FreeBSD Manual Pages.” Execve(2), \href{https://man.freebsd.org/cgi/man.cgi?query=execve\&sektion=2\&n=1}{https://man.freebsd.org/cgi/man.cgi?query=execve\&sektion=2\&n=1}.
+	\bibitem{fork} “FreeBSD Manual Pages.” Fork(2), \href{https://man.freebsd.org/cgi/man.cgi?fork(2)}{https://man.freebsd.org/cgi/man.cgi?fork(2)}.	
+	\bibitem{pipe} “FreeBSD Manual Pages.” Pipe(2), \href{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}{https://man.freebsd.org/cgi/man.cgi?pipe\%282\%29}.
 	\bibitem{signal} “FreeBSD Manual Pages.” Signal(3), \href{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}{https://man.freebsd.org/cgi/man.cgi?sektion=3\&query=signal}.
+	\bibitem{wait} “FreeBSD Manual Pages.” Wait(2), \href{https://man.freebsd.org/cgi/man.cgi?wait(2)}{https://man.freebsd.org/cgi/man.cgi?wait(2)}.
+	\bibitem{mckusick} McKusick, Marshall Kirk. Design and Implementation of the Freebsd Operating System. 2nd ed., Addison-Wesley Professional, 2015.
 	\bibitem{pipe-explained} Menon-Sen, Abhijit. “How Are Unix Pipes Implemented?” Toroid.org, 27 Mar. 2020, \href{https://toroid.org/unix-pipe-implementation}{https://toroid.org/unix-pipe-implementation}.
+	\bibitem{rytarowski}Rytarowski, Kamil. “Mastering Unix Pipes, Part 1.” Moritz Systems, 26 Nov. 2020, https://www.moritz.systems/blog/mastering-unix-pipes-part-1/.
 \end{thebibliography}
 \end{document}
