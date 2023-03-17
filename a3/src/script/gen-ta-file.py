@@ -47,37 +47,50 @@ def file_exists_in_directory(directory, filename):
     Verifies if a file exists in a directory.
     """
     file_path = os.path.join(directory, filename)
-    return os.path.isfile(file_path)
+    if os.path.isfile(file_path):
+        return file_path
+    else:
+        return None
 
+def find_directories_with_headers(root_directory):
+    """
+    Recursively scan root_directory for directories that contain header files.
+    Return a dictionary that maps each directory to the set of header files it contains.
+    """
+    header_dirs = {}
+    for dirpath, dirnames, filenames in os.walk(root_directory):
+        headers = set(f for f in filenames if f.endswith('.h') or f.endswith('.c'))
+        if headers:
+            header_dirs[dirpath] = headers
+    return header_dirs
 
-def parse_file_dependencies(filename):
+def parse_file_dependencies(file, header_dirs):
     """
     Parses a file and return a set of full paths of files it depends on.
     """
     dependencies = set()
     try:
-        with open(filename, encoding="utf-8", errors="ignore") as f:
-            try:
-                for line in f:
-                    if line.startswith("#include"):
-                        include_file = line.split()[1].strip('"<>"')
-                        # Get the full path of the include file : potential bug, todo
-                        # include_file_path = os.path.abspath(os.path.join(os.path.dirname(filename), include_file))
-                        # print(include_file_path)
-                        # dependencies.add(include_file_path.replace(src_path, root))
-                        dependencies.add(include_file)
-            except Exception as err:
-                # print(filename, err)
-                pass
-    except Exception as err:
-        # print(f'{filename}\n')
+        with open(file, encoding="utf-8", errors="ignore") as f:
+            contents = f.read()
+            includes = re.findall(r'^\s*#\s*include\s+[<"].*?([^\/>"]+)[>"]', contents, flags=re.MULTILINE)
+            for include_file in includes:
+                for header_dir, header_files in header_dirs.items():
+                    if include_file in header_files:
+                        full_path = file_exists_in_directory(header_dir, include_file)
+                        if full_path:
+                            dependencies.add(full_path.replace(src_path, root, 1))
+                            break
+    except Exception:
         pass
     return dependencies
 
 # All dependencies
 dependencies = {}
 links = []
-instances = []
+instances = set()
+print('Finding header locations...')
+header_dirs = find_directories_with_headers(src_path)
+print(f'Found {len(header_dirs)} header locations.')
 
 def print_subsystem(d, fn, parent=None):
     for subsystem, value in d.items():
@@ -90,29 +103,32 @@ def print_subsystem(d, fn, parent=None):
                     # match pattern using glob
                     matches = glob.glob(f'{src_path}{sep}{pattern}', recursive=True)
                     for match in matches:
-                        match = match.replace(f'{src_path}{sep}', "")
-                        fn(subsystem, f'{root}{sep}{match}')
+                        fn(subsystem, match)
                 elif pattern_type == 'exact':
                     # match pattern exactly
                     if file_exists_in_directory(src_path, pattern):
-                        fn(subsystem, f'{root}{sep}{pattern}')
+                        fn(subsystem, match)
                 else:
                     raise ValueError(f'Invalid pattern type: {pattern_type}')
 
-# Add file level contain
+# Add include level dependencies
 def add_file_dependencies(subsystem, file):
     if file.endswith(('.c', '.cpp', '.h')):
+        file_clean = file.replace(src_path, root, 1)
+        instances.add(f'$INSTANCE {file_clean} cFile\n')
+
         # From dependencies
-        dependencies[file] = parse_file_dependencies(file.replace('freebsd', src_path, 1))
+        dependencies[file] = parse_file_dependencies(file, header_dirs)
         
         if dependencies[file]:
             for dep in dependencies[file]:
-                instances.append(f'$INSTANCE {dep} cFile\n')
-                links.append(f'cLinks {file} {dep}\n')
+                links.append(f'cLinks {file_clean} {dep}\n')
 
-# Recursively build subsystems
+print('Finding include dependencies...')
+# Recursively build include dependencies
 print_subsystem(subsystems, add_file_dependencies)
 
+print(f'Creating {ta_file}...')
 with open(ta_file, 'w') as tf:
     tf.write('FACT TUPLE :\n')
 

@@ -1,13 +1,3 @@
-# Setup
-
-1. extract [FreeBSD 12.4.0](https://github.com/freebsd/freebsd-src/releases/tag/release%2F12.4.0) source
-2. Download [Understand](https://licensing.scitools.com/login) with education license
-3. Open Understand IDE
-4. `file` > `new` > `project` and open extracted source
-5. Wait for analysis
-6. `project` > `export dependencies` > `file dependencies` > `export csv` to `eecs4313-reports/a2/src/`
-7. Might need to do additional preprocessing on output
-
 # Methods to Extract Dependencies
 
 1. [Understand](https://licensing.scitools.com/login) (see [A2 source](/a2/src/README.md))

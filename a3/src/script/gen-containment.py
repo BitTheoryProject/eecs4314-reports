@@ -44,7 +44,7 @@ with open(subsystems_file) as f:
     subsystems = json.load(f)
 
 # Read ta_dependency_file dependencies
-dependencies = []
+dependencies = {}
 with open(ta_file) as f:
     for line in f:
         line = line.strip()
@@ -53,9 +53,8 @@ with open(ta_file) as f:
         type, from_file, _ = line.split()
         # We only care about the concrete files
         if type == "$INSTANCE":
-            dependencies.append(from_file)
+            dependencies[from_file] = 1
 
-dependencies_hash = {d: 1 for d in dependencies}
 toplevel = []
 lowlevel = []
 root = 'freebsd'
@@ -75,13 +74,13 @@ def print_subsystem(d, fn, parent=None):
                     for match in matches:
                         match = match.replace(f'{src_path}{sep}', "")
                         # make sure file is a raw.ta instance
-                        if dependencies_hash.get(f'{root}{sep}{match}'):
+                        if dependencies.get(f'{root}{sep}{match}'):
                             fn(subsystem, f'{root}{sep}{match}')
                         else:
                             print(f'{root}{sep}{match}')
                 elif pattern_type == 'regex':
                     # match pattern using regex
-                    match = next((s for s in dependencies if re.search(pattern, s)), None)
+                    match = next((file for file, value in dependencies.items() if re.search(pattern, file)), None)
                     if match:
                         fn(subsystem, match)
                 elif pattern_type == 'exact':
