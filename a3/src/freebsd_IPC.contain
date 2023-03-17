@@ -54,6 +54,7 @@ contain GenericSystemInterface.ss freebsd/sys/sys/termios.h
 contain GenericSystemInterface.ss freebsd/sys/sys/time.h
 contain Security.ss freebsd/sys/security/mac_veriexec/mac_veriexec.h
 contain Security.ss freebsd/sys/security/mac_veriexec/mac_veriexec_internal.h
+contain Subroutines.ss freebsd/sys/kern/subr_syscall.c
 contain Crypto.ss freebsd/sys/crypto/aesni/aesencdec.h
 contain Crypto.ss freebsd/sys/crypto/blake2/blake2_kfreebsd.h
 contain Crypto.ss freebsd/sys/crypto/ccp/ccp.h

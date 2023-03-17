@@ -74,10 +74,11 @@ def print_subsystem(d, fn, parent=None):
                     matches = glob.glob(f'{src_path}{sep}{pattern}', recursive=True)
                     for match in matches:
                         match = match.replace(f'{src_path}{sep}', "")
-                        print(f'{match}')
                         # make sure file is a raw.ta instance
                         if dependencies_hash.get(f'{root}{sep}{match}'):
                             fn(subsystem, f'{root}{sep}{match}')
+                        else:
+                            print(f'{root}{sep}{match}')
                 elif pattern_type == 'regex':
                     # match pattern using regex
                     match = next((s for s in dependencies if re.search(pattern, s)), None)

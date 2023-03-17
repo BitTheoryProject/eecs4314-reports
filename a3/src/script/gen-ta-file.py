@@ -54,18 +54,25 @@ def parse_file_dependencies(filename):
     """
     Parses a file and return a set of full paths of files it depends on.
     """
+    dependencies = set()
     try:
-        dependencies = set()
-        with open(filename) as f:
-            for line in f:
-                if line.startswith("#include"):
-                    include_file = line.split()[1].strip('"<>"')
-                    # Get the full path of the include file
-                    include_file_path = os.path.abspath(os.path.join(os.path.dirname(filename), include_file))
-                    dependencies.add(include_file_path.replace(src_path, root))
-        return dependencies
-    except:
-        return set()
+        with open(filename, encoding="utf-8", errors="ignore") as f:
+            try:
+                for line in f:
+                    if line.startswith("#include"):
+                        include_file = line.split()[1].strip('"<>"')
+                        # Get the full path of the include file : potential bug, todo
+                        # include_file_path = os.path.abspath(os.path.join(os.path.dirname(filename), include_file))
+                        # print(include_file_path)
+                        # dependencies.add(include_file_path.replace(src_path, root))
+                        dependencies.add(include_file)
+            except Exception as err:
+                # print(filename, err)
+                pass
+    except Exception as err:
+        # print(f'{filename}\n')
+        pass
+    return dependencies
 
 # All dependencies
 dependencies = {}
@@ -96,7 +103,7 @@ def print_subsystem(d, fn, parent=None):
 def add_file_dependencies(subsystem, file):
     if file.endswith(('.c', '.cpp', '.h')):
         # From dependencies
-        dependencies[file] = parse_file_dependencies(file.replace('freebsd', src_path))
+        dependencies[file] = parse_file_dependencies(file.replace('freebsd', src_path, 1))
         
         if dependencies[file]:
             for dep in dependencies[file]:
