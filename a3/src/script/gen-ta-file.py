@@ -6,17 +6,18 @@ import argparse
 
 # Parse args
 parser = argparse.ArgumentParser(description='Generate the <containment-file-name>.contain file')
-parser.add_argument('-ss', '--subsystems', type=str, required=True, help='The subsystems file')
 parser.add_argument('-t', '--ta-file', type=str, required=True, help='The ta file name to generate')
-parser.add_argument('-s', '--source', type=str, required=True, help='The path to the freebsd source code')
+parser.add_argument('-ss', '--subsystems', type=str, required=True, help='The subsystems file')
+parser.add_argument('-s', '--source', type=str, required=True, help='The path to the freebsd source code (make sure root is "freebsd")')
 args = parser.parse_args()
 
 subsystems_file = args.subsystems
 ta_file = args.ta_file
 src_path = args.source
+root = 'freebsd'
 
-# Create a containment file from Header includes, for the defined subsystems.
-# Usage: python gen-containment.py -c <containment_file_name> -ss <subsystems-json-file> -s <src_path>
+# Create a raw.ta file from header includes, for the defined subsystems.
+# Usage: python gen-ta-file.py -t <raw_ta_dependency_filename> -ss <subsystems-json-file> -s <src_path>
 
 # Subsystems json file structure:
 # {
@@ -33,7 +34,6 @@ src_path = args.source
 # Pattern types:
 # exact -> exact match pattern
 # glob -> glob match pattern
-# regex -> regex match pattern
 
 sep = os.sep
 
@@ -52,28 +52,28 @@ def file_exists_in_directory(directory, filename):
 
 def parse_file_dependencies(filename):
     """
-    Parses a file and return a set of files it depends on.
+    Parses a file and return a set of full paths of files it depends on.
     """
-    dependencies = set()
-    with open(filename) as f:
-        for line in f:
-            if line.startswith("#include"):
-                include_file = line.split()[1].strip('"<>"')
-                dependencies.add(include_file)
-    return dependencies
+    try:
+        dependencies = set()
+        with open(filename) as f:
+            for line in f:
+                if line.startswith("#include"):
+                    include_file = line.split()[1].strip('"<>"')
+                    # Get the full path of the include file
+                    include_file_path = os.path.abspath(os.path.join(os.path.dirname(filename), include_file))
+                    dependencies.add(include_file_path.replace(src_path, root))
+        return dependencies
+    except:
+        return set()
 
 # All dependencies
 dependencies = {}
 links = []
-# toplevel = []
-# lowlevel = []
 instances = []
-root = 'freebsd'
 
 def print_subsystem(d, fn, parent=None):
-    new_parent = parent or root
     for subsystem, value in d.items():
-        # toplevel.append(f'contain {new_parent} {subsystem}\n')
         if isinstance(value, dict):
             print_subsystem(value, fn, subsystem)
         elif isinstance(value, list):
@@ -95,27 +95,19 @@ def print_subsystem(d, fn, parent=None):
 # Add file level contain
 def add_file_dependencies(subsystem, file):
     if file.endswith(('.c', '.cpp', '.h')):
-        # lowlevel.append(f'$INSTANCE {subsystem} cSubSystem\n')
         # From dependencies
-        dependencies[file] = parse_file_dependencies(file)
+        dependencies[file] = parse_file_dependencies(file.replace('freebsd', src_path))
         
-        for dep in dependencies[file]:
-            instances.append(f'$INSTANCE "{dep}" cFile\n')
-            links.append(f'cLinks {file} {dep}\n')
+        if dependencies[file]:
+            for dep in dependencies[file]:
+                instances.append(f'$INSTANCE {dep} cFile\n')
+                links.append(f'cLinks {file} {dep}\n')
 
 # Recursively build subsystems
 print_subsystem(subsystems, add_file_dependencies)
 
 with open(ta_file, 'w') as tf:
     tf.write('FACT TUPLE :\n')
-    # # Print top-level contains
-    # for contain in toplevel:
-    #     tf.write(contain)
-    # tf.write("\n\n")
-
-    # # Print file-level contains
-    # for contain in lowlevel:
-    #     tf.write(contain)
 
     # Print top-level contains
     for instance in instances:
