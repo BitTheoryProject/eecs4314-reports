@@ -62,6 +62,7 @@ def find_include_dependencies():
     Parse the srcML include tags for each file.
     Return a dictionary that maps each file to the set of include files it contains.
     """
+    # Limitation: potential bug with srcML
     file_dependencies = {}
     for unit in xml_root:
         filename = unit.attrib['filename'].replace('freebsd-src-release-12.4.0', root_path)
