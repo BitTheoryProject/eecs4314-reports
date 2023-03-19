@@ -65,10 +65,10 @@ def find_include_dependencies():
     # Limitation: potential bug with srcML
     file_dependencies = {}
     for unit in xml_root:
-        filename = unit.attrib['filename'].replace('freebsd-src-release-12.4.0', root_path)
+        filename = unit.attrib['filename']
         include_file = unit.find("{http://www.srcML.org/srcML/cpp}file").text
         include_file = include_file[1:-1]
-        # include_file = os.path.basename(include_file)
+        include_file = os.path.basename(include_file)
         if filename not in file_dependencies:
             file_dependencies[filename] = set()
         file_dependencies[filename].add(include_file)
@@ -91,31 +91,31 @@ def parse_file_dependencies(file_clean, include_map, header_dirs):
     Parses a file and return a set of full paths include files it depends on.
     """
     dependencies = set()
-    includes = include_map.get(file_clean, set())
-    # print(f'found {len(includes)} includes for {file_clean}')
-    for include_file in includes:
-        for header_dir, header_files in header_dirs.items():
-            if include_file in header_files:
-                # Limitation: This finds the first match, might not be the right header file
-                full_path = file_exists_in_directory(header_dir, include_file)
-                if full_path:
-                    dependencies.add(full_path.replace(src_path, root_path, 1))
-                    break
-
+    try:
+        # Limitation: might not find all include types
+        includes = include_map.get(file_clean, set())
+        for include_file in includes:
+            for header_dir, header_files in header_dirs.items():
+                if include_file in header_files:
+                    # Limitation: This finds the first match, might not be the right header file
+                    full_path = os.path.join(header_dir, include_file)
+                    if full_path:
+                        dependencies.add(full_path.replace(src_path, root_path, 1))
+                        break
+    except Exception:
+        pass
     return dependencies
 
 
 # All dependencies
-dependencies = {}
 links = []
 instances = set()
 print('Finding header directories...')
 header_dirs = find_directories_with_headers(src_path)
+print(f' Found {len(header_dirs)} header locations.')
 print('Finding include files...')
 include_map = find_include_dependencies()
-
-print(f'Found {len(include_map)} header locations.')
-
+print(f' Mapped {len(include_map)} files.')
 def print_subsystem(d, fn, parent=None):
     for subsystem, value in d.items():
         if isinstance(value, dict):
@@ -140,13 +140,9 @@ def add_file_dependencies(subsystem, file):
     if file.endswith(('.c', '.cpp', '.h')):
         file_clean = file.replace(src_path, root_path, 1)
         instances.add(f'$INSTANCE {file_clean} cFile\n')
-
-        # From dependencies
-        dependencies[file] = parse_file_dependencies(file_clean, include_map, header_dirs)
-        
-        if dependencies[file]:
-            for dep in dependencies[file]:
-                links.append(f'cLinks {file_clean} {dep}\n')
+        # Add dependencies
+        for dep in parse_file_dependencies(file_clean, include_map, header_dirs):
+            links.append(f'cLinks {file_clean} {dep}\n')
 
 print('Finding include dependencies...')
 # Recursively build include dependencies

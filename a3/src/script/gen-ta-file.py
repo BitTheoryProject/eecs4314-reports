@@ -87,7 +87,6 @@ def parse_file_dependencies(file, header_dirs):
     return dependencies
 
 # All dependencies
-dependencies = {}
 links = []
 instances = set()
 print('Finding header locations...')
@@ -118,13 +117,9 @@ def add_file_dependencies(subsystem, file):
     if file.endswith(('.c', '.cpp', '.h')):
         file_clean = file.replace(src_path, root, 1)
         instances.add(f'$INSTANCE {file_clean} cFile\n')
-
-        # From dependencies
-        dependencies[file] = parse_file_dependencies(file, header_dirs)
-        
-        if dependencies[file]:
-            for dep in dependencies[file]:
-                links.append(f'cLinks {file_clean} {dep}\n')
+        # Add dependencies
+        for dep in parse_file_dependencies(file, header_dirs):
+            links.append(f'cLinks {file_clean} {dep}\n')
 
 print('Finding include dependencies...')
 # Recursively build include dependencies
