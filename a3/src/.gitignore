@@ -3,4 +3,5 @@
 *.con.ta
 *.old
 *.txt
+!results*.txt
 *.xml
