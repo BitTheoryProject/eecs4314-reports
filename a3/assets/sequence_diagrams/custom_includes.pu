@@ -1,0 +1,51 @@
+@startuml
+title ""raw.ta"" Generation: Custom Include Method
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+ArrowColor #B70000
+
+ActorBackgroundColor #F8CDCC
+ActorBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+ParticipantBackgroundColor #F8CDCC
+ParticipantBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+DatabaseBackgroundColor #F8CDCC
+DatabaseBorderColor #B70000
+}
+
+actor actor
+
+actor -> "gen-ta-file.py": Provides Subsystem JSON & FreeBSD source
+activate "gen-ta-file.py"
+note right: Subsystem JSON file contains\nthe subsystem names mapped\nto glob patterns that matches\nsubsystem files
+
+"gen-ta-file.py" -> "gen-ta-file.py": Create dict (""header_dirs"") of directories to header files it contains\nvia walking the FreeBSD source
+
+loop For each Subsystem
+    loop For each Glob Pattern Matching the Subsystem
+    "gen-ta-file.py" -> "gen-ta-file.py": Find all ""c"", ""cpp"" & "".h""\nfiles matching the glob pattern
+    loop For each matching file
+        "gen-ta-file.py" -> "gen-ta-file.py": Add file path to ""INSTANCE"" array
+         loop For each line in file
+             "gen-ta-file.py" -> "gen-ta-file.py": Use regex to get the dependency if it exists
+             alt Dependency found (ie. ""include <foo.h>"")
+                  "gen-ta-file.py" -> "gen-ta-file.py": Get headers path from ""header_dirs"" dict created earlier
+                  "gen-ta-file.py" -> "gen-ta-file.py": Add original file path, and dependent file path to ""CLinks"" dict
+             end
+         end
+    end
+    end
+end
+
+"gen-ta-file.py" -> "gen-ta-file.py": Write "".raw.ta"" file\nwith ""INSTANCE"" array & ""CLinks"" dict
+"gen-ta-file.py" --> actor: Exits
+deactivate "gen-ta-file.py"
+@enduml
