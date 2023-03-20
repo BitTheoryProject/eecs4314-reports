@@ -1,0 +1,61 @@
+@startuml
+title ""raw.ta"" Generation: SrcML Include Method
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+ArrowColor #B70000
+
+ActorBackgroundColor #F8CDCC
+ActorBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+ParticipantBackgroundColor #F8CDCC
+ParticipantBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+DatabaseBackgroundColor #F8CDCC
+DatabaseBorderColor #B70000
+}
+
+actor actor
+
+actor -> srcml: Provides FreeBSD source\n& ouput file (ie. ""freebsd.xml"")
+activate srcml
+srcml -> srcml: Parses source code to XML\n& writes to output file
+srcml --> actor: Exits
+deactivate srcml
+
+actor -> srcml: Provides ""freebsd.xml"", output file (ie. ""dependencies.xml"")\n and ""xpath"" to get file dependenices
+activate srcml
+note right: xpath is ""//src:unit[@type='include']/@filename | //cpp:include/cpp:file""
+srcml -> srcml: Writes xml elements from ""freebsd.xml""\nmatching the xpath to output file
+srcml --> actor: Exits
+deactivate srcml
+
+actor -> "gen-ta-file-srcml.py": Provides Subsystem JSON, ""dependencies.xml"", & FreeBSD source
+activate "gen-ta-file-srcml.py"
+note right: Subsystem JSON file contains\nthe subsystem names mapped\nto glob patterns that matches\nsubsystem files
+
+"gen-ta-file-srcml.py" -> "gen-ta-file-srcml.py": Create dict (""header_dirs"") of directories to header files it contains\nvia walking the FreeBSD source
+"gen-ta-file-srcml.py" -> "gen-ta-file-srcml.py": Parse ""dependencies.xml"" into a dict (""include_map"") of files to\ntheir dependencies
+
+loop For each Subsystem
+    loop For each Glob Pattern Matching the Subsystem
+    "gen-ta-file-srcml.py" -> "gen-ta-file-srcml.py": Find all ""c"", ""cpp"" & "".h""\nfiles matching the glob pattern
+    loop For each matching file
+        "gen-ta-file-srcml.py" -> "gen-ta-file-srcml.py": Add file path to ""INSTANCE"" array
+         loop For each dependency of the file from ""include_map""
+                  "gen-ta-file-srcml.py" -> "gen-ta-file-srcml.py": Get headers path from ""header_dirs"" dict
+                  "gen-ta-file-srcml.py" -> "gen-ta-file-srcml.py": Add original file path, and dependent file path to ""CLinks"" map
+    end
+    end
+end
+
+"gen-ta-file-srcml.py" -> "gen-ta-file-srcml.py": Write "".raw.ta"" file\nwith ""INSTANCE"" array & ""CLinks"" map
+"gen-ta-file-srcml.py" --> actor: Exits
+deactivate "gen-ta-file-srcml.py"
+@enduml
