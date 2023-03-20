@@ -1,0 +1,76 @@
+@startuml
+title Common Dependency Extracion Overview
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+ArrowColor #B70000
+
+ActorBackgroundColor #F8CDCC
+ActorBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+ParticipantBackgroundColor #F8CDCC
+ParticipantBorderColor #B70000
+
+NoteBackgroundColor #F8CDCC
+NoteBorderColor #B70000
+
+DatabaseBackgroundColor #F8CDCC
+DatabaseBorderColor #B70000
+}
+
+actor actor
+participant "gen-containment.py"
+participant "final-containment.sh"
+participant "ql.jar"
+participant "clean-ignored.py"
+participant "ls-edit.sh"
+participant "lseditor.jar"
+
+note over actor, "lseditor.jar": Assumes the ""raw.ta"" file has already been generated, and the user has files required by ""ql.jar"": ""schema.asv.ta"" & ""addcontain.ql""
+
+actor -> "gen-containment.py": Provides ""raw.ta"" file, FreeBSD Source & Subsystem JSON file
+activate "gen-containment.py"
+note right: Subsystem JSON file contains\nthe subsystem names mapped\nto glob patterns that matches\nsubsystem files.
+"gen-containment.py" -> "gen-containment.py": Create "".contain"" file
+note right: "".contain"" file is a map\nof subsystem names to file paths
+"gen-containment.py" --> actor: Exits (created "".contain"" file)
+deactivate "gen-containment.py"
+
+
+actor -> "final-containment.sh": Provides "".contain"", ""raw.ta"" file & ""ql.jar""
+activate "final-containment.sh"
+
+"final-containment.sh" -> "ql.jar": Provides "".contain"", ""raw.ta"" &\n""addcontain.ql"" file
+deactivate "final-containment.sh"
+activate "ql.jar"
+
+"ql.jar" -> "ql.jar": Generates ""con.ta"" file
+note right: ""con.ta"" file is ""raw.ta"" with\n"".contain"" merged into it
+
+"ql.jar" --> "final-containment.sh": Outputs file paths from ""raw.ta""\nthat weren't in "".contain""
+deactivate "ql.jar"
+activate "final-containment.sh"
+
+"final-containment.sh" -> "final-containment.sh": Writes output to ""ignored.txt""
+"final-containment.sh" -> "final-containment.sh": Creates "".ls.ta"" file
+note right: ""ls.ta"" file is a concatenation of ""schema.asv.ta""\nand "".raw.ta"" (to populate ""SCHEME"" attributes/tuple\n& ""INHERITICE"")
+"final-containment.sh" --> actor: Exits (created ""ignored.txt"", ""con.ta"" & ""ls.ta"" files)
+deactivate "final-containment.sh"
+
+actor -> "clean-ignored.py": Provides ""ls.ta"" file & ""ignored.txt""
+activate "clean-ignored.py"
+"clean-ignored.py" -> "clean-ignored.py": Overwrites ""ls.ta"" removing lines\nthat contain files in ""ignored.txt""
+"clean-ignored.py" --> actor: Exits (""ls.ta"" is now fully prepared)
+deactivate "clean-ignored.py"
+
+actor -> "ls-edit.sh": Provides ""lseditor.jar"" & ""ls.ta"" file
+activate "ls-edit.sh"
+"ls-edit.sh" -> "lseditor.jar": Starts program passing ""ls.ta"" file
+deactivate "ls-edit.sh"
+activate "lseditor.jar"
+
+"lseditor.jar" --> actor: Provides GUI for displaying dependencies
+@enduml
