@@ -182,10 +182,29 @@
 \lipsum[1]
 
 \section{Conclusion}
-\lipsum[1]
+To conclude, based on the results and observations presented, it is clear that the choice of dependency extraction tool can have a significant impact on the number and types of dependencies identified in a codebase. Understand appears to be the most thorough and comprehensive tool, identifying over 180,000 dependencies, 80% of which were exclusive to that tool. However, it is worth noting that this may lead to more false positives or irrelevant dependencies being identified. SRC-ML and the custom script both focused primarily on include files and identified around 96,000 dependencies, with SRC-ML having no exclusive dependencies and the custom script having only 8. The similarity in their statistics suggests that they may have similar strengths and limitations.
+
+The observation that Understand analyses dependencies based on functions calling other functions while SRC-ML and the custom script prioritise ‘include’ files only suggests that the former may be more effective at identifying dynamic or runtime dependencies, while the latter may be more appropriate for identifying static or compile-time dependencies. However, it is important to note that both types of dependencies can be important in understanding the architecture of a codebase.
+
+In terms of choosing a methodology for dependency extraction in FreeBSD, the specific goals and characteristics of the analysis should be taken into account. For example, if the goal is to identify dynamic dependencies, Understand may be the most appropriate tool. If the focus is on static dependencies based on include files, SRC-ML or the custom script may be more effective. However, it is worth noting that no single tool or methodology may be sufficient on its own, and a combination of techniques may be needed for a more comprehensive understanding of the architecture.
+
+Overall, the process of extracting and analysing architectural dependencies in FreeBSD can be complex and may require careful consideration of the specific needs of the analysis. The tools and methodologies used should be chosen based on the specific goals of the analysis and the characteristics of the codebase being analysed. By taking these factors into account and combining multiple techniques as necessary, a more complete understanding of the architecture of FreeBSD can be achieved.
 
 \section{Lessons Learned}
-\lipsum[1]
+The importance of choosing the right tool: The choice of tool for dependency extraction can have a significant impact on the results and effectiveness of the analysis. It is important to carefully consider the strengths and limitations of each tool and select the one that is most appropriate for the specific goals and characteristics of the analysis.
+
+The importance of understanding the codebase: A thorough understanding of the codebase is crucial for effective dependency extraction and analysis. Without a good understanding of the code structure, it can be difficult to interpret the results and identify relevant dependencies.
+
+The value of combining multiple techniques: While each tool or methodology may have its own strengths and limitations, combining multiple techniques can provide a more comprehensive understanding of the architecture. For example, using both Understand and a custom script may help to identify both dynamic and static dependencies.
+
+The risk of false positives and irrelevant dependencies: Some tools may identify a large number of dependencies, many of which may not be relevant to the specific analysis. It is important to carefully review and validate the results to avoid being misled by false positives or irrelevant dependencies.
+
+The need for ongoing analysis and refinement: As codebases evolve over time, the architecture and dependencies may change as well. Ongoing analysis and refinement of the dependency extraction process is needed to ensure that the results remain accurate and relevant. This may involve updating the tools and techniques used, as well as revisiting the goals and objectives of the analysis.
+
+
+
+
+
 
 \begin{thebibliography}{00}
 	\bibitem{b2} Clarke, Arthur C. 2001: A Space Odyssey. New York: Roc, 1968. 297.
