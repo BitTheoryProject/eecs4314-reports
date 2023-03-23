@@ -184,6 +184,119 @@ in our 2 custom methods.
 	\caption{Raw TA file generation using custom SrcML script.}
 \end{figure}
 
+\section{Quantitative Analysis}
+\lipsum[1]
+
+\section{Qualitative Comparison}
+\subsection{Process of Qualitative Comparison}
+\begin{figure}[h]
+    \center
+    \includegraphics[width=300pt]{assets/qualitative_process_diagram.PNG}
+    \caption{Qualitative Comparison's Process Diagram}
+\end{figure}
+This is the process of our qualitative comparison. After obtaining the extracted dependencies from each technique, we applied the Stratified Sampling to get samples. Here, the population is the union set of all the techniques minus the common dependencies, which is equivalent to 205,963.
+By utilizing a calculator from Creative Research Systems \cite{calculator}, we got 383 as a needed sample size. We divided all the dependencies into 7 stratas and fetched the appropriate number of dependencies from them.
+For example, the number of dependencies extracted only by our Custom method is 8, and the proportion of the stratum is 8 divided by 205,963, which is approximately 0.000039.
+That is, the sample size needed for the particular stratum is 383 multiplied by 0.000039, which is approximately 0.
+After completing all the calculations, we obtained 270 samples from dependencies which only Understand extracted and 113 samples from the common dependencies, extracted by both Custom and srcML methods.
+Moreover, we fetched a single random dependency from the other stratas to introduce more variety of reasons for the existence of dependencies in each strata.
+After the Stratified Sampling, we observed each dependency to find any differences, examined its file code, and updated our extracters when necessary. We repeated these steps until we classified all the dependencies.
+\subsection{Results of Qualitative Comparison}
+\subsubsection{Comparison Between Understand and Custom}
+\underline{Understand-Only Dependencies}
+\newline
+\newline
+Example$\,\colon\,$freebsd/sys/fs/nfsclient/nfs\_clsubs.c $\,\to\,$ freebsd/sys/fs/nfsclient/nfs.h
+\newline
+\newline
+This dependency was extracted because this nfs\_clsubs.c file includes nfs.h as an imported file. Only Understand was able to fetch this dependency as our Custom script is built to fetch the first match, which results in capturing nfs.h under sontib/tcpdump folder.
+
+\underline{Custom-Only Dependencies}
+\newline
+\newline
+Example$\,\colon\,$freebsd/sys/dev/pms/RefTisa/sallsdk/spc/sahw.c $\,\to\,$ freebsd/sys/dev/pms/RefTisa/sallsdk/hda/64k/iopimg.h
+\newline
+\newline
+The dependency is found here because ioparray within iopimg.h is included and utilized in sahw.c.
+However, Understand did not include this dependency as the used location is within a comment line but within the actual run code. Therefore, it was assumed by Understand that it is an unnecessary dependency to extract.
+
+\underline{Common Dependencies Between Understand And Custom}
+\newline
+\newline
+Example$\,\colon\,$freebsd/sys/dev/pms/freebsd/driver/ini/src/agtiapi.c $\,\to\,$ freebsd/sys/cam/cam\_sim.h
+\newline
+\newline
+cam\_sim.h is included and utilized in agtiapi.c for creating structs. For this dependency, Understand simply extracted it, and also the Custom script extracted without any issues as cam\_sim.h with this particular file name can be found only once in the system.
+
+\subsubsection{Comparison Between Understand and srcML}
+
+\subsubsection{Comparison Between Custom and srcML}
+\underline{Custom-Only Dependencies}
+\newline
+\newline
+Example$\,\colon\,$freebsd/sys/dev/pms/RefTisa/sallsdk/spc/sahw.c $\,\to\,$ freebsd/sys/dev/pms/RefTisa/sallsdk/hda/64k/iopimg.h
+\newline
+\newline
+It is the same dependency as the one, brought up earlier for the comparison between Understand and Custom. As well as Understand, srcML also ignored the dependency as iopimg.h was included within commented-out lines. 
+
+\underline{srcML-Only Dependencies}
+\newline
+\newline
+Example$\,\colon\,$artpqi/smartpqi\_event.c $\,\to\,$ freebsd/sys/dev/smartpqi/smartpqi\_includes.h
+\newline
+\newline
+For this srcML-only dependency, this was included only in a srcML extracted list, and the reason for this was due to the missing white space in include reference.
+
+\underline{Common Dependencies Between Custom And srcML}
+\newline
+\newline
+Example$\,\colon\,$freebsd/sys/dev/beri/virtio/network/if\_vtbe.c $\,\to\,$ freebsd/sys/amd64/include/cpu.h
+\newline
+\newline
+For this dependency, we were not able to find a clear rationale. Because both Custom and srcML contain this sample, we first assumed that if\_vtbe.c includes cpu header file. But after examination, we found out that the if\_vtbe.c imports cpu.h, but not in the path shown in the list of extracted dependencies. Instead, the imported cpu.h was under machine folder. 
+Because the file location is still under the machine folder within a XML file we obtained, we assume that the srcML script we created might need to be modified to show the correct path.
+
+\subsubsection{Performance Metrics}
+For the Performance metrics, we utilized recall and precision for our Custom and srcML by including Understand as Oracle.
+Here is two formulas to calculate recall and precision and a diagram which shows which dependency sets we examined to obtain solutions.
+\begin{figure}[h]
+    \center
+    \includegraphics[width=300pt]{assets/recall_precision_diagram.PNG}
+    \caption{Classification Diagram}
+\end{figure}
+
+\begin{equation*}
+    \begin{split}
+    Recall &= \frac{True Positive}{(True Positive + False Negative)}
+    \end{split}
+\end{equation*}
+\newline
+\begin{equation*}
+    \begin{split}
+    Precision &= \frac{True Positive}{(True Positive + False Positive)}
+    \end{split}
+\end{equation*}
+
+For both Custom and srcML, we obtained the same results shown below$\,\colon\,$
+\newline
+For recall, we obtained 66 True Positive dependencies and 270 False Negative dependencies. 
+\begin{equation*}
+    \begin{split}
+    Recall &= \frac{66}{(66 + 270)}\\
+    &= 0.196428571\dots\\
+    &\approx 20\%
+    \end{split}
+\end{equation*}
+For precision, we obtained the same number of True Positive dependencies and 133 False Positive dependencies.
+\begin{equation*}
+    \begin{split}
+    Precision &= \frac{0 + 66}{(66 + 113)}\\
+    &= 0.3687150\dots\\
+    &\approx 37\%
+    \end{split}
+\end{equation*}
+
+
 \section{Architecture}
 \lipsum[1]
 
@@ -226,5 +339,6 @@ The need for ongoing analysis and refinement: As codebases evolve over time, the
 
 \begin{thebibliography}{00}
 	\bibitem{b2} Clarke, Arthur C. 2001: A Space Odyssey. New York: Roc, 1968. 297.
+	\bibitem{calculator} “Sample Size Calculator.” Sample Size Calculator - Confidence Level, Confidence Interval, Sample Size, Population Size, Relevant Population - Creative Research Systems, 2012, https://www.surveysystem.com/sscalc.htm. 
 \end{thebibliography}
 \end{document}
