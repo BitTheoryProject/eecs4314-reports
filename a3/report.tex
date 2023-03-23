@@ -163,6 +163,27 @@
 \subsection{Overview}
 \lipsum[1]
 
+\section{Dependency Extraction}
+
+\clearpage
+\subsection{Generation of Raw TA Files}
+The main difference between our various dependency extraction processes
+is the generation of the \texttt{*.raw.ta} file. Once this file has been generated,
+the processes generally follow the same steps. With that being said,
+the following diagrams show how the \texttt{*.raw.ta} files are generated
+in our 2 custom methods.
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 350pt]{assets/sequence_diagrams/custom_includes.pdf}
+	\caption{Raw TA file generation using custom includes script.}
+\end{figure}
+
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 450pt]{assets/sequence_diagrams/srcml_includes.pdf}
+	\caption{Raw TA file generation using custom SrcML script.}
+\end{figure}
+
 \section{Architecture}
 \lipsum[1]
 
@@ -170,9 +191,6 @@
 \lipsum[1]
 
 \section{External Interfaces}
-\lipsum[1]
-
-\section{Use Cases}
 \lipsum[1]
 
 \section{Data Dictionary}
