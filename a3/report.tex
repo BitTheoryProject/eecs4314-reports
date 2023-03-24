@@ -263,21 +263,21 @@ We used a python script \code{gen-statistics.py} in order to generate our result
 	\caption{The exclusive and common dependencies of the 3 tools we used for extraction, broken into 7 sets.}
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[H]
 	\center
-	\includegraphics[width = 290pt]{assets/UnderstandCustom.jpeg}
+	\includegraphics[width = 230pt]{assets/UnderstandCustom.jpeg}
 	\caption{Direct comparison between the number of dependencies found from the Understand extraction tool and the Custom "include" extraction}
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[H]
 	\center
-	\includegraphics[width = 290pt]{assets/SrcMLCustom.jpeg}
+	\includegraphics[width = 230pt]{assets/SrcMLCustom.jpeg}
 	\caption{Direct comparison between the number of dependencies found from the SrcML extraction tool and the Custom "include" extraction}
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[H]
 	\center
-	\includegraphics[width = 290pt]{assets/UnderstandSrcML.jpeg}
+	\includegraphics[width = 230pt]{assets/UnderstandSrcML.jpeg}
 	\caption{Direct comparison between the number of dependencies found from the Understand extraction tool and the scrML extraction tool}
 \end{figure}
 
@@ -303,133 +303,133 @@ We used a python script \code{gen-statistics.py} in order to generate our result
 \\
 \\
 The above table above shows the number of dependencies extracted from each extraction tool. Understand has the most dependencies out of the three extraction tools, with 180,739 dependencies total. If we divide the number of unique dependencies of Understand by its total number of dependencies, we get $($$145130 \div 180739$$) \approx 80\%$. From this we can conclude that 80\% of Understand's extracted dependencies are unique to that tool.
-\newline
-One observation was that Understand was able to extract far more unique dependencies than SrcML and our custom script put together. Combined, $SrcML \cap Custom Script$ extracted 60,823 unique dependencies, but Understand managed to extract 145,130 dependencies, which is more than double. The SrcML by itself only captured one unique dependency, and our custom script only captured 9 unique dependencies, compared to the large number that Understand gathered.
-\newline
-One thing to note is that SrcML and our custom script have similar statistics. SrcML extracted 96,431 dependencies in total, while our custom script extracted 96,439. The reason why SrcML and the custom script have similar statistics is because they both focus on parsing include statements, in contrast to Understand which prioritizes extracting functions calling other functions.
+		\newline
+		One observation was that Understand was able to extract far more unique dependencies than SrcML and our custom script put together. Combined, $SrcML \cap Custom Script$ extracted 60,823 unique dependencies, but Understand managed to extract 145,130 dependencies, which is more than double. The SrcML by itself only captured one unique dependency, and our custom script only captured 9 unique dependencies, compared to the large number that Understand gathered.
+		\newline
+		One thing to note is that SrcML and our custom script have similar statistics. SrcML extracted 96,431 dependencies in total, while our custom script extracted 96,439. The reason why SrcML and the custom script have similar statistics is because they both focus on parsing include statements, in contrast to Understand which prioritizes extracting functions calling other functions.
 
-\section{Qualitative Comparison}
-\subsection{Process of Qualitative Comparison}
-\begin{figure}[h]
-	\center
-	\includegraphics[width=200pt]{assets/qualitative_process_diagram.PNG}
-	\caption{Qualitative Comparison's Process Diagram}
-\end{figure}
-This is the process of our qualitative comparison. After obtaining the extracted dependencies from each technique, we applied the Stratified Sampling to get samples. Here, the population is the union set of all the techniques minus the common dependencies, which is equivalent to 205,963.
-By utilizing a calculator from Creative Research Systems \cite{calculator}, we got 383 as a needed sample size. We divided all the dependencies into 7 stratas and fetched the appropriate number of dependencies from them.
-For example, the number of dependencies extracted only by our Custom method is 8, and the proportion of the stratum is 8 divided by 205,963, which is approximately 0.000039.
-That is, the sample size needed for the particular stratum is 383 multiplied by 0.000039, which is approximately 0.
-After completing all the calculations, we obtained 270 samples from dependencies which only Understand extracted and 113 samples from the common dependencies, extracted by both Custom and SrcML methods.
-Moreover, we fetched a single random dependency from the other stratas to introduce more variety of reasons for the existence of dependencies in each strata.
-After the Stratified Sampling, we observed each dependency to find any differences, examined its file code, and updated our extractors when necessary. We repeated these steps until we classified all the dependencies.
-\subsection{Results of Qualitative Comparison}
-\subsubsection{Comparison Between Understand and Custom}
-\underline{Understand-Only Dependencies}
-\newline
-\newline
-Example$\,\colon\,$\texttt{freebsd/sys/fs/nfsclient/nfs\_clsubs.c \\$\,\to\,$ freebsd/sys/fs/nfsclient/nfs.h}
-\newline
-\newline
-This dependency was extracted because this \texttt{nfs\_clsubs.c} file includes \texttt{nfs.h} as an imported file. Only Understand was able to fetch this dependency as our Custom script is built to fetch the first match, which results in capturing \texttt{nfs.h} under \texttt{sontib/tcpdump} folder.
+		\section{Qualitative Comparison}
+		\subsection{Process of Qualitative Comparison}
+		\begin{figure}[h]
+			\center
+			\includegraphics[width=200pt]{assets/qualitative_process_diagram.PNG}
+			\caption{Qualitative Comparison's Process Diagram}
+		\end{figure}
+		This is the process of our qualitative comparison. After obtaining the extracted dependencies from each technique, we applied the Stratified Sampling to get samples. Here, the population is the union set of all the techniques minus the common dependencies, which is equivalent to 205,963.
+		By utilizing a calculator from Creative Research Systems \cite{calculator}, we got 383 as a needed sample size. We divided all the dependencies into 7 stratas and fetched the appropriate number of dependencies from them.
+		For example, the number of dependencies extracted only by our Custom method is 8, and the proportion of the stratum is 8 divided by 205,963, which is approximately 0.000039.
+		That is, the sample size needed for the particular stratum is 383 multiplied by 0.000039, which is approximately 0.
+		After completing all the calculations, we obtained 270 samples from dependencies which only Understand extracted and 113 samples from the common dependencies, extracted by both Custom and SrcML methods.
+		Moreover, we fetched a single random dependency from the other stratas to introduce more variety of reasons for the existence of dependencies in each strata.
+		After the Stratified Sampling, we observed each dependency to find any differences, examined its file code, and updated our extractors when necessary. We repeated these steps until we classified all the dependencies.
+		\subsection{Results of Qualitative Comparison}
+		\subsubsection{Comparison Between Understand and Custom}
+		\underline{Understand-Only Dependencies}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{freebsd/sys/fs/nfsclient/nfs\_clsubs.c \\$\,\to\,$ freebsd/sys/fs/nfsclient/nfs.h}
+		\newline
+		\newline
+		This dependency was extracted because this \texttt{nfs\_clsubs.c} file includes \texttt{nfs.h} as an imported file. Only Understand was able to fetch this dependency as our Custom script is built to fetch the first match, which results in capturing \texttt{nfs.h} under \texttt{sontib/tcpdump} folder.
 
-\underline{Custom-Only Dependencies}
-\newline
-\newline
-Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/RefTisa/sallsdk/spc/sahw.c \\$\,\to\,$ freebsd/sys/dev/pms/RefTisa/sallsdk/hda/64k/iopimg.h}
-\newline
-\newline
-The dependency is found here because ioparray within \texttt{iopimg.h} is included and utilized in \texttt{sahw.c}.
-However, Understand did not include this dependency as the used location is within a comment line but within the actual run code. Therefore, it was assumed by Understand that it is an unnecessary dependency to extract.
+		\underline{Custom-Only Dependencies}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/RefTisa/sallsdk/spc/sahw.c \\$\,\to\,$ freebsd/sys/dev/pms/RefTisa/sallsdk/hda/64k/iopimg.h}
+		\newline
+		\newline
+		The dependency is found here because ioparray within \texttt{iopimg.h} is included and utilized in \texttt{sahw.c}.
+		However, Understand did not include this dependency as the used location is within a comment line but within the actual run code. Therefore, it was assumed by Understand that it is an unnecessary dependency to extract.
 
-\underline{Common Dependencies Between Understand And Custom}
-\newline
-\newline
-Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/freebsd/driver/ini/src/agtiapi.c \\$\,\to\,$ freebsd/sys/cam/cam\_sim.h}
-\newline
-\newline
-\texttt{cam\_sim.h} is included and utilized in \texttt{agtiapi.c} for creating structs. For this dependency, Understand simply extracted it, and the Custom script also extracted it without any issues as \texttt{cam\_sim.h} with this particular file name can be found only once in the system.
-\clearpage
-\subsubsection{Comparison Between Understand and SrcML}
-\underline{Understand-Only Dependencies}
-\newline
-\newline
-Example$\,\colon\,$\texttt{freebsd/sys/contrib/libnv/cnvlist.c \\$\,\to\,$ freebsd/sys/sys/nv.h}
-\newline
-\newline
-For this Understand-only dependency, \code{cnvlist.c} uses data structures and functions defined in \code{nv.h}. \code{nv.h} is a header file that defines the "name-value" (NV) pair data structure. The \code{cnvlist.c} source file in \code{libnv} provides functions for creating, manipulating, and storing NV pairs.
+		\underline{Common Dependencies Between Understand And Custom}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/freebsd/driver/ini/src/agtiapi.c \\$\,\to\,$ freebsd/sys/cam/cam\_sim.h}
+		\newline
+		\newline
+		\texttt{cam\_sim.h} is included and utilized in \texttt{agtiapi.c} for creating structs. For this dependency, Understand simply extracted it, and the Custom script also extracted it without any issues as \texttt{cam\_sim.h} with this particular file name can be found only once in the system.
+		\clearpage
+		\subsubsection{Comparison Between Understand and SrcML}
+		\underline{Understand-Only Dependencies}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{freebsd/sys/contrib/libnv/cnvlist.c \\$\,\to\,$ freebsd/sys/sys/nv.h}
+		\newline
+		\newline
+		For this Understand-only dependency, \code{cnvlist.c} uses data structures and functions defined in \code{nv.h}. \code{nv.h} is a header file that defines the "name-value" (NV) pair data structure. The \code{cnvlist.c} source file in \code{libnv} provides functions for creating, manipulating, and storing NV pairs.
 
-Example$\,\colon\,$\texttt{freebsd/sys/contrib/dev/acpica/compiler/aslmaputils.c \\$\,\to\,$ freebsd/sys/contrib/dev/acpica/include/acobject.h}
-\newline
-\newline
-Although not a direct dependency understand was able to still catch indirect dependencies between these files. \code{acobject.h} is a header file that defines various ACPI object data structures and functions used throughout the ACPI subsystem. The \code{aslmaputils.c} source file provides utilities for mapping ACPI names to objects and vice versa, as well as for searching and validating ACPI namepaths.
+		Example$\,\colon\,$\texttt{freebsd/sys/contrib/dev/acpica/compiler/aslmaputils.c \\$\,\to\,$ freebsd/sys/contrib/dev/acpica/include/acobject.h}
+		\newline
+		\newline
+		Although not a direct dependency understand was able to still catch indirect dependencies between these files. \code{acobject.h} is a header file that defines various ACPI object data structures and functions used throughout the ACPI subsystem. The \code{aslmaputils.c} source file provides utilities for mapping ACPI names to objects and vice versa, as well as for searching and validating ACPI namepaths.
 
-\underline{SrcML-Only Dependencies}
+		\underline{SrcML-Only Dependencies}
 
-Example$\,\colon\,$\texttt{freebsd/sys/dev/cfe/cfe\_resource.c \\$\,\to\,$ freebsd/contrib/sendmail/include/sm/cdefs.h}
-\newline
-\newline
-The reason for the apparent dependency between these two files is that \code{cfe\_resource.c} includes a header file that is defined in \code{cdefs.h}.
-
-
-\underline{Common Dependencies Between Understand And SrcML}
-\newline
-\newline
-Example$\,\colon\,$\texttt{freebsd/sys/dev/smartpqi/smartpqi\_event.c \\$\,\to\,$ freebsd/sys/dev/smartpqi/smartpqi\_includes.h}
-\newline
-\newline
-The \code{smartpqi\_event.c} source file in the \code{smartpqi} driver for FreeBSD includes the \code{smartpqi\_includes.h} header file because it contains various data structures and function declarations declared in \code{smartpqi\_includes.h}. \code{smartpqi\_includes.h}  provides definitions for the data structures used to represent various events that can occur in the driver.
+		Example$\,\colon\,$\texttt{freebsd/sys/dev/cfe/cfe\_resource.c \\$\,\to\,$ freebsd/contrib/sendmail/include/sm/cdefs.h}
+		\newline
+		\newline
+		The reason for the apparent dependency between these two files is that \code{cfe\_resource.c} includes a header file that is defined in \code{cdefs.h}.
 
 
-\subsubsection{Comparison Between Custom and SrcML}
-\underline{Custom-Only Dependencies}
-\newline
-\newline
-Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/RefTisa/sallsdk/spc/sahw.c \\$\,\to\,$ freebsd/sys/dev/pms/RefTisa/sallsdk/hda/64k/iopimg.h}
-\newline
-\newline
-It is the same dependency as the one, brought up earlier for the comparison between Understand and Custom. As well as Understand, SrcML also ignored the dependency as \texttt{iopimg.h} was included within commented-out lines.
+		\underline{Common Dependencies Between Understand And SrcML}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{freebsd/sys/dev/smartpqi/smartpqi\_event.c \\$\,\to\,$ freebsd/sys/dev/smartpqi/smartpqi\_includes.h}
+		\newline
+		\newline
+		The \code{smartpqi\_event.c} source file in the \code{smartpqi} driver for FreeBSD includes the \code{smartpqi\_includes.h} header file because it contains various data structures and function declarations declared in \code{smartpqi\_includes.h}. \code{smartpqi\_includes.h}  provides definitions for the data structures used to represent various events that can occur in the driver.
 
-\underline{SrcML-Only Dependencies}
-\newline
-\newline
-Example$\,\colon\,$\texttt{artpqi/smartpqi\_event.c \\$\,\to\,$ freebsd/sys/dev/smartpqi/smartpqi\_includes.h}
-\newline
-\newline
-For this SrcML-only dependency, this was included only in a SrcML extracted list, and the reason for this was due to the missing white space in include reference.
 
-\underline{Common Dependencies Between Custom And SrcML}
-\newline
-\newline
-Example$\,\colon\,$\texttt{freebsd/sys/dev/beri/virtio/network/if\_vtbe.c \\$\,\to\,$ freebsd/sys/amd64/include/cpu.h}
-\newline
-\newline
-For this dependency, we were not able to find a clear rationale. Because both Custom and SrcML contain this sample, we first assumed that \texttt{if\_vtbe.c} includes \texttt{cpu.h}. However, after examination, we found out that the \texttt{if\_vtbe.c} imports \texttt{cpu.h}, but not in the path shown in the list of extracted dependencies. Instead, the imported \texttt{cpu.h} was under a \texttt{machine} folder.
-Because the file location is still under the \texttt{machine} folder within a XML file we obtained, we assume that the SrcML script we created might need to be modified to show the correct path.
-\clearpage
+		\subsubsection{Comparison Between Custom and SrcML}
+		\underline{Custom-Only Dependencies}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/RefTisa/sallsdk/spc/sahw.c \\$\,\to\,$ freebsd/sys/dev/pms/RefTisa/sallsdk/hda/64k/iopimg.h}
+		\newline
+		\newline
+		It is the same dependency as the one, brought up earlier for the comparison between Understand and Custom. As well as Understand, SrcML also ignored the dependency as \texttt{iopimg.h} was included within commented-out lines.
 
-\subsubsection{Performance Metrics}
-For the Performance metrics, we utilized recall and precision for our Custom and SrcML by including Understand as Oracle.
-Here, we have two formulas to calculate recall and precision. As well as these formulas, we included a diagram which shows which dependency sets we examined to obtain solutions.
+		\underline{SrcML-Only Dependencies}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{artpqi/smartpqi\_event.c \\$\,\to\,$ freebsd/sys/dev/smartpqi/smartpqi\_includes.h}
+		\newline
+		\newline
+		For this SrcML-only dependency, this was included only in a SrcML extracted list, and the reason for this was due to the missing white space in include reference.
 
-\begin{equation*}
-	\begin{split}
-		Recall &= \frac{True Positive}{(True Positive + False Negative)}
-	\end{split}
-\end{equation*}
-\newline
-\begin{equation*}
-	\begin{split}
-		Precision &= \frac{True Positive}{(True Positive + False Positive)}
-	\end{split}
-\end{equation*}
+		\underline{Common Dependencies Between Custom And SrcML}
+		\newline
+		\newline
+		Example$\,\colon\,$\texttt{freebsd/sys/dev/beri/virtio/network/if\_vtbe.c \\$\,\to\,$ freebsd/sys/amd64/include/cpu.h}
+		\newline
+		\newline
+		For this dependency, we were not able to find a clear rationale. Because both Custom and SrcML contain this sample, we first assumed that \texttt{if\_vtbe.c} includes \texttt{cpu.h}. However, after examination, we found out that the \texttt{if\_vtbe.c} imports \texttt{cpu.h}, but not in the path shown in the list of extracted dependencies. Instead, the imported \texttt{cpu.h} was under a \texttt{machine} folder.
+		Because the file location is still under the \texttt{machine} folder within a XML file we obtained, we assume that the SrcML script we created might need to be modified to show the correct path.
+		\clearpage
 
-\begin{figure}[h]
-	\center
-	\includegraphics[width=300pt]{assets/recall_precision_diagram.PNG}
-	\caption{Classification Diagram}
-\end{figure}
+		\subsubsection{Performance Metrics}
+		For the Performance metrics, we utilized recall and precision for our Custom and SrcML by including Understand as Oracle.
+		Here, we have two formulas to calculate recall and precision. As well as these formulas, we included a diagram which shows which dependency sets we examined to obtain solutions.
 
-For both Custom and SrcML, we obtained the same results shown below$\,\colon\,$
+		\begin{equation*}
+			\begin{split}
+				Recall &= \frac{True Positive}{(True Positive + False Negative)}
+			\end{split}
+		\end{equation*}
+		\newline
+		\begin{equation*}
+			\begin{split}
+				Precision &= \frac{True Positive}{(True Positive + False Positive)}
+			\end{split}
+		\end{equation*}
+
+		\begin{figure}[h]
+			\center
+			\includegraphics[width=300pt]{assets/recall_precision_diagram.PNG}
+			\caption{Classification Diagram}
+		\end{figure}
+
+		For both Custom and SrcML, we obtained the same results shown below$\,\colon\,$
 \newline
 For recall, we obtained 66 True Positive dependencies and 270 False Negative dependencies.
 \begin{equation*}
