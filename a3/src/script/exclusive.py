@@ -62,7 +62,7 @@ while len(exclusive_A1) > 0:
     output.append(exclusive_A1.pop())
     output.append("\n")
 
-output.append("---------------------Exclusive to A1--------------------\n")
+output.append("---------------------Exclusive to A2--------------------\n")
 while len(exclusive_A2) > 0:
     output.append(exclusive_A2.pop())
     output.append("\n")

@@ -185,7 +185,30 @@ in our 2 custom methods.
 \end{figure}
 
 \section{Quantitative Analysis}
-\lipsum[1]
+\subsection{Process of Quantitative Analysis}
+
+We used a python script \textbackslash src\textbackslash scripts\textbackslash gen-statistics.py in order to generate our results for this analysis. This script would take 3 ls.ta extraction files for each tool that we implemented in this project, then read every line from each extraction file looking for cLinks dependencies. The script then adds the dependencies to a respective set for each tool using the “from file” and “to file” as a key. Then we use python set theory functions to find useful statistics such as: the size of the intersection between each two tool dependency sets, the size of the intersection of all depdency sets, the size of the exclusive dependency set for each tool, and the size of the union of all dependency sets. Finally this information is logged into a txt file for future reference. Finally we use this file to generate the following visualizations.
+
+\subsection{Direct Comparison}
+
+\begin{figure}[H]
+	\center
+	\includegraphics[width = 450pt]{assets/UnderstandCustom.jpeg}
+	\caption{Direct comparision between the number of dependencies found from the Understand extraction tool and the Custom "include" extraction}
+\end{figure}
+
+\begin{figure}[H]
+	\center
+	\includegraphics[width = 450pt]{assets/srcMLCustom.jpeg}
+	\caption{Direct comparision between the number of dependencies found from the srcML extraction tool and the Custom "include" extraction}
+\end{figure}
+
+\begin{figure}[H]
+	\center
+	\includegraphics[width = 450pt]{assets/UnderstandSrcML.jpeg}
+	\caption{Direct comparision between the number of dependencies found from the Understand extraction tool and the scrML extraction tool}
+\end{figure}
+
 
 \section{Qualitative Comparison}
 \subsection{Process of Qualitative Comparison}
