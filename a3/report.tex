@@ -149,7 +149,7 @@
 \hspace{0pt}
 \vfill
 \begin{abstract}
-	Dependency extraction for source code is a critical task in software engineering which involves identifying and extracting software components from the repositories. It is a process of obtaining source code from compiled executables, and it is essential for reverse engineering, software analysis and debugging. We can find the relationships, including function calls, variable references, and inheritance relationships among different components in the system. We will be able to maintain the software architecture features. By achieving these features, we can minimize changes' impact and ensure the system is always scalable and maintainable. It will also help refactor the code by identifying the components that might need to change from different files. In the report, we will extract the source code from the FreeBSD operating system and find the relationships between the components inside the system, including Understand, srcML and our custom method. During the research process, we used two different techniques to get more precise results and better compare the three methods.
+	Dependency extraction for source code is a critical task in software engineering which involves identifying and extracting software components from the repositories. It is a process of obtaining source code from compiled executables, and it is essential for reverse engineering, software analysis and debugging. We can find the relationships, including function calls, variable references, and inheritance relationships among different components in the system. We will be able to maintain the software architecture features. By achieving these features, we can minimize changes' impact and ensure the system is always scalable and maintainable. It will also help refactor the code by identifying the components that might need to change from different files. In the report, we will extract the source code from the FreeBSD operating system and find the relationships between the components inside the system, including Understand, SrcML and our custom method. During the research process, we used two different techniques to get more precise results and better compare the three methods.
 	Based on these techniques, the quantitative and qualitative helped to show more secrete about dependency extraction.
 	After those processes, we successfully compared three extraction methods and summarized their advantages and limitations.
 	\\\\
@@ -164,33 +164,32 @@
 \section{Introduction}
 In the report, we will be analyzing dependency extraction in software architecture development. As software changes over time, the architecture might be changed a lot. The process of dependency extraction will be able to reconstruct the structure of the software architecture. Dependency extraction allows developers to understand the meaning of the code-based information better and can improve the accuracy of automated text analysis and processing.
 Understand is a commercial software tool that supports many programming languages. It can generate different reports such as metrics, dependency, and call graphs by analyzing the source code from the software. After analysis of the source code, it will also create a dependency graph which shows the relationships between different components and entities inside the source code. These dependency graphs will give the developers a clear view of the effect of each component and how these components will work together.
-The official website briefly and concisely explains the functionalities of srcML, which is an infrastructure for the exploration, analysis, and manipulation of source code and a lightweight, highly scalable, robust, multi-language parsing tool to convert source code into srcML. Compared to Understand, srcML is an open-source software system that provides a way to generate the source code in an XML format, and XML format can be easily analyzed and manipulated using other software tools by the developers. SrcML can use different programming languages as input, and SrcML captures both the syntax and semantics of the code. By analyzing the source code, srcML will depend on the code's structure, including the variables' names and types.
+The official website briefly and concisely explains the functionalities of SrcML, which is an infrastructure for the exploration, analysis, and manipulation of source code and a lightweight, highly scalable, robust, multi-language parsing tool to convert source code into SrcML. Compared to Understand, SrcML is an open-source software system that provides a way to generate the source code in an XML format, and XML format can be easily analyzed and manipulated using other software tools by the developers. SrcML can use different programming languages as input, and SrcML captures both the syntax and semantics of the code. By analyzing the source code, SrcML will depend on the code's structure, including the variables' names and types.
 
 \subsection{Overview}
-The report contains several parts. Firstly, we will discuss the derivation process of the three methods of extracting dependencies, and we will show the use cases and diagram. We will discuss three main extraction strategies we decide to use in the dependency extraction: understand, srcML and custom. Then, we will discuss the quantitative and qualitative analysis to explain the performance metrics. Before concluding, we will analyze the limitations of the techniques used and explained in the report.
+The report contains several parts. Firstly, we will discuss the derivation process of the three methods of extracting dependencies, and we will show the use cases and diagram. We will discuss three main extraction strategies we decide to use in the dependency extraction: understand, SrcML and custom. Then, we will discuss the quantitative and qualitative analysis to explain the performance metrics. Before concluding, we will analyze the limitations of the techniques used and explained in the report.
 
 \section{Dependency Extraction}
 \subsection{Understand}
-The first technique we used to extract dependencies of the FreeBSD kernel is using the Understand static code analysis IDE. We used it to analyze the FreeBSD source code and generate the extracted dependencies in \code{freebsd\_FileDependencies.csv} format. This CSV file is then converted to a \code{raw.ta} file using \code{csv-to-ta.pl} perl script. The rest of the process after the \code{Start A}, in figure 1, state is complete is the same as the assignment 2 iterative architectural decomposition. This process takes roughly over 3 hours to complete from start to end.
+The first technique we used to extract dependencies of the FreeBSD kernel is using the Understand static code analysis IDE. We used it to analyze the FreeBSD source code and generate the extracted dependencies in \code{freebsd\_FileDependencies.csv} format. This CSV file is then converted to a \code{raw.ta} file using \code{csv-to-ta.pl} perl script. The rest of the process after the \code{Start A}, in figure 1, state is complete is the same as the assignment 2 iterative architectural decomposition. This process takes roughly over 3 hours to complete from start to end. A more comprehensive set of instructions of extracting dependencies with Understand can be found at \cite{understand}.
 
 
-\subsection{SrcML Introduction}
+\subsection{SrcML}
+The second technique we used to extract dependencies of the FreeBSD kernel is using the SrcML tool to convert our source code into xml and perform \code{xPath} queries. We used it to analyze the FreeBSD source code and generate the extracted dependencies in \code{freebsd\_FileDependencies.xml} format. Similarly, the rest of the process after the \code{Start A} state, is the same iterative process. The SrcML method uses an \code{xPath} query, \code{src:unit[@type='include']/@filename | cpp:include/cpp:file}, on the XML to extract the include dependencies. This method takes about 20 minutes for the entire process.
 
-As part of our ongoing efforts to understand and analyze the FreeBSD kernel's structure, we have successfully extracted file-level dependencies using the srcML tool. we will outline the steps taken to achieve this goal and provide an overview of each step. Our findings helped us tremendously in understanding the kernel's architecture and identifying areas for optimization or improvement.
+\subsubsection{Installing and Configuring SrcML}
 
-\subsubsection{Installing and Configuring srcML}
-
-we installed the srcML tool on our local machines. srcML is an open-source tool designed to convert source code into an XML format, which makes it easier to analyze and manipulate using XPath queries. After installing srcML, we familiarized ourselves with its documentation and basic usage, enabling us to use it effectively in the next steps.
+we installed the SrcML tool on our local machines. SrcML is an open-source tool designed to convert source code into an XML format, which makes it easier to analyze and manipulate using XPath queries. After installing SrcML, we familiarized ourselves with its documentation and basic usage, enabling us to use it effectively in the next steps.
 
 \subsubsection{Converting the FreeBSD Kernel Source Code to XML}
 
-With srcML installed and configured, we proceeded to convert the entire FreeBSD kernel source code into an XML format. Using the command:
+With SrcML installed and configured, we proceeded to convert the entire FreeBSD kernel source code into an XML format. Using the command:
 
 \begin{verbatim}
 srcml freebsd/src/sys -o freebsd_kernel.xml
 \end{verbatim}
 
-we directed srcML to process the source code located in the \texttt{freebsd/src/sys} directory and output the resulting XML to a file named \texttt{freebsd\_kernel.xml}. This step was essential for enabling us to perform XPath queries on the source code data.
+we directed SrcML to process the source code located in the \texttt{freebsd/src/sys} directory and output the resulting XML to a file named \texttt{freebsd\_kernel.xml}. This step was essential for enabling us to perform XPath queries on the source code data.
 
 \subsubsection{Extracting Include Units and Files with XPath}
 
@@ -206,9 +205,9 @@ This XPath query searched for all \texttt{src:unit} elements with a \texttt{type
 
 With the data extracted, we created a custom script to parse the output from the previous step and generate a raw TA file.  Our custom script iterated through the list of include units and files, reformatting the data into the desired format and outputting it to the raw TA file.
 
-\subsubsection{srcML Conclusion}
+\subsubsection{SrcML Conclusion}
 
-In conclusion, we have successfully extracted file-level dependencies within the FreeBSD kernel using the srcML tool and a series of XPath queries. srcML has some limitations that users should be aware of when using it for source code analysis. it can be computationally intensive and time-consuming when processing large codebases, potentially impacting the efficiency of the analysis. Finally, srcML's XML output can be cumbersome to work with and may require additional tools or expertise to manipulate and analyze effectively, However, being efficient in XPath Queries can help save time in writing multiple lines of code.
+In conclusion, we have successfully extracted file-level dependencies within the FreeBSD kernel using the SrcML tool and a series of XPath queries. SrcML has some limitations that users should be aware of when using it for source code analysis. it can be computationally intensive and time-consuming when processing large codebases, potentially impacting the efficiency of the analysis. Finally, SrcML's XML output can be cumbersome to work with and may require additional tools or expertise to manipulate and analyze effectively, However, being efficient in XPath Queries can help save time in writing multiple lines of code.
 
 \subsection{Custom Script}
 The last technique we used to extract dependencies of the FreeBSD kernel is using a custom script to recursively scan our source code and match include directives with regex. This is all done in our \code{gen-ta-file.py} script. We used this script to generate the \code{freebsd\_FileDependencies.raw.ta} file without any intermediate tools. Similarly, the rest of the processes after the \code{Start A} state is complete, is the same iterative process mentioned earlier. This method is the fastest of the three since it does not have intermediate steps for \code{Start A} state. It takes about 10 minutes.
@@ -266,8 +265,8 @@ We used a python script \code{gen-statistics.py} in order to generate our result
 
 \begin{figure}[H]
 	\center
-	\includegraphics[width = 290pt]{assets/srcMLCustom.jpeg}
-	\caption{Direct comparison between the number of dependencies found from the srcML extraction tool and the Custom "include" extraction}
+	\includegraphics[width = 290pt]{assets/SrcMLCustom.jpeg}
+	\caption{Direct comparison between the number of dependencies found from the SrcML extraction tool and the Custom "include" extraction}
 \end{figure}
 
 \begin{figure}[H]
@@ -284,11 +283,11 @@ We used a python script \code{gen-statistics.py} in order to generate our result
 	Extraction Tool                  & Total number of dependencies & Number of unique dependencies \\
 	\hline
 	Understand                       & 180,739                      & 145,130                       \\
-	srcML                            & 96,431                       & 1                             \\
+	SrcML                            & 96,431                       & 1                             \\
 	Custom Script                    & 96,439                       & 9                             \\
-	$Understand \cap  srcML$         & 35,608                       & 1                             \\
+	$Understand \cap  SrcML$         & 35,608                       & 1                             \\
 	$Understand \cap  Custom Script$ & 35,608                       & 1                             \\
-	$srcML \cap Custom Script$       & 96,430                       & 60823                         \\
+	$SrcML \cap Custom Script$       & 96,430                       & 60823                         \\
 	All three (union)                & 241,570                      & N/A                           \\
 	All three (common)               & 35,607                       & N/A                           \\
 	\hline
@@ -299,9 +298,9 @@ We used a python script \code{gen-statistics.py} in order to generate our result
 \\
 The above table above shows the number of dependencies extracted from each extraction tool. Understand has the most dependencies out of the three extraction tools, with 180,739 dependencies total. If we divide the number of unique dependencies of Understand by its total number of dependencies, we get $($$145130 \div 180739$$) \approx 80\%$. From this we can conclude that 80\% of Understand's extracted dependencies are unique to that tool.
 \newline
-One observation was that Understand was able to extract far more unique dependencies than srcML and our custom script put together. Combined, $srcML \cap Custom Script$ extracted 60,823 unique dependencies, but Understand managed to extract 145,130 dependencies, which is more than double. The srcML by itself only captured one unique dependency, and our custom script only captured 9 unique dependencies, compared to the large number that Understand gathered.
+One observation was that Understand was able to extract far more unique dependencies than SrcML and our custom script put together. Combined, $SrcML \cap Custom Script$ extracted 60,823 unique dependencies, but Understand managed to extract 145,130 dependencies, which is more than double. The SrcML by itself only captured one unique dependency, and our custom script only captured 9 unique dependencies, compared to the large number that Understand gathered.
 \newline
-One thing to note is that srcML and our custom script have similar statistics. srcML extracted 96,431 dependencies in total, while our custom script extracted 96,439. The reason why srcML and the custom script have similar statistics is because they both focus on parsing include statements, in contrast to Understand which prioritizes extracting functions calling other functions.
+One thing to note is that SrcML and our custom script have similar statistics. SrcML extracted 96,431 dependencies in total, while our custom script extracted 96,439. The reason why SrcML and the custom script have similar statistics is because they both focus on parsing include statements, in contrast to Understand which prioritizes extracting functions calling other functions.
 
 \section{Qualitative Comparison}
 \subsection{Process of Qualitative Comparison}
@@ -314,7 +313,7 @@ This is the process of our qualitative comparison. After obtaining the extracted
 By utilizing a calculator from Creative Research Systems \cite{calculator}, we got 383 as a needed sample size. We divided all the dependencies into 7 stratas and fetched the appropriate number of dependencies from them.
 For example, the number of dependencies extracted only by our Custom method is 8, and the proportion of the stratum is 8 divided by 205,963, which is approximately 0.000039.
 That is, the sample size needed for the particular stratum is 383 multiplied by 0.000039, which is approximately 0.
-After completing all the calculations, we obtained 270 samples from dependencies which only Understand extracted and 113 samples from the common dependencies, extracted by both Custom and srcML methods.
+After completing all the calculations, we obtained 270 samples from dependencies which only Understand extracted and 113 samples from the common dependencies, extracted by both Custom and SrcML methods.
 Moreover, we fetched a single random dependency from the other stratas to introduce more variety of reasons for the existence of dependencies in each strata.
 After the Stratified Sampling, we observed each dependency to find any differences, examined its file code, and updated our extractors when necessary. We repeated these steps until we classified all the dependencies.
 \subsection{Results of Qualitative Comparison}
@@ -344,7 +343,7 @@ Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/freebsd/driver/ini/src/agtiapi.c 
 \newline
 \texttt{cam\_sim.h} is included and utilized in \texttt{agtiapi.c} for creating structs. For this dependency, Understand simply extracted it, and the Custom script also extracted it without any issues as \texttt{cam\_sim.h} with this particular file name can be found only once in the system.
 \clearpage
-\subsubsection{Comparison Between Understand and srcML}
+\subsubsection{Comparison Between Understand and SrcML}
 \underline{Understand-Only Dependencies}
 \newline
 \newline
@@ -358,7 +357,7 @@ Example$\,\colon\,$\texttt{freebsd/sys/contrib/dev/acpica/compiler/aslmaputils.c
 \newline
 Although not a direct dependency understand was able to still catch indirect dependencies between these files. \code{acobject.h} is a header file that defines various ACPI object data structures and functions used throughout the ACPI subsystem. The \code{aslmaputils.c} source file provides utilities for mapping ACPI names to objects and vice versa, as well as for searching and validating ACPI namepaths.
 
-\underline{srcML-Only Dependencies}
+\underline{SrcML-Only Dependencies}
 
 Example$\,\colon\,$\texttt{freebsd/sys/dev/cfe/cfe\_resource.c \\$\,\to\,$ freebsd/contrib/sendmail/include/sm/cdefs.h}
 \newline
@@ -366,7 +365,7 @@ Example$\,\colon\,$\texttt{freebsd/sys/dev/cfe/cfe\_resource.c \\$\,\to\,$ freeb
 The reason for the apparent dependency between these two files is that \code{cfe\_resource.c} includes a header file that is defined in \code{cdefs.h}.
 
 
-\underline{Common Dependencies Between Understand And srcML}
+\underline{Common Dependencies Between Understand And SrcML}
 \newline
 \newline
 Example$\,\colon\,$\texttt{freebsd/sys/dev/smartpqi/smartpqi\_event.c \\$\,\to\,$ freebsd/sys/dev/smartpqi/smartpqi\_includes.h}
@@ -375,35 +374,35 @@ Example$\,\colon\,$\texttt{freebsd/sys/dev/smartpqi/smartpqi\_event.c \\$\,\to\,
 The \code{smartpqi\_event.c} source file in the \code{smartpqi} driver for FreeBSD includes the \code{smartpqi\_includes.h} header file because it contains various data structures and function declarations declared in \code{smartpqi\_includes.h}. \code{smartpqi\_includes.h}  provides definitions for the data structures used to represent various events that can occur in the driver.
 
 
-\subsubsection{Comparison Between Custom and srcML}
+\subsubsection{Comparison Between Custom and SrcML}
 \underline{Custom-Only Dependencies}
 \newline
 \newline
 Example$\,\colon\,$\texttt{freebsd/sys/dev/pms/RefTisa/sallsdk/spc/sahw.c \\$\,\to\,$ freebsd/sys/dev/pms/RefTisa/sallsdk/hda/64k/iopimg.h}
 \newline
 \newline
-It is the same dependency as the one, brought up earlier for the comparison between Understand and Custom. As well as Understand, srcML also ignored the dependency as \texttt{iopimg.h} was included within commented-out lines.
+It is the same dependency as the one, brought up earlier for the comparison between Understand and Custom. As well as Understand, SrcML also ignored the dependency as \texttt{iopimg.h} was included within commented-out lines.
 
-\underline{srcML-Only Dependencies}
+\underline{SrcML-Only Dependencies}
 \newline
 \newline
 Example$\,\colon\,$\texttt{artpqi/smartpqi\_event.c \\$\,\to\,$ freebsd/sys/dev/smartpqi/smartpqi\_includes.h}
 \newline
 \newline
-For this srcML-only dependency, this was included only in a srcML extracted list, and the reason for this was due to the missing white space in include reference.
+For this SrcML-only dependency, this was included only in a SrcML extracted list, and the reason for this was due to the missing white space in include reference.
 
-\underline{Common Dependencies Between Custom And srcML}
+\underline{Common Dependencies Between Custom And SrcML}
 \newline
 \newline
 Example$\,\colon\,$\texttt{freebsd/sys/dev/beri/virtio/network/if\_vtbe.c \\$\,\to\,$ freebsd/sys/amd64/include/cpu.h}
 \newline
 \newline
-For this dependency, we were not able to find a clear rationale. Because both Custom and srcML contain this sample, we first assumed that \texttt{if\_vtbe.c} includes \texttt{cpu.h}. However, after examination, we found out that the \texttt{if\_vtbe.c} imports \texttt{cpu.h}, but not in the path shown in the list of extracted dependencies. Instead, the imported \texttt{cpu.h} was under a \texttt{machine} folder.
-Because the file location is still under the \texttt{machine} folder within a XML file we obtained, we assume that the srcML script we created might need to be modified to show the correct path.
+For this dependency, we were not able to find a clear rationale. Because both Custom and SrcML contain this sample, we first assumed that \texttt{if\_vtbe.c} includes \texttt{cpu.h}. However, after examination, we found out that the \texttt{if\_vtbe.c} imports \texttt{cpu.h}, but not in the path shown in the list of extracted dependencies. Instead, the imported \texttt{cpu.h} was under a \texttt{machine} folder.
+Because the file location is still under the \texttt{machine} folder within a XML file we obtained, we assume that the SrcML script we created might need to be modified to show the correct path.
 \clearpage
 
 \subsubsection{Performance Metrics}
-For the Performance metrics, we utilized recall and precision for our Custom and srcML by including Understand as Oracle.
+For the Performance metrics, we utilized recall and precision for our Custom and SrcML by including Understand as Oracle.
 Here, we have two formulas to calculate recall and precision. As well as these formulas, we included a diagram which shows which dependency sets we examined to obtain solutions.
 
 \begin{equation*}
@@ -424,7 +423,7 @@ Here, we have two formulas to calculate recall and precision. As well as these f
 	\caption{Classification Diagram}
 \end{figure}
 
-For both Custom and srcML, we obtained the same results shown below$\,\colon\,$
+For both Custom and SrcML, we obtained the same results shown below$\,\colon\,$
 \newline
 For recall, we obtained 66 True Positive dependencies and 270 False Negative dependencies.
 \begin{equation*}
@@ -460,15 +459,15 @@ The Understand static code analysis tool also has limitations despite being a ro
 Furthermore, Understand cannot analyze dynamic code since it is a static code analysis tool. This means it cannot analyze dynamic code or code generated at runtime. Lastly, Understand can be resource-intensive and time-consuming when analyzing large codebases, making it challenging to use on large projects and may impact its effectiveness.
 
 \subsection{Recommendations}
-If we had more time, one way to improve these limitations would be to explore other dependency extraction techniques, such as compiling the source code and extracting linked library dependencies instead of using two methods that include directives. Alternatively, we can expand using SrcML and create a custom parser that generates a call graph based on XPath queries on the XML function units.
+If we had more time, one way to improve these limitations would be to explore other dependency extraction techniques, such as compiling the source code and extracting linked library dependencies instead of using two methods that use include directives. Alternatively, we can expand using SrcML and create a custom parser that generates a call graph based on XPath queries on the XML function units.
 \clearpage
 
 \section{Conclusion}
-To conclude, based on the results and observations presented, it is clear that the choice of dependency extraction tool can have a significant impact on the number and types of dependencies identified in a codebase. Understand appears to be the most thorough and comprehensive tool, identifying over 180,000 dependencies, 80\% of which were exclusive to that tool. However, it is worth noting that this may lead to more false positives or irrelevant dependencies being identified. srcML and the custom script both focused primarily on include files and identified around 96,000 dependencies, with srcML having no exclusive dependencies and the custom script having only 8. The similarity in their statistics suggests that they may have similar strengths and limitations.
+To conclude, based on the results and observations presented, it is clear that the choice of dependency extraction tool can have a significant impact on the number and types of dependencies identified in a codebase. Understand appears to be the most thorough and comprehensive tool, identifying over 180,000 dependencies, 80\% of which were exclusive to that tool. However, it is worth noting that this may lead to more false positives or irrelevant dependencies being identified. SrcML and the custom script both focused primarily on include files and identified around 96,000 dependencies, with SrcML having no exclusive dependencies and the custom script having only 8. The similarity in their statistics suggests that they may have similar strengths and limitations.
 
-The observation that Understand analyses dependencies based on functions calling other functions while srcML and the custom script prioritize "include" files only suggests that the former may be more effective at identifying dynamic or runtime dependencies, while the latter may be more appropriate for identifying static or compile-time dependencies. However, it is important to note that both types of dependencies can be important in understanding the architecture of a codebase.
+The observation that Understand analyses dependencies based on functions calling other functions while SrcML and the custom script prioritize "include" files only suggests that the former may be more effective at identifying dynamic or runtime dependencies, while the latter may be more appropriate for identifying static or compile-time dependencies. However, it is important to note that both types of dependencies can be important in understanding the architecture of a codebase.
 
-In terms of choosing a methodology for dependency extraction in FreeBSD, the specific goals and characteristics of the analysis should be taken into account. For example, if the goal is to identify dynamic dependencies, Understand may be the most appropriate tool. If the focus is on static dependencies based on include files, srcML or the custom script may be more effective. However, it is worth noting that no single tool or methodology may be sufficient on its own, and a combination of techniques may be needed for a more comprehensive understanding of the architecture.
+In terms of choosing a methodology for dependency extraction in FreeBSD, the specific goals and characteristics of the analysis should be taken into account. For example, if the goal is to identify dynamic dependencies, Understand may be the most appropriate tool. If the focus is on static dependencies based on include files, SrcML or the custom script may be more effective. However, it is worth noting that no single tool or methodology may be sufficient on its own, and a combination of techniques may be needed for a more comprehensive understanding of the architecture.
 
 Overall, the process of extracting and analyzing architectural dependencies in FreeBSD can be complex and may require careful consideration of the specific needs of the analysis. The tools and methodologies used should be chosen based on the specific goals of the analysis and the characteristics of the codebase being analyzed. By taking these factors into account and combining multiple techniques as necessary, a more complete understanding of the architecture of FreeBSD can be achieved.
 
