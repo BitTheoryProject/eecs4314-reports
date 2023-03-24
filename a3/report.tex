@@ -249,11 +249,6 @@ in our 2 custom methods.
 	\includegraphics[width = 450pt]{assets/sequence_diagrams/srcml_includes.pdf}
 	\caption{Raw TA file generation using custom SrcML script.\cite{sourcecode}\cite{srcml}}
 \end{figure}
-\begin{figure}[H]
-    \center
-    \includegraphics[width = 450pt]{assets/UnderstandCustomScrML.png}
-    \caption{The exclusive and common dependencies of the 3 tools we used for extraction, broken into 7 sets.}
-\end{figure}
 
 \section{Quantitative Analysis}
 \subsection{Process of Quantitative Analysis}
@@ -264,17 +259,23 @@ We used a python script \code{gen-statistics.py} in order to generate our result
 
 \begin{figure}[H]
 	\center
+	\includegraphics[width = 230pt]{assets/UnderstandCustom.png}
+	\caption{The exclusive and common dependencies of the 3 tools we used for extraction, broken into 7 sets.}
+\end{figure}
+
+\begin{figure}[!htb]
+	\center
 	\includegraphics[width = 290pt]{assets/UnderstandCustom.jpeg}
 	\caption{Direct comparison between the number of dependencies found from the Understand extraction tool and the Custom "include" extraction}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\center
 	\includegraphics[width = 290pt]{assets/SrcMLCustom.jpeg}
 	\caption{Direct comparison between the number of dependencies found from the SrcML extraction tool and the Custom "include" extraction}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\center
 	\includegraphics[width = 290pt]{assets/UnderstandSrcML.jpeg}
 	\caption{Direct comparison between the number of dependencies found from the Understand extraction tool and the scrML extraction tool}
@@ -464,11 +465,11 @@ The Understand static code analysis tool also has limitations despite being a ro
 Furthermore, Understand cannot analyze dynamic code since it is a static code analysis tool. This means it cannot analyze dynamic code or code generated at runtime. Lastly, Understand can be resource-intensive and time-consuming when analyzing large codebases, making it challenging to use on large projects and may impact its effectiveness.
 
 \subsection{Difficulty in navigating CLI for LLVM-IR extractions}
-The process of extracting dependecies through LLVM-IR from the FreeBSD kernel source code can be a daunting task, particularly for those who are not well-versed in command line interface (CLI) navigation. One of the primary challenges is the fact that the FreeBSD kernel source code can only be built within the FreeBSD environment, which adds an additional layer of complexity to an already intricate process. Moreover, working with the CLI requires scripting expertise, a skill that may not have been taught or had the opportunity to acquire. 
+The process of extracting dependecies through LLVM-IR from the FreeBSD kernel source code can be a daunting task, particularly for those who are not well-versed in command line interface (CLI) navigation. One of the primary challenges is the fact that the FreeBSD kernel source code can only be built within the FreeBSD environment, which adds an additional layer of complexity to an already intricate process. Moreover, working with the CLI requires scripting expertise, a skill that may not have been taught or had the opportunity to acquire.
 \begin{figure}[H]
-    \center
-    \includegraphics[width = 450pt]{assets/make_kern.png}
-    \caption{The process of perform LLVM dependency extractions}
+	\center
+	\includegraphics[width = 450pt]{assets/make_kern.png}
+	\caption{The process of perform LLVM dependency extractions}
 \end{figure}
 The expectation to perform LLVM-IR extractions on the FreeBSD kernel source code, despite the lack of formal training in command line scripting, left us feeling overwhelmed and ill-equipped. This difficulty in navigating the CLI in FreeBSD for dependency extractions through LLVM highlights the need for importance of teaching students complex scripting task in CLI interface.
 
