@@ -173,19 +173,16 @@ The report contains several parts. Firstly, we will discuss the derivation proce
 \subsection{Understand}
 The first technique we used to extract dependencies of the FreeBSD kernel is using the Understand static code analysis IDE. We used it to analyze the FreeBSD source code and generate the extracted dependencies in \code{freebsd\_FileDependencies.csv} format. This CSV file is then converted to a \code{raw.ta} file using \code{csv-to-ta.pl} perl script. The rest of the process after the \code{Start A}, in figure 1, state is complete is the same as the assignment 2 iterative architectural decomposition. This process takes roughly over 3 hours to complete from start to end.
 
-\subsection{SrcML}
-The second technique we used to extract dependencies of the FreeBSD kernel is using the SrcML tool to convert our source code into xml and perform \code{xPath} queries. We used it to analyze the FreeBSD source code and generate the extracted dependencies in \code{freebsd\_FileDependencies.xml} format. Similarly, the rest of the process after the \code{Start A} state, is the same iterative process. The SrcML method uses an \code{xPath} query, \code{src:unit[@type='include']/@filename | cpp:include/cpp:file}, on the XML to extract the include dependencies. This method takes about 20 minutes for the entire process.
 
-
-\section*{SrcML Introduction}
+\subsection{SrcML Introduction}
 
 As part of our ongoing efforts to understand and analyze the FreeBSD kernel's structure, we have successfully extracted file-level dependencies using the srcML tool. we will outline the steps taken to achieve this goal and provide an overview of each step. Our findings helped us tremendously in understanding the kernel's architecture and identifying areas for optimization or improvement.
 
-\section{Installing and Configuring srcML}
+\subsubsection{Installing and Configuring srcML}
 
 we installed the srcML tool on our local machines. srcML is an open-source tool designed to convert source code into an XML format, which makes it easier to analyze and manipulate using XPath queries. After installing srcML, we familiarized ourselves with its documentation and basic usage, enabling us to use it effectively in the next steps.
 
-\section{Converting the FreeBSD Kernel Source Code to XML}
+\subsubsection{Converting the FreeBSD Kernel Source Code to XML}
 
 With srcML installed and configured, we proceeded to convert the entire FreeBSD kernel source code into an XML format. Using the command:
 
@@ -195,7 +192,7 @@ srcml freebsd/src/sys -o freebsd_kernel.xml
 
 we directed srcML to process the source code located in the \texttt{freebsd/src/sys} directory and output the resulting XML to a file named \texttt{freebsd\_kernel.xml}. This step was essential for enabling us to perform XPath queries on the source code data.
 
-\section{Extracting Include Units and Files with XPath}
+\subsubsection{Extracting Include Units and Files with XPath}
 
 Now that we had the kernel source code in XML format, we used an XPath query to extract all the include units and their respective files. We executed the following command:
 
@@ -205,11 +202,11 @@ srcml freebsd_kernel.xml --xpath="//src:unit[@type='include']/@filename | //cpp:
 
 This XPath query searched for all \texttt{src:unit} elements with a \texttt{type} attribute set to \texttt{include}, as well as all \texttt{cpp:include/cpp:file} elements. The query then returned the \texttt{filename} attribute of each matching element. This step provided us with a comprehensive list of all the included files and their dependencies.
 
-\section{Generating a Raw TA File}
+\subsubsection{Generating a Raw TA File}
 
 With the data extracted, we created a custom script to parse the output from the previous step and generate a raw TA file.  Our custom script iterated through the list of include units and files, reformatting the data into the desired format and outputting it to the raw TA file.
 
-\section*{srcML Conclusion}
+\subsubsection{srcML Conclusion}
 
 In conclusion, we have successfully extracted file-level dependencies within the FreeBSD kernel using the srcML tool and a series of XPath queries. srcML has some limitations that users should be aware of when using it for source code analysis. it can be computationally intensive and time-consuming when processing large codebases, potentially impacting the efficiency of the analysis. Finally, srcML's XML output can be cumbersome to work with and may require additional tools or expertise to manipulate and analyze effectively, However, being efficient in XPath Queries can help save time in writing multiple lines of code.
 
