@@ -249,6 +249,11 @@ in our 2 custom methods.
 	\includegraphics[width = 450pt]{assets/sequence_diagrams/srcml_includes.pdf}
 	\caption{Raw TA file generation using custom SrcML script.\cite{sourcecode}\cite{srcml}}
 \end{figure}
+\begin{figure}[H]
+    \center
+    \includegraphics[width = 450pt]{assets/UnderstandCustomScrML.png}
+    \caption{The exclusive and common dependencies of the 3 tools we used for extraction, broken into 7 sets.}
+\end{figure}
 
 \section{Quantitative Analysis}
 \subsection{Process of Quantitative Analysis}
@@ -457,6 +462,15 @@ The SrcML and custom method are similar, as seen by our performance metrics and 
 The Understand static code analysis tool also has limitations despite being a robust commercial tool. One of the primary limitations is a high false-positive rate, and understanding sometimes identifies dependencies that are not in the source code, leading to a high false-positive rate. Additionally, while Understand supports a wide range of programming languages, it may only support some features, making it challenging to analyze code that uses those features.
 
 Furthermore, Understand cannot analyze dynamic code since it is a static code analysis tool. This means it cannot analyze dynamic code or code generated at runtime. Lastly, Understand can be resource-intensive and time-consuming when analyzing large codebases, making it challenging to use on large projects and may impact its effectiveness.
+
+\subsection{Difficulty in navigating CLI for LLVM-IR extractions}
+The process of extracting dependecies through LLVM-IR from the FreeBSD kernel source code can be a daunting task, particularly for those who are not well-versed in command line interface (CLI) navigation. One of the primary challenges is the fact that the FreeBSD kernel source code can only be built within the FreeBSD environment, which adds an additional layer of complexity to an already intricate process. Moreover, working with the CLI requires scripting expertise, a skill that may not have been taught or had the opportunity to acquire. 
+\begin{figure}[H]
+    \center
+    \includegraphics[width = 450pt]{assets/make_kern.png}
+    \caption{The process of perform LLVM dependency extractions}
+\end{figure}
+The expectation to perform LLVM-IR extractions on the FreeBSD kernel source code, despite the lack of formal training in command line scripting, left us feeling overwhelmed and ill-equipped. This difficulty in navigating the CLI in FreeBSD for dependency extractions through LLVM highlights the need for importance of teaching students complex scripting task in CLI interface.
 
 \subsection{Recommendations}
 If we had more time, one way to improve these limitations would be to explore other dependency extraction techniques, such as compiling the source code and extracting linked library dependencies instead of using two methods that use include directives. Alternatively, we can expand using SrcML and create a custom parser that generates a call graph based on XPath queries on the XML function units.
