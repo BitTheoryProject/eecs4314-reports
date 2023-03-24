@@ -1,0 +1,7 @@
+*.csv
+*.raw.ta
+*.con.ta
+*.old
+*.txt
+!results*.txt
+*.xml
