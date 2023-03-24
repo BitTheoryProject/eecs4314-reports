@@ -209,6 +209,30 @@ We used a python script \textbackslash src\textbackslash scripts\textbackslash g
 	\caption{Direct comparision between the number of dependencies found from the Understand extraction tool and the scrML extraction tool}
 \end{figure}
 
+\subsection{Quantitative Analysis Table}
+\begin{tabular}{ |p{6cm}||p{6cm}|p{5cm}|  }
+ \hline
+ \multicolumn{3}{|c|}{Number of dependencies} \\
+ \hline
+ Extraction Tool & Total number of dependencies & Number of unique dependencies\\
+ \hline
+ Understand   & 180,739    &145,130\\
+ SRC-ML&   96,431  & 1   \\
+ Custom Script &96,439 & 9\\
+ $Understand \cap  SRC-ML$    &35,608 & 1\\
+ $Understand \cap  Custom Script$&   35,608  & 1\\
+ $SRC-ML \cap Custom Script$& 96,430  & 60823   \\
+ All three (union)& 241,570  & N/A\\
+ All three (common)& 35,607  & N/A\\
+ \hline
+\end{tabular}
+\newline
+\newline
+The above table above shows the number of dependencies extracted from each extraction tool. Understand has the most dependencies out of the three extraction tools, with 180,739 dependencies total. If we divide the number of unique dependencies of Understand by its total number of dependencies, we get $($$145130 \div 180739$$) \approx 80\%$. From this we can conclude that 80\% of Understand's extracted dependencies are unique to that tool.
+\newline
+One observation was that Understand was able to extract far more unique dependencies than SRC-ML and our custom script put together. Combined, $SRC-ML \cap Custom Script$ extracted 60,823 unique dependencies, but Understand managed to extract 145,130 dependencies, which is more than double. The SRC-ML by itself only captured one unique dependency, and our custom script only caputured 9 unique dependencies, compared to the large number that Understand gathered.
+\newline
+One thing to note is that SRC-ML and our custom script have similar statistics. SRC-ML extracted 96,431 dependencies in total, while our custom script extracted 96,439. The reason why SRC-ML and the custom script have similar statistics is because they both focus on parsing include statements, in contrast to Understand which prioritizes extracting functions calling other functions.
 
 \section{Qualitative Comparison}
 \subsection{Process of Qualitative Comparison}
