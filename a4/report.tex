@@ -212,8 +212,17 @@ taking advantage of \texttt{jails}.
 \section{Use Cases}
 \lipsum[1]
 
+
+\section{Concurrency}
+There are two different versions for how threads are handled in version 1 and 2. In version 1, threads are made distinct from processes. This way, one process can consist of multiple threads at a time. It is also possible to change the cgroups memberships of the threads within the process. However, that ability was removed in version 2, because it caused issues in some cases. For instance, all threads in a process shared a single address space, which caused issues for the memory controller, because it makes no sense to split threads across multiple memory cgroups. That ability was brought back in version 2’s thread mode.
+
+In version 2, it has two restrictions imposed on it. One of them is no thread-granularity control, meaning that all threads of a process must belong to the same cgroup. Another restriction is no internal processes, meaning that a cgroup cannot have member processes while controlling child cgroups at the same time. In some cases, it makes sense to have thread-granularity control, such as the CPU controller, so that ability was brought back in the form of thread mode.
+
+Thread mode has several abilities. One is the ability to create threaded subtrees where the threads of a given process are spread across multiple cgroups inside the tree. Another is a new feature called threaded controllers, which can distribute resources across the cgroups in a subtree. Also, the restriction for no internal processes is relaxed. Now, a cgroup can have its own threads and manage child cgroups at the same time. 
+
 \section{Risks \& Limitations}
 Although the proposed enhancement will lead to improving the overall operating system with better compatibility with Linux, it is still significant to examine how it would potentially affect other factors. For the section, we will observe the risks and limitations from three perspectives: Security, Maintainability, and Performance.
+
 \subsection{Security}
 One of the major concerns people would consider when they use containers is leaks of files and resources between the objects. Containers without complete separations would lead to poor efficiency for developments. However, it would not be a concern for this enhancement at this time because this proposed enhancement is based on existing functions and features. For example, to make \texttt{namespace}’s functions work correctly on FreeBSD, we utilize the existed \texttt{clone()} system call, which Linuxulator supports, instead of introducing a completely new idea into the system. Moreover, the mechanism of containers, which will be necessary for the namespace functionality, are from Jails. Jails is a virtual-machine-like containerization tool, completely separating users and processes from the space outside of a Jail \cite{jail}. Therefore, utilizing it as part of the enhancement’s functionalities would keep the system secure.
 
@@ -247,14 +256,16 @@ This aspect would be challenging to estimate as there is no existing case of int
 \lipsum[1]
 
 \begin{thebibliography}{00}
+	\bibitem{cgroups} Cgroups(7) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man7/cgroups.7.html}{https://man7.org/linux/man-pages/man7/cgroups.7.html}. 
+	\bibitem{linuxbinarycompat} “Chapter 11. Linux Binary Compatibility.” FreeBSD Documentation Portal, \href{https://docs.freebsd.org/en/books/handbook/linuxemu/}{https://docs.freebsd.org/en/books/handbook/linuxemu/}.	
+	\bibitem{clone} Clone(2) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man2/clone.2.html}{https://man7.org/linux/man-pages/man2/clone.2.html}.	
 	\bibitem{jail} Delgado, Sergio  Carlavilla. “Chapter 16. Jails.” FreeBSD Documentation Portal, 4 Mar. 2023, \href{https://docs.freebsd.org/en/books/handbook/jails/}{https://docs.freebsd.org/en/books/handbook/jails/}.
 	\bibitem{freebsd} Freebsd. “FreeBSD/FreeBSD-Src$\,\colon\,$ The Freebsd Src Tree.” GitHub, 1993, \href{https://github.com/freebsd/freebsd-src}{https://github.com/freebsd/freebsd-src}.
-	\bibitem{linux} Torvalds, Linus. “Torvalds/Linux$\,\colon\,$ Linux Kernel Source Tree.” GitHub, 2002, \href{https://github.com/torvalds/linux}{https://github.com/torvalds/linux}. 
-	\bibitem{runj} Karp, Samuel. “Samuelkarp/Runj$\,\colon\,$ Runj.” GitHub, 2020, \href{https://github.com/samuelkarp/runj}{https://github.com/samuelkarp/runj}.
-	\bibitem{linuxulator} “Linuxulator.” Edited by Graham Perrin, Linuxulator - FreeBSD Wiki, 29 Jan. 2023, \href{https://wiki.freebsd.org/Linuxulator}{https://wiki.freebsd.org/Linuxulator}.
-	\bibitem{linuxbinarycompat} “Chapter 11. Linux Binary Compatibility.” FreeBSD Documentation Portal, \href{https://docs.freebsd.org/en/books/handbook/linuxemu/}{https://docs.freebsd.org/en/books/handbook/linuxemu/}.
-	\bibitem{clone} Clone(2) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man2/clone.2.html}{https://man7.org/linux/man-pages/man2/clone.2.html}.
 	\bibitem{linsysfs} “FreeBSD Manual Pages.” Linsysfs, \href{https://man.freebsd.org/cgi/man.cgi?linsysfs}{https://man.freebsd.org/cgi/man.cgi?linsysfs}.
+	\bibitem{runj} Karp, Samuel. “Samuelkarp/Runj$\,\colon\,$ Runj.” GitHub, 2020, \href{https://github.com/samuelkarp/runj}{https://github.com/samuelkarp/runj}.	
+	\bibitem{linuxulator} “Linuxulator.” Edited by Graham Perrin, Linuxulator - FreeBSD Wiki, 29 Jan. 2023, \href{https://wiki.freebsd.org/Linuxulator}{https://wiki.freebsd.org/Linuxulator}.
+	\bibitem{linux} Torvalds, Linus. “Torvalds/Linux$\,\colon\,$ Linux Kernel Source Tree.” GitHub, 2002, \href{https://github.com/torvalds/linux}{https://github.com/torvalds/linux}. 
+
 
 
 \end{thebibliography}
