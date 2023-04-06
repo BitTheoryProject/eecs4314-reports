@@ -175,11 +175,33 @@
 \section{Use Cases}
 \lipsum[1]
 
+\section{Risks \& Limitations}
+Although the proposed enhancement will lead to improving the overall operating system with better compatibility with Linux, it is still significant to examine how it would potentially affect other factors. For the section, we will observe the risks and limitations from three perspectives: Security, Maintainability, and Performance.
+\subsection{Security}
+One of the major concerns people would consider when they use containers is leaks of files and resources between the objects. Containers without complete separations would lead to poor efficiency for developments. However, it would not be a concern for this enhancement at this time because this proposed enhancement is based on existing functions and features. For example, to make \texttt{namespace}’s functions work correctly on FreeBSD, we utilize the existed \texttt{clone()} system call, which Linuxulator supports, instead of introducing a completely new idea into the system. Moreover, the mechanism of containers, which will be necessary for the namespace functionality, are from Jails. Jails is a virtual-machine-like containerization tool, completely separating users and processes from the space outside of a Jail \cite{jail}. Therefore, utilizing it as part of the enhancement’s functionalities would keep the system secure.
+
+\subsection{Maintainability}
+It might be an issue to maintain our proposed enhancement simply because of the relatively small population of contributors who actively support FreeBSD overall. As proof, only several-thousands of developers involve in FreeBSD development \cite{freebsd}. On the other hand, over 10,000 developers contribute in Linux more actively and frequently \cite{linux}. It is possible that the failure of implementation on native Docker development in the past is also due to this factor. Moreover, as there are already existing developed or developing implementations that can support Linux compatibility on FreeBSD, there might not be enough developers interested in or encouraged to maintain this new enhancement in the future. One of the existing implementations is runj, which follows the basics of runc for Linux \cite{runj}.
+
+\subsection{Performance}
+This aspect would be challenging to estimate as there is no existing case of internal usage of Jails. As explained earlier in this report, our idea of the enhancement is to create the same functionalities as unsupported Linux features, particularly \texttt{cgroups} and \texttt{namespaces}. Although the enhancement involves modifying the existing functions to add a new parameter feature and introducing fully built container system for isolations, it is still possible that the system will not work as it does by itself.
+
 \section{Data Dictionary}
-\lipsum[1]
+\begin{itemize}
+	\item {Linuxulator (Linux Emulation): A technique to Linux binaries on FreeBSD without any modifications \cite{linuxulator}}
+	\item {cgroups: One of the features in Linux, which sets aside resources within namespaces for other usages}
+	\item {namespaces: One of the features in Linux, which creates several numbers of completely separated spaces within the operating system}
+	\item {Docker: A technique based on both hypervisor-based and containerized virtualizations}
+	\item {runj: A Docker-like tool which supports Jails based on the OCI runtime specifications}
+	\item {runc: A Linux tool which manages container systems based on the OCI specifications}
+	\item {Jails: A FreeBSD tool which follows the functionalities of the containerized virtualization}
+\end{itemize}
 
 \section{Naming Conventions}
-\lipsum[1]
+\begin{itemize}
+	\item {cgroup: Control group}
+	\item {OCI: Open Container Initiative}
+\end{itemize}
 
 \section{Conclusion}
 \lipsum[1]
@@ -189,5 +211,10 @@
 
 \begin{thebibliography}{00}
 	\bibitem{b2} Clarke, Arthur C. 2001: A Space Odyssey. New York: Roc, 1968. 297.
+	\bibitem{jail} Delgado, Sergio  Carlavilla. “Chapter 16. Jails.” FreeBSD Documentation Portal, 4 Mar. 2023, \href{https://docs.freebsd.org/en/books/handbook/jails/}{https://docs.freebsd.org/en/books/handbook/jails/}.
+	\bibitem{freebsd} Freebsd. “FreeBSD/FreeBSD-Src$\,\colon\,$ The Freebsd Src Tree.” GitHub, 1993, \href{https://github.com/freebsd/freebsd-src}{https://github.com/freebsd/freebsd-src}.
+	\bibitem{linux} Torvalds, Linus. “Torvalds/Linux$\,\colon\,$ Linux Kernel Source Tree.” GitHub, 2002, \href{https://github.com/torvalds/linux}{https://github.com/torvalds/linux}. 
+	\bibitem{runj} Karp, Samuel. “Samuelkarp/Runj$\,\colon\,$ Runj.” GitHub, 2020, \href{https://github.com/samuelkarp/runj}{https://github.com/samuelkarp/runj}.
+	\bibitem{linuxulator} “Linuxulator.” Edited by Graham Perrin, Linuxulator - FreeBSD Wiki, 29 Jan. 2023, \href{https://wiki.freebsd.org/Linuxulator}{https://wiki.freebsd.org/Linuxulator}.
 \end{thebibliography}
 \end{document}
