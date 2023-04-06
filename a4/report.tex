@@ -164,7 +164,44 @@
 \lipsum[1]
 
 \section{Architecture}
-\lipsum[1]
+\subsection{Current State of The System}
+
+In the current state of the system, the Linuxulator subsystem provides kernel
+interfaces identical to Linux system calls to allow for emulation \cite{linuxbinarycompat}.
+It does this by mapping Linux system calls to their FreeBSD equivalents \cite{linuxulator},
+while also emulating parts of the Linux filesystem using \texttt{linsysfs} \cite{linsysfs}
+Due to this, many Linux binaries can run natively on FreeBSD if the
+\texttt{linux\_enable} flag is enabled in \texttt{/etc/rc.conf}.\\
+
+Although, Linuxulator currently doesn't support \texttt{cgroups} or \texttt{namespaces}.
+Due to this, any binaries that rely on these Linux features cannot run
+natively on FreeBSD without modifications.\\
+
+With that being said, it's important to note that FreeBSD has \texttt{jails},
+which cover most of the use-cases of \texttt{cgroups} and \texttt{namespaces}.
+A \texttt{jail} provides containerization, while \texttt{namespaces} and \texttt{cgroups}
+can be used together to enable containerization.
+
+\subsection{Enhanced State of The System}
+
+Our proposal is to extend Linuxulator to provide interfaces for \texttt{namespaces}
+and \texttt{cgroups}, while using \texttt{jails} internally.\\
+
+More specifically, \texttt{namespaces} will be supported by supporting
+the \texttt{set\_tid} argument in the \texttt{linux\_clone3} system call (\href{https://github.com/freebsd/freebsd-src/blob/953efa5b200f060564a090ab71b3d7f614a35e3f/sys/compat/linux/linux_fork.c#L398}{\texttt{sys/compat/linux/linux\_fork.c}})
+which is currently ignored. Then when the \texttt{CLONE\_NEWPID} flag is passed in
+\texttt{set\_tid}, a new jail will be created, which will enable
+namespaces \cite{clone}. Internally, some logic will handle mapping the jail ID to the
+returned PID, and simulate the cloned process seeing itself as PID 0.\\
+
+The \texttt{cgroups} virtual file system will then be supported in the
+Linuxulator file system (\texttt{linsysfs}), which will act as an interface
+for modifying the \texttt{jails} resources.\\
+
+With that being said, this will cause the Linuxulator to become dependent on
+jails. Although, it will also greatly improve compatibility with linux
+binaries, allowing applications such as Docker to run natively, while still
+taking advantage of \texttt{jails}.
 
 \section{Diagrams}
 \lipsum[1]
@@ -210,11 +247,15 @@ This aspect would be challenging to estimate as there is no existing case of int
 \lipsum[1]
 
 \begin{thebibliography}{00}
-	\bibitem{b2} Clarke, Arthur C. 2001: A Space Odyssey. New York: Roc, 1968. 297.
 	\bibitem{jail} Delgado, Sergio  Carlavilla. “Chapter 16. Jails.” FreeBSD Documentation Portal, 4 Mar. 2023, \href{https://docs.freebsd.org/en/books/handbook/jails/}{https://docs.freebsd.org/en/books/handbook/jails/}.
 	\bibitem{freebsd} Freebsd. “FreeBSD/FreeBSD-Src$\,\colon\,$ The Freebsd Src Tree.” GitHub, 1993, \href{https://github.com/freebsd/freebsd-src}{https://github.com/freebsd/freebsd-src}.
 	\bibitem{linux} Torvalds, Linus. “Torvalds/Linux$\,\colon\,$ Linux Kernel Source Tree.” GitHub, 2002, \href{https://github.com/torvalds/linux}{https://github.com/torvalds/linux}. 
 	\bibitem{runj} Karp, Samuel. “Samuelkarp/Runj$\,\colon\,$ Runj.” GitHub, 2020, \href{https://github.com/samuelkarp/runj}{https://github.com/samuelkarp/runj}.
 	\bibitem{linuxulator} “Linuxulator.” Edited by Graham Perrin, Linuxulator - FreeBSD Wiki, 29 Jan. 2023, \href{https://wiki.freebsd.org/Linuxulator}{https://wiki.freebsd.org/Linuxulator}.
+	\bibitem{linuxbinarycompat} “Chapter 11. Linux Binary Compatibility.” FreeBSD Documentation Portal, \href{https://docs.freebsd.org/en/books/handbook/linuxemu/}{https://docs.freebsd.org/en/books/handbook/linuxemu/}.
+	\bibitem{clone} Clone(2) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man2/clone.2.html}{https://man7.org/linux/man-pages/man2/clone.2.html}.
+	\bibitem{linsysfs} “FreeBSD Manual Pages.” Linsysfs, \href{https://man.freebsd.org/cgi/man.cgi?linsysfs}{https://man.freebsd.org/cgi/man.cgi?linsysfs}.
+
+
 \end{thebibliography}
 \end{document}
