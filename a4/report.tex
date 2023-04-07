@@ -250,10 +250,30 @@ This aspect would be challenging to estimate as there is no existing case of int
 \end{itemize}
 
 \section{Conclusion}
-\lipsum[1]
+In conclusion, the proposed enhancement to extend the linuxulator subsystem in FreeBSD has the potential to significantly improve Linux binary compatibility on FreeBSD. Through a detailed analysis of the benefits, architectural impact, and use cases/sequence diagrams, the proposal demonstrates promising prospects for the FreeBSD operating system and its users. 
+
+The enhancement allows for improved compatibility with Linux binaries, particularly for containerization platforms like Docker. This will provide FreeBSD users with access to a wider range of applications and a more seamless deployment and management experience.
+
+The benefits of this enhancement are numerous. As mentioned throughout this report, it would improve compatibility with Linux binaries, enabling FreeBSD to support a wider range of applications and services. This increased compatibility would make FreeBSD more attractive to stakeholders, developers and users who rely on Linux-specific applications, potentially expanding the user base and fostering further development.
+
+In addition, implementing cgroups and namespaces support would not only enhance resource management and process isolation within the operating system (which would consequently optimise performance, allocate resources more efficiently, and ensure better isolation between processes), but would also facilitate its integration with Docker. This would further broaden FreeBSD’s appeal and applicability in various use cases, from personal computing to large-scale data centres.
+
+While there are some limitations and risks associated with this enhancement, such as the potential for leaks of files and resources between containers, with proper attention to security and maintainability, these risks can be mitigated. Additionally, the increased interest in the FreeBSD operating system that this enhancement may generate could result in additional contributions to the open-source community and further improvements to the operating system in the future.
+
+In summary, extending the linuxulator subsystem in FreeBSD to provide interfaces for cgroups and namespaces using jails internally offers numerous benefits, including improved Linux binary compatibility, enhanced resource management and process isolation, and better integration with containerization technologies. However, it is essential to acknowledge the limitations and challenges associated with the proposed enhancement that will increase the overall system’s complexity. By carefully considering these factors and mitigating the identified challenges, the proposed enhancement has the potential to bring significant value to the FreeBSD operating system and its users.
+
 
 \section{Lessons Learned}
-\lipsum[1]
+
+\textbf{Importance of compatibility between operating systems:}  Enhancements that improve compatibility with other operating systems can significantly expand the range of applications and tools available to users, making an operating system more versatile and attractive. By ensuring compatibility, an operating system can also be used more easily in a variety of environments and integrated more easily with other systems.
+
+\textbf{Different methods of containerization in Linux and FreeBSD:} As we analysed the FreeBSD Operating System to look for potential enhancement proposals, we learned about different methods of containerization technologies in both Linux and FreeBSD. Containerization is a popular technology used for deploying and managing applications. It was learnt that the methods used for containerization differ between Linux and FreeBSD, with jails being the preferred method in FreeBSD. Understanding these differences is important for making informed decisions about how to add support for features such as cgroups and namespaces.
+
+\textbf{Security, maintainability, and performance are potential drawbacks of our proposal:} Enhancements that introduce new functionality or change the architecture of an operating system can also introduce potential risks and challenges by increasing it’s overall complexity. It is important to carefully consider the potential drawbacks of any proposed enhancement and develop strategies to mitigate risks related to security, maintainability, and performance. 
+
+\textbf{Architectural analysis is crucial the implementation of such enhancement feature:} Enhancements that involve changes to an operating system's architecture require careful analysis to ensure that they are technically feasible, maintainable, and efficient. By performing a thorough analysis of the architecture and potential impacts of a proposed enhancement, stakeholders can make informed decisions about the potential implementation of features that could potentially add value to the overall system.
+
+\textbf{Collaboration with stakeholders is crucial for successful enhancements:} Enhancements that involve significant changes to an operating system require collaboration with a range of stakeholders, including developers, users, and companies that may be impacted by the changes, such as Docker in this case. By engaging with stakeholders and soliciting feedback throughout the development process, it is possible to build enhancements that meet the needs of a wide range of users and maximise the benefits of the enhancement for all stakeholders involved.
 
 \begin{thebibliography}{00}
 	\bibitem{cgroups} Cgroups(7) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man7/cgroups.7.html}{https://man7.org/linux/man-pages/man7/cgroups.7.html}. 
