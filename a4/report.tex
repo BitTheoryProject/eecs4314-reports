@@ -149,10 +149,15 @@
 \hspace{0pt}
 \vfill
 \begin{abstract}
-	\lipsum[1]
-	\lipsum[1]
-	\\\\
-	\keywords{cgroups, namespaces, containerization, Docker, compatibility}
+	This report proposes the development of a new feature for the Docker system. This new feature is the implementation of Cgroup and Namespace API for FreeBSD. At the moment, Docker's performance depends on the Linux operating system's Cgroup and Namespace features. By creating a FreeBSD equivalent of these capabilities, Docker may be made to function seamlessly on the platform, expanding its user base and increasing its general adaptability.
+
+The suggested improvement will be thoroughly covered, including its potential value and advantages for different stakeholders. We'll look at the architectural adjustments needed to accommodate this functionality, paying particular attention to the high-level parts and interfaces that need to change. The study will examine how this new feature interacts with existing functionality and give a thorough comparison of the system's current and improved states.
+
+Additionally, the study will examine how this architectural change will affect both high-level and low-level system concepts, with the help of an architecture diagram that graphically illustrates the changes. The discussion of flagged files, use cases, and concurrency issues will also be included to ensure that all aspects of the proposed improvement are clear.
+
+The implementation of the Cgroup and Namespace API for FreeBSD will be assessed for potential risks and constraints, identifying any potential negative outcomes. The study will end with a summary of the results and an evaluation of the feasibility and advantages of adding this improvement to the Docker software system overall.
+\newline
+\keywords{cgroups, namespaces, containerization, Docker, compatibility}
 \end{abstract}
 \vfill
 \hspace{0pt}
@@ -160,6 +165,7 @@
 \tableofcontents
 \clearpage
 
+\section{Introduction}
 \subsection{Problem Definition}
 FreeBSD currently relies on jails for providing containerization capabilities. However, as containerization needs evolve, the limitations of jails become more evident.
 Jails work well for simple isolation use cases but lack features critical for more advanced container workflows. They provide a basic level of encapsulation but lack the portability and interoperability of modern container formats. Jails also have limited options for networking, storage, and orchestration between containers.
@@ -171,7 +177,7 @@ With containerization becoming integral to application development and deploymen
 
 Advancements in containerization are essential for FreeBSD to meet evolving needs and remain competitive. Jails alone no longer suffice for the kinds of containerized architectures and workflows common today. Additional container tools will be needed to address limitations, unlock new potential, and ensure FreeBSD keeps pace with rapid changes in containerization. Keeping up with container futures will require more possibilities beyond just jails.
 
-\subsection{Our Proposal}
+\subsection{Docker}
 Docker is a famous software that uses OS-level virtualization to deliver software in packages called containers. It has been widely used in many mainstream operating systems such as Windows, macOS, and Linux. Sadly, Docker can't operate on FreeBSD due to the difference in kernel features. Though the Jails in FreeBSD have similar functions as Docker, most users think that Docker works much better than Jails. In fact, Docker performs better than Jails in almost all categories except startup time. As a result, it's reasonable to try to make Docker work on FreeBSD.
 To reach our target of allowing features like Docker to be functional in FreeBSD, there are many different approaches. For example, we can run a Linux Virtual Machine within FreeBSD, so that we can containerize without using Jails. However, this will surely be an unnecessary move. Among all those approaches, the one we choose to use to solve the problem is implementing cgroup and namespace 'like' APIs that internally use jails. In Linux, docker requires cgroup and namespace, which are featured on the Linux kernel, to run. What we want is to implement a clone of cgroup and namespace for FreeBSD, so that we can get a result of running Docker on FreeBSD.
 
@@ -187,6 +193,29 @@ To clearly introduce our project from multi-angel, the report has been divided i
 	\item Conclusion - Summarize the whole report and record the lessons learned in the process.
 \end{itemize}
 \clearpage
+
+
+\section{Enhancement}
+\subsection{Our Proposed Enhancement}
+Our proposed enhancement is to extend the current Linux emulator for FreeBSD, Linuxulator, to also handle cgroup and namespace calls. Currently they are not implemented because they are features that act on hardware and can’t be directly mapped to a FreeBSD system calls. This causes problems with many Linux binaries that utilize cgroups or namespaces as well as Container runtimes which are used widely in Linux development. After this interface is added almost all binaries will now run easily using the Linuxulator, which is important because Linux is heavily supported and has a lot of developers making useful binaries. Another benefit is that OCI compliant container run-times like runc, Containerd, or Docker would work natively instead of using ports. The port for running OCI compliant runtimes, runj, utilizes jails to make Containers and is currently under development. This works great natively for FreeBSD but the goal is to integrate FreeBSD into the broader Docker ecosystem and using our interface would allow widely used OCI runtimes to work seamlessly and remove complication.
+
+\subsection{Alternatives}
+For many Linux binaries running through Linuxulator there aren't any great alternatives to this interface, as cgroup and namespaces are very integral to some programs. It is possible to edit Linux binaries through FreeBSD but this can cause the Linux binary to use a lot of efficiency or functionality. A more viable solution is to use a Linux Virtual machine inside FreeBSD, which allows you to run any Linux binary and use all types of OCI runtimes like Docker, Containerized, runc, etc… Although a lot of developers will not like this method as it brings a lot of overhead which will slow down Linux binaries. This is something Linux developers will not tolerate because the main reason people use Linux operating systems is because it removes overhead and allows them to work more efficiently!. This is why our solution is favorable to many developers.
+
+\section{Stakeholders}
+With this new implementation of Namespace and Cgroups for FreeBSD several stakeholders who would be involved. 
+
+\subsection{Developers}
+The first stakeholder is the developers who are working to implement this new improvement as they will be the ones responsible for creating code that will enable docker to run on the FreeBSD platform.Their work will require expertise in kernel architecture, API design, and programming languages like C and Rust, among others.
+
+\subsection{Users}
+Secondly, users of Docker who want to use the platform FreeBSD are another stakeholder group. These users, who want to leverage Docker's capabilities on the FreeBSD platform, could be freelance developers, small businesses, or bigger corporations. They might be interested in how Cgroup and Namespace API implementation will affect performance, stability, or security.
+
+\subsection{Docker}
+Thirdly the Docker company would also be another key stakeholder. By supporting the FreeBSD platform, they will get the chance to increase their user base. The strategic market expansion or rivalry with competing containerization platforms may be the driving forces behind Docker's involvement in this project.
+
+\subsection{FreeBSD Community}
+The FreeBSD community is also a stakeholder group. The Cgroup and Namespace API would improve FreeBSD's functionality and make it a more desirable platform for users and developers. The project might also spark more interest in the FreeBSD operating system, which might result in additional contributions to the open-source initiative or a rise in the use of FreeBSD in commercial settings.
 
 \section{Architecture}
 \subsection{Current State of The System}
