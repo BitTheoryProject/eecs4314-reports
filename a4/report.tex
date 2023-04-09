@@ -22,6 +22,9 @@
 \usepackage{tikz-qtree}
 \usepackage{tikz}
 \usepackage{hyperref}
+\usepackage[english]{babel}
+\usepackage[autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
 \usetikzlibrary{decorations.pathreplacing}
 \tikzset{every tree node/.style={minimum width=4cm,draw,circle},
          blank/.style={draw=none},
@@ -149,7 +152,7 @@
 	\lipsum[1]
 	\lipsum[1]
 	\\\\
-	\keywords{keyword1, keyword2, keyword3}
+	\keywords{cgroups, namespaces, containerization, Docker, compatibility}
 \end{abstract}
 \vfill
 \hspace{0pt}
@@ -158,10 +161,20 @@
 \clearpage
 
 \section{Introduction}
-\lipsum[1]
-
+Docker is a famous software that uses OS-level virtualization to deliver software in packages called containers. It has been widely used in many mainstream operating systems such as Windows, macOS, and Linux. Sadly, Docker can't operate on FreeBSD due to the difference in kernel features. Though the Jails in FreeBSD have similar functions as Docker, most users think that Docker works much better than Jails. In fact, Docker performs better than Jails in almost all categories except startup time. As a result, it's reasonable to try to make Docker work on FreeBSD.
+To reach our target of allowing features like Docker to be functional in FreeBSD, there are many different approaches. For example, we can run a Linux Virtual Machine within FreeBSD, so that we can containerize without using Jails. However, this will surely be an unnecessary move. Among all those approaches, the one we choose to use to solve the problem is implementing cgroup and namespace 'like' APIs that internally use jails. In Linux, docker requires cgroup and namespace, which are featured on the Linux kernel, to run. What we want is to implement a clone of cgroup and namespace for FreeBSD, so that we can get a result of running Docker on FreeBSD.
 \subsection{Overview}
-\lipsum[1]
+
+To clearly introduce our project from multi-angel, the report has been divided into six different chapters:
+\begin{itemize}
+	\item Enhancement - This part explains how the project works and explains the benefits it brings.
+	\item Stakeholders - Show the influence that might happen to developers, users, and other stakeholders.
+	\item Architectural Impact - This part shows the concrete architecture changes caused by the enhancements through diagrams.
+	\item Concurrency - Compares concurrency of different versions of cgroup in Linux.
+	\item Risk \& Limitation - Find out the risk and limitations that might appear.
+	\item Conclusion - Summarize the whole report and record the lessons learned in the process.
+\end{itemize}
+\clearpage
 
 \section{Architecture}
 \subsection{Current State of The System}
@@ -203,28 +216,67 @@ jails. Although, it will also greatly improve compatibility with linux
 binaries, allowing applications such as Docker to run natively, while still
 taking advantage of \texttt{jails}.
 
-\section{Diagrams}
-\lipsum[1]
+\subsection{Interactions with Other Features}
+In this part, we will be discussing about the impact of interaction and design patterns after
+adding these features. We know that Cgroups allows the system administrator to allocate
+system resources and place limits on resource usage. First, it will interact with the virtual
+memory subsystem to create a more secured system environment. It can be used to limit the
+amount of memory being used and preventing it from consuming excessive system resources.
+The second interacting part can be security subsystem. Cgroups can be used in conjunction with
+other security mechanisms. For example, with the Mandatory Access Control, it can prevent
+unauthorized access to system resource. There will be two design patterns can be found in this
+feature. It will use command pattern to implement the functionalities and improve the system
+performance. Another pattern that scan be found is the builder pattern. It is good for customize
+Cgroups for different applications and use cases. It can also make it easier to create and
+manage complex configurations.
+Namespace is a feature allows for the creations of isolated environments that have their own
+independent view of certain system resources including process IDs, network interfaces, file
+systems, user IDs, and other system resources. It will be interacted with the process
+management system. Namespaces can be used to create isolated process trees so the process
+can be limited into smaller parts. Second interacting part can be file system. Namespaces can
+be used to isolate files systems between different processes. It can prevent the applications
+from accessing or modifying files outside their own namespaces. The design pattern might be
+found is proxy pattern. Since it will create an independent view of certain system resource,
+using proxy pattern can allow the system to create a virtualized view of the system that is
+isolated from the underlying system. It will make it easier and safer to customize the behavior
+of the virtualized system.
+\clearpage
 
-\section{External Interfaces}
-\lipsum[1]
+\subsection{Flagged Files}
 
-\section{Use Cases}
-\lipsum[1]
+The proposed enhancement to the Linuxulator subsystem in FreeBSD will significantly impact the system's directory structure. Firstly, the Linuxulator subsystem, which provides a Linux kernel interface for emulation, will be extended to include support for jails. This will introduce a new way for users to leverage FreeBSD's native containerization technology while running Linux applications like Docker.
+As a result, the impacted directories include:
+\begin{itemize}
+	\item \code{sys/compat/linux}
+	\item \code{sys/compat/linsysfs}
+\end{itemize}
 
+\code{sys/compat/linux} provides binary compatibility files for Linux, while the \code{sys/compat/linsysfs} provides file system emulation for \code{cgroups}. The proposed enhancement will also require changes to specific files, including \code{sys/compat/linux/linux\_fork.c} and its \code{linux\_clone3()} method, to provide support for namespaces by enabling the \code{set\_tid} arg.
+Once these changes are made, the Linuxulator subsystem will have improved Linux binary compatibility, thanks to the newly added support for cgroups and namespaces. This will enable FreeBSD to run any Linux binary that requires the use of containerization, making it an attractive platform for developers and businesses alike.
 
 \section{Concurrency}
-There are two different versions for how threads are handled in version 1 and 2. In version 1, threads are made distinct from processes. This way, one process can consist of multiple threads at a time. It is also possible to change the cgroups memberships of the threads within the process. However, that ability was removed in version 2, because it caused issues in some cases. For instance, all threads in a process shared a single address space, which caused issues for the memory controller, because it makes no sense to split threads across multiple memory cgroups. That ability was brought back in version 2’s thread mode.
+There are two different versions for how threads are handled in version 1 and 2. In version 1, threads are made distinct from processes. This way, one process can consist of multiple threads at a time. It is also possible to change the cgroups memberships of the threads within the process. However, that ability was removed in version 2, because it caused issues in some cases. For instance, all threads in a process shared a single address space, which caused issues for the memory controller, because it makes no sense to split threads across multiple memory cgroups. That ability was brought back in version 2's thread mode.
 
 In version 2, it has two restrictions imposed on it. One of them is no thread-granularity control, meaning that all threads of a process must belong to the same cgroup. Another restriction is no internal processes, meaning that a cgroup cannot have member processes while controlling child cgroups at the same time. In some cases, it makes sense to have thread-granularity control, such as the CPU controller, so that ability was brought back in the form of thread mode.
 
-Thread mode has several abilities. One is the ability to create threaded subtrees where the threads of a given process are spread across multiple cgroups inside the tree. Another is a new feature called threaded controllers, which can distribute resources across the cgroups in a subtree. Also, the restriction for no internal processes is relaxed. Now, a cgroup can have its own threads and manage child cgroups at the same time. 
+Thread mode has several abilities. One is the ability to create threaded subtrees where the threads of a given process are spread across multiple cgroups inside the tree. Another is a new feature called threaded controllers, which can distribute resources across the cgroups in a subtree. Also, the restriction for no internal processes is relaxed. Now, a cgroup can have its own threads and manage child cgroups at the same time.
+\clearpage
+
+\section{Use Cases}
+\subsection{Docker}
+An important use case of our enhancement is the use of an industry standard tool, Docker. Docker does not work without \code{namespace} and \code{cgroup} functionality and our compatibility enhancement would allow these types of applications to run on FreeBSD. Docker and similar containerization engines are widely used in distributed systems within the industry and the diagram below covers the process of emulating \code{namespace} and \code{cgroup} functionality in FreeBSD.
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 500pt]{assets/sequence_diagrams/docker.pdf}
+	\caption{Docker use case using enhanced state.}
+\end{figure}
+\clearpage
 
 \section{Risks \& Limitations}
 Although the proposed enhancement will lead to improving the overall operating system with better compatibility with Linux, it is still significant to examine how it would potentially affect other factors. For the section, we will observe the risks and limitations from three perspectives: Security, Maintainability, and Performance.
 
 \subsection{Security}
-One of the major concerns people would consider when they use containers is leaks of files and resources between the objects. Containers without complete separations would lead to poor efficiency for developments. However, it would not be a concern for this enhancement at this time because this proposed enhancement is based on existing functions and features. For example, to make \texttt{namespace}’s functions work correctly on FreeBSD, we utilize the existed \texttt{clone()} system call, which Linuxulator supports, instead of introducing a completely new idea into the system. Moreover, the mechanism of containers, which will be necessary for the namespace functionality, are from Jails. Jails is a virtual-machine-like containerization tool, completely separating users and processes from the space outside of a Jail \cite{jail}. Therefore, utilizing it as part of the enhancement’s functionalities would keep the system secure.
+One of the major concerns people would consider when they use containers is leaks of files and resources between the objects. Containers without complete separations would lead to poor efficiency for developments. However, it would not be a concern for this enhancement at this time because this proposed enhancement is based on existing functions and features. For example, to make \texttt{namespace}'s functions work correctly on FreeBSD, we utilize the existed \texttt{clone()} system call, which Linuxulator supports, instead of introducing a completely new idea into the system. Moreover, the mechanism of containers, which will be necessary for the namespace functionality, are from Jails. Jails is a virtual-machine-like containerization tool, completely separating users and processes from the space outside of a Jail \cite{jail}. Therefore, utilizing it as part of the enhancement's functionalities would keep the system secure.
 
 \subsection{Maintainability}
 It might be an issue to maintain our proposed enhancement simply because of the relatively small population of contributors who actively support FreeBSD overall. As proof, only several-thousands of developers involve in FreeBSD development \cite{freebsd}. On the other hand, over 10,000 developers contribute in Linux more actively and frequently \cite{linux}. It is possible that the failure of implementation on native Docker development in the past is also due to this factor. Moreover, as there are already existing developed or developing implementations that can support Linux compatibility on FreeBSD, there might not be enough developers interested in or encouraged to maintain this new enhancement in the future. One of the existing implementations is runj, which follows the basics of runc for Linux \cite{runj}.
@@ -232,6 +284,45 @@ It might be an issue to maintain our proposed enhancement simply because of the 
 \subsection{Performance}
 This aspect would be challenging to estimate as there is no existing case of internal usage of Jails. As explained earlier in this report, our idea of the enhancement is to create the same functionalities as unsupported Linux features, particularly \texttt{cgroups} and \texttt{namespaces}. Although the enhancement involves modifying the existing functions to add a new parameter feature and introducing fully built container system for isolations, it is still possible that the system will not work as it does by itself.
 
+\section{Conclusion}
+In conclusion, the proposed enhancement to extend the linuxulator subsystem in FreeBSD has the potential to significantly improve Linux binary compatibility on FreeBSD. Through a detailed analysis of the benefits, architectural impact, and use cases/sequence diagrams, the proposal demonstrates promising prospects for the FreeBSD operating system and its users.
+
+The enhancement allows for improved compatibility with Linux binaries, particularly for containerization platforms like Docker. This will provide FreeBSD users with access to a wider range of applications and a more seamless deployment and management experience.
+
+The benefits of this enhancement are numerous. As mentioned throughout this report, it would improve compatibility with Linux binaries, enabling FreeBSD to support a wider range of applications and services. This increased compatibility would make FreeBSD more attractive to stakeholders, developers and users who rely on Linux-specific applications, potentially expanding the user base and fostering further development.
+
+In addition, implementing cgroups and namespaces support would not only enhance resource management and process isolation within the operating system (which would consequently optimise performance, allocate resources more efficiently, and ensure better isolation between processes), but would also facilitate its integration with Docker. This would further broaden FreeBSD's appeal and applicability in various use cases, from personal computing to large-scale data centres.
+
+While there are some limitations and risks associated with this enhancement, such as the potential for leaks of files and resources between containers, with proper attention to security and maintainability, these risks can be mitigated. Additionally, the increased interest in the FreeBSD operating system that this enhancement may generate could result in additional contributions to the open-source community and further improvements to the operating system in the future.
+
+In summary, extending the linuxulator subsystem in FreeBSD to provide interfaces for cgroups and namespaces using jails internally offers numerous benefits, including improved Linux binary compatibility, enhanced resource management and process isolation, and better integration with containerization technologies. However, it is essential to acknowledge the limitations and challenges associated with the proposed enhancement that will increase the overall system's complexity. By carefully considering these factors and mitigating the identified challenges, the proposed enhancement has the potential to bring significant value to the FreeBSD operating system and its users.
+
+
+\section{Lessons Learned}
+
+\textbf{Importance of compatibility between operating systems:}  Enhancements that improve compatibility with other operating systems can significantly expand the range of applications and tools available to users, making an operating system more versatile and attractive. By ensuring compatibility, an operating system can also be used more easily in a variety of environments and integrated more easily with other systems.
+
+\textbf{Different methods of containerization in Linux and FreeBSD:} As we analysed the FreeBSD Operating System to look for potential enhancement proposals, we learned about different methods of containerization technologies in both Linux and FreeBSD. Containerization is a popular technology used for deploying and managing applications. It was learnt that the methods used for containerization differ between Linux and FreeBSD, with jails being the preferred method in FreeBSD. Understanding these differences is important for making informed decisions about how to add support for features such as cgroups and namespaces.
+
+\textbf{Security, maintainability, and performance are potential drawbacks of our proposal:} Enhancements that introduce new functionality or change the architecture of an operating system can also introduce potential risks and challenges by increasing it's overall complexity. It is important to carefully consider the potential drawbacks of any proposed enhancement and develop strategies to mitigate risks related to security, maintainability, and performance.
+
+\textbf{Architectural analysis is crucial the implementation of such enhancement feature:} Enhancements that involve changes to an operating system's architecture require careful analysis to ensure that they are technically feasible, maintainable, and efficient. By performing a thorough analysis of the architecture and potential impacts of a proposed enhancement, stakeholders can make informed decisions about the potential implementation of features that could potentially add value to the overall system.
+
+\textbf{Collaboration with stakeholders is crucial for successful enhancements:} Enhancements that involve significant changes to an operating system require collaboration with a range of stakeholders, including developers, users, and companies that may be impacted by the changes, such as Docker in this case. By engaging with stakeholders and soliciting feedback throughout the development process, it is possible to build enhancements that meet the needs of a wide range of users and maximise the benefits of the enhancement for all stakeholders involved.
+\clearpage
+
+\section{Diagrams}
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 500pt]{assets/architecture_diagrams/current-concrete-architecture.pdf}
+	\caption{Current state of the concrete architecture diagram of FreeBSD.}
+\end{figure}
+\begin{figure}[!htb]
+	\center
+	\includegraphics[width = 500pt]{assets/architecture_diagrams/enhanced-concrete-architecture.pdf}
+	\caption{Enhanced state of the concrete architecture diagram of FreeBSD.}
+\end{figure}
+\clearpage
 \section{Data Dictionary}
 \begin{itemize}
 	\item {Linuxulator (Linux Emulation): A technique to Linux binaries on FreeBSD without any modifications \cite{linuxulator}}
@@ -248,43 +339,18 @@ This aspect would be challenging to estimate as there is no existing case of int
 	\item {cgroup: Control group}
 	\item {OCI: Open Container Initiative}
 \end{itemize}
-
-\section{Conclusion}
-In conclusion, the proposed enhancement to extend the linuxulator subsystem in FreeBSD has the potential to significantly improve Linux binary compatibility on FreeBSD. Through a detailed analysis of the benefits, architectural impact, and use cases/sequence diagrams, the proposal demonstrates promising prospects for the FreeBSD operating system and its users. 
-
-The enhancement allows for improved compatibility with Linux binaries, particularly for containerization platforms like Docker. This will provide FreeBSD users with access to a wider range of applications and a more seamless deployment and management experience.
-
-The benefits of this enhancement are numerous. As mentioned throughout this report, it would improve compatibility with Linux binaries, enabling FreeBSD to support a wider range of applications and services. This increased compatibility would make FreeBSD more attractive to stakeholders, developers and users who rely on Linux-specific applications, potentially expanding the user base and fostering further development.
-
-In addition, implementing cgroups and namespaces support would not only enhance resource management and process isolation within the operating system (which would consequently optimise performance, allocate resources more efficiently, and ensure better isolation between processes), but would also facilitate its integration with Docker. This would further broaden FreeBSD’s appeal and applicability in various use cases, from personal computing to large-scale data centres.
-
-While there are some limitations and risks associated with this enhancement, such as the potential for leaks of files and resources between containers, with proper attention to security and maintainability, these risks can be mitigated. Additionally, the increased interest in the FreeBSD operating system that this enhancement may generate could result in additional contributions to the open-source community and further improvements to the operating system in the future.
-
-In summary, extending the linuxulator subsystem in FreeBSD to provide interfaces for cgroups and namespaces using jails internally offers numerous benefits, including improved Linux binary compatibility, enhanced resource management and process isolation, and better integration with containerization technologies. However, it is essential to acknowledge the limitations and challenges associated with the proposed enhancement that will increase the overall system’s complexity. By carefully considering these factors and mitigating the identified challenges, the proposed enhancement has the potential to bring significant value to the FreeBSD operating system and its users.
-
-
-\section{Lessons Learned}
-
-\textbf{Importance of compatibility between operating systems:}  Enhancements that improve compatibility with other operating systems can significantly expand the range of applications and tools available to users, making an operating system more versatile and attractive. By ensuring compatibility, an operating system can also be used more easily in a variety of environments and integrated more easily with other systems.
-
-\textbf{Different methods of containerization in Linux and FreeBSD:} As we analysed the FreeBSD Operating System to look for potential enhancement proposals, we learned about different methods of containerization technologies in both Linux and FreeBSD. Containerization is a popular technology used for deploying and managing applications. It was learnt that the methods used for containerization differ between Linux and FreeBSD, with jails being the preferred method in FreeBSD. Understanding these differences is important for making informed decisions about how to add support for features such as cgroups and namespaces.
-
-\textbf{Security, maintainability, and performance are potential drawbacks of our proposal:} Enhancements that introduce new functionality or change the architecture of an operating system can also introduce potential risks and challenges by increasing it’s overall complexity. It is important to carefully consider the potential drawbacks of any proposed enhancement and develop strategies to mitigate risks related to security, maintainability, and performance. 
-
-\textbf{Architectural analysis is crucial the implementation of such enhancement feature:} Enhancements that involve changes to an operating system's architecture require careful analysis to ensure that they are technically feasible, maintainable, and efficient. By performing a thorough analysis of the architecture and potential impacts of a proposed enhancement, stakeholders can make informed decisions about the potential implementation of features that could potentially add value to the overall system.
-
-\textbf{Collaboration with stakeholders is crucial for successful enhancements:} Enhancements that involve significant changes to an operating system require collaboration with a range of stakeholders, including developers, users, and companies that may be impacted by the changes, such as Docker in this case. By engaging with stakeholders and soliciting feedback throughout the development process, it is possible to build enhancements that meet the needs of a wide range of users and maximise the benefits of the enhancement for all stakeholders involved.
+\clearpage
 
 \begin{thebibliography}{00}
-	\bibitem{cgroups} Cgroups(7) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man7/cgroups.7.html}{https://man7.org/linux/man-pages/man7/cgroups.7.html}. 
-	\bibitem{linuxbinarycompat} “Chapter 11. Linux Binary Compatibility.” FreeBSD Documentation Portal, \href{https://docs.freebsd.org/en/books/handbook/linuxemu/}{https://docs.freebsd.org/en/books/handbook/linuxemu/}.	
-	\bibitem{clone} Clone(2) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man2/clone.2.html}{https://man7.org/linux/man-pages/man2/clone.2.html}.	
+	\bibitem{cgroups} Cgroups(7) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man7/cgroups.7.html}{https://man7.org/linux/man-pages/man7/cgroups.7.html}.
+	\bibitem{linuxbinarycompat} “Chapter 11. Linux Binary Compatibility.” FreeBSD Documentation Portal, \href{https://docs.freebsd.org/en/books/handbook/linuxemu/}{https://docs.freebsd.org/en/books/handbook/linuxemu/}.
+	\bibitem{clone} Clone(2) - Linux Manual Page, \href{https://man7.org/linux/man-pages/man2/clone.2.html}{https://man7.org/linux/man-pages/man2/clone.2.html}.
 	\bibitem{jail} Delgado, Sergio  Carlavilla. “Chapter 16. Jails.” FreeBSD Documentation Portal, 4 Mar. 2023, \href{https://docs.freebsd.org/en/books/handbook/jails/}{https://docs.freebsd.org/en/books/handbook/jails/}.
 	\bibitem{freebsd} Freebsd. “FreeBSD/FreeBSD-Src$\,\colon\,$ The Freebsd Src Tree.” GitHub, 1993, \href{https://github.com/freebsd/freebsd-src}{https://github.com/freebsd/freebsd-src}.
 	\bibitem{linsysfs} “FreeBSD Manual Pages.” Linsysfs, \href{https://man.freebsd.org/cgi/man.cgi?linsysfs}{https://man.freebsd.org/cgi/man.cgi?linsysfs}.
-	\bibitem{runj} Karp, Samuel. “Samuelkarp/Runj$\,\colon\,$ Runj.” GitHub, 2020, \href{https://github.com/samuelkarp/runj}{https://github.com/samuelkarp/runj}.	
+	\bibitem{runj} Karp, Samuel. “Samuelkarp/Runj$\,\colon\,$ Runj.” GitHub, 2020, \href{https://github.com/samuelkarp/runj}{https://github.com/samuelkarp/runj}.
 	\bibitem{linuxulator} “Linuxulator.” Edited by Graham Perrin, Linuxulator - FreeBSD Wiki, 29 Jan. 2023, \href{https://wiki.freebsd.org/Linuxulator}{https://wiki.freebsd.org/Linuxulator}.
-	\bibitem{linux} Torvalds, Linus. “Torvalds/Linux$\,\colon\,$ Linux Kernel Source Tree.” GitHub, 2002, \href{https://github.com/torvalds/linux}{https://github.com/torvalds/linux}. 
+	\bibitem{linux} Torvalds, Linus. “Torvalds/Linux$\,\colon\,$ Linux Kernel Source Tree.” GitHub, 2002, \href{https://github.com/torvalds/linux}{https://github.com/torvalds/linux}.
 
 
 
