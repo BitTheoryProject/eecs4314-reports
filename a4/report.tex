@@ -151,13 +151,13 @@
 \begin{abstract}
 	This report proposes the development of a new feature for the Docker system. This new feature is the implementation of Cgroup and Namespace API for FreeBSD. At the moment, Docker's performance depends on the Linux operating system's Cgroup and Namespace features. By creating a FreeBSD equivalent of these capabilities, Docker may be made to function seamlessly on the platform, expanding its user base and increasing its general adaptability.
 
-The suggested improvement will be thoroughly covered, including its potential value and advantages for different stakeholders. We'll look at the architectural adjustments needed to accommodate this functionality, paying particular attention to the high-level parts and interfaces that need to change. The study will examine how this new feature interacts with existing functionality and give a thorough comparison of the system's current and improved states.
+	The suggested improvement will be thoroughly covered, including its potential value and advantages for different stakeholders. We'll look at the architectural adjustments needed to accommodate this functionality, paying particular attention to the high-level parts and interfaces that need to change. The study will examine how this new feature interacts with existing functionality and give a thorough comparison of the system's current and improved states.
 
-Additionally, the study will examine how this architectural change will affect both high-level and low-level system concepts, with the help of an architecture diagram that graphically illustrates the changes. The discussion of flagged files, use cases, and concurrency issues will also be included to ensure that all aspects of the proposed improvement are clear.
+	Additionally, the study will examine how this architectural change will affect both high-level and low-level system concepts, with the help of an architecture diagram that graphically illustrates the changes. The discussion of flagged files, use cases, and concurrency issues will also be included to ensure that all aspects of the proposed improvement are clear.
 
-The implementation of the Cgroup and Namespace API for FreeBSD will be assessed for potential risks and constraints, identifying any potential negative outcomes. The study will end with a summary of the results and an evaluation of the feasibility and advantages of adding this improvement to the Docker software system overall.
-\newline
-\keywords{cgroups, namespaces, containerization, Docker, compatibility}
+	The implementation of the Cgroup and Namespace API for FreeBSD will be assessed for potential risks and constraints, identifying any potential negative outcomes. The study will end with a summary of the results and an evaluation of the feasibility and advantages of adding this improvement to the Docker software system overall.
+	\newline
+	\keywords{cgroups, namespaces, containerization, Docker, compatibility}
 \end{abstract}
 \vfill
 \hspace{0pt}
@@ -203,7 +203,7 @@ Our proposed enhancement is to extend the current Linux emulator for FreeBSD, Li
 For many Linux binaries running through Linuxulator there aren't any great alternatives to this interface, as cgroup and namespaces are very integral to some programs. It is possible to edit Linux binaries through FreeBSD but this can cause the Linux binary to use a lot of efficiency or functionality. A more viable solution is to use a Linux Virtual machine inside FreeBSD, which allows you to run any Linux binary and use all types of OCI runtimes like Docker, Containerized, runc, etc… Although a lot of developers will not like this method as it brings a lot of overhead which will slow down Linux binaries. This is something Linux developers will not tolerate because the main reason people use Linux operating systems is because it removes overhead and allows them to work more efficiently!. This is why our solution is favorable to many developers.
 
 \section{Stakeholders}
-With this new implementation of Namespace and Cgroups for FreeBSD several stakeholders who would be involved. 
+With this new implementation of Namespace and Cgroups for FreeBSD several stakeholders who would be involved.
 
 \subsection{Developers}
 The first stakeholder is the developers who are working to implement this new improvement as they will be the ones responsible for creating code that will enable docker to run on the FreeBSD platform.Their work will require expertise in kernel architecture, API design, and programming languages like C and Rust, among others.
@@ -369,18 +369,6 @@ In summary, extending the linuxulator subsystem in FreeBSD to provide interfaces
 \textbf{Collaboration with stakeholders is crucial for successful enhancements:} Enhancements that involve significant changes to an operating system require collaboration with a range of stakeholders, including developers, users, and companies that may be impacted by the changes, such as Docker in this case. By engaging with stakeholders and soliciting feedback throughout the development process, it is possible to build enhancements that meet the needs of a wide range of users and maximise the benefits of the enhancement for all stakeholders involved.
 \clearpage
 
-\section{Diagrams}
-\begin{figure}[!htb]
-	\center
-	\includegraphics[width = 500pt]{assets/architecture_diagrams/current-concrete-architecture.pdf}
-	\caption{Current state of the concrete architecture diagram of FreeBSD.}
-\end{figure}
-\begin{figure}[!htb]
-	\center
-	\includegraphics[width = 500pt]{assets/architecture_diagrams/enhanced-concrete-architecture.pdf}
-	\caption{Enhanced state of the concrete architecture diagram of FreeBSD.}
-\end{figure}
-\clearpage
 \section{Data Dictionary}
 \begin{itemize}
 	\item {Linuxulator (Linux Emulation): A technique to Linux binaries on FreeBSD without any modifications \cite{linuxulator}}
