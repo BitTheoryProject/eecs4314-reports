@@ -1,0 +1,24 @@
+{
+  "KERNEL.ss": {
+    "InterProcessCommunication.ss": [
+      ["glob", "sys/kern/uipc*"],
+      ["glob", "sys/kern/sysv*"]
+    ],
+    "KernelFacilities.ss": [["glob", "sys/kern/kern*"]],
+    "NetworkCommunication.ss": [["glob", "sys/net*/**/*"]],
+    "TerminalHandling": [["glob", "sys/kern/tty*"]],
+    "FileSystem.ss": {
+      "FS.ss": [["glob", "sys/fs/**/*"]],
+      "UFS.ss": [["glob", "sys/ufs/**/*"]],
+      "NFS.ss": [["glob", "sys/nfs/**/*"]],
+      "NFSCLIENT.ss": [["glob", "sys/nfsclient/**/*"]],
+      "NFSSERVIER.ss": [["glob", "sys/nfsserver/**/*"]]
+    },
+    "MemoryManagement.ss": [["glob", "sys/vm/**/*"]],
+    "GenericSystemInterface.ss": [["glob", "sys/sys/**/*"]],
+    "Security.ss": [["glob", "sys/security/**/*"]],
+    "Subroutines.ss": [["glob", "sys/kern/subr*"]],
+    "Crypto.ss": [["glob", "sys/*crypto*/**/*"]],
+    "Compat.ss": [["glob", "sys/compat/**/*"]]
+  }
+}

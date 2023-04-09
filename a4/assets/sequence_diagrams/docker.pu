@@ -1,0 +1,48 @@
+@startuml
+title FreeBSD Docker Use Case 
+header EECS 4314 FreeBSD Analysis - BitTheory
+
+skinparam {
+  ArrowColor #B70000
+  ActorBackgroundColor #F8CDCC
+  ActorBorderColor #B70000
+
+  NoteBackgroundColor #F8CDCC
+  NoteBorderColor #B70000
+
+  ParticipantBackgroundColor #F8CDCC
+  ParticipantBorderColor #B70000
+  
+  NoteBackgroundColor #F8CDCC
+  NoteBorderColor #B70000
+
+  DatabaseBackgroundColor #F8CDCC
+  DatabaseBorderColor #B70000
+}
+
+box "User space" #ffffff
+  Actor User as s
+  participant "Docker" as d
+
+end box
+
+box "Kernel space" #ffffff
+participant "namespace \n //sys/compat/linux///" as ns
+participant lynsysfs as lfs
+participant jail as j
+end box
+
+s -> d : start docker
+activate d
+d -> ns : create namespace, linux_clone3()
+activate ns
+ns -> j ** : create jail
+activate j
+j --> ns : jid
+ns --> d : namespace pid
+deactivate ns
+d -> lfs : modify namespace resources
+activate lfs
+lfs -> j : modify jail resources
+deactivate lfs
+@enduml
