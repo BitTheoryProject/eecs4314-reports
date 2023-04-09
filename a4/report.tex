@@ -284,7 +284,7 @@ of the virtualized system.
 \clearpage
 
 \subsection{Effect of the Enhancement on the Concrete Architecture}
-The Linulator subsystem resides in the newly discovered subsystem called \emph{Comapt}, or the Compatibility subsystem. Enhancing FreeBSD for native Docker support by extending the linuxulator subsystem but keeping jails largely unchanged would not drastically alter the concrete architecture of the FreeBSD operating system itself. The core architecture and design of FreeBSD would remain intact, with Docker capability added through strategic, focused changes rather than a complete overhaul.
+The Linulator subsystem resides in the newly discovered subsystem called \emph{Compat}, or the Compatibility subsystem. Enhancing FreeBSD for native Docker support by extending the linuxulator subsystem but keeping jails largely unchanged would not drastically alter the concrete architecture of the FreeBSD operating system itself. The core architecture and design of FreeBSD would remain intact, with Docker capability added through strategic, focused changes rather than a complete overhaul.
 
 While linuxulator would gain strengthened Jail integration and dependence on it to support containers, the existing jail subsystem would persist and continue functioning as before. Jails have been a fundamental part of FreeBSD's containerization strategy and do not require replacement with Docker. Integrating Docker would add useful complementary functionality rather than replacing central components. In fact, it will add a dependency to the existing central component. Administrators and users could utilize either jails or Docker containers, or both, based on their particular needs.
 
