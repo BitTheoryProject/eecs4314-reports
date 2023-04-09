@@ -160,9 +160,21 @@
 \tableofcontents
 \clearpage
 
-\section{Introduction}
+\subsection{Problem Definition}
+FreeBSD currently relies on jails for providing containerization capabilities. However, as containerization needs evolve, the limitations of jails become more evident.
+Jails work well for simple isolation use cases but lack features critical for more advanced container workflows. They provide a basic level of encapsulation but lack the portability and interoperability of modern container formats. Jails also have limited options for networking, storage, and orchestration between containers.
+Additional container tools are needed to address these limitations and meet the growing demands of containerized applications and infrastructure. Options like Kubernetes are attracting developers and sysadmins to containerized platforms but FreeBSD remains limited to jails.
+
+Integration with other open source container projects would make FreeBSD far more suitable for the microservices, cloud-native environments, and CI/CD pipelines that are increasingly prevalent. When combined with FreeBSD's security, stability and customizability, new container technologies could significantly expand usage possibilities.
+
+With containerization becoming integral to application development and deployment, FreeBSD requires further enhancements beyond just jails. Options for container formats, networks, storage, and orchestration would provide far more flexibility and capabilities. Developing or leveraging additional tools would position FreeBSD as a robust, configurable operating system able to support containerized workloads at scale.
+
+Advancements in containerization are essential for FreeBSD to meet evolving needs and remain competitive. Jails alone no longer suffice for the kinds of containerized architectures and workflows common today. Additional container tools will be needed to address limitations, unlock new potential, and ensure FreeBSD keeps pace with rapid changes in containerization. Keeping up with container futures will require more possibilities beyond just jails.
+
+\subsection{Our Proposal}
 Docker is a famous software that uses OS-level virtualization to deliver software in packages called containers. It has been widely used in many mainstream operating systems such as Windows, macOS, and Linux. Sadly, Docker can't operate on FreeBSD due to the difference in kernel features. Though the Jails in FreeBSD have similar functions as Docker, most users think that Docker works much better than Jails. In fact, Docker performs better than Jails in almost all categories except startup time. As a result, it's reasonable to try to make Docker work on FreeBSD.
 To reach our target of allowing features like Docker to be functional in FreeBSD, there are many different approaches. For example, we can run a Linux Virtual Machine within FreeBSD, so that we can containerize without using Jails. However, this will surely be an unnecessary move. Among all those approaches, the one we choose to use to solve the problem is implementing cgroup and namespace 'like' APIs that internally use jails. In Linux, docker requires cgroup and namespace, which are featured on the Linux kernel, to run. What we want is to implement a clone of cgroup and namespace for FreeBSD, so that we can get a result of running Docker on FreeBSD.
+
 \subsection{Overview}
 
 To clearly introduce our project from multi-angel, the report has been divided into six different chapters:
